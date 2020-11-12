@@ -28,7 +28,7 @@ getTrustLineStrings(AccountID const& accountID, Asset const& asset,
     }
     else if (asset.type() == ASSET_TYPE_NATIVE)
     {
-        throw NonSociRelatedException("XLM TrustLine?");
+        throw NonSociRelatedException("DLO TrustLine?");
     }
     else if (accountID == getIssuer(asset))
     {

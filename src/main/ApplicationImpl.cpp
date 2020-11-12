@@ -21,7 +21,7 @@
 #include "history/HistoryManager.h"
 #include "invariant/AccountSubEntriesCountIsValid.h"
 #include "invariant/BucketListIsConsistentWithDatabase.h"
-#include "invariant/ConservationOfLumens.h"
+#include "invariant/ConservationOfDelos.h"
 #include "invariant/InvariantManager.h"
 #include "invariant/LedgerEntryIsValid.h"
 #include "invariant/LiabilitiesMatchOffers.h"
@@ -167,7 +167,7 @@ ApplicationImpl::initialize(bool createNewDB)
 
     BucketListIsConsistentWithDatabase::registerInvariant(*this);
     AccountSubEntriesCountIsValid::registerInvariant(*this);
-    ConservationOfLumens::registerInvariant(*this);
+    ConservationOfDelos::registerInvariant(*this);
     LedgerEntryIsValid::registerInvariant(*this);
     LiabilitiesMatchOffers::registerInvariant(*this);
     SponsorshipCountIsValid::registerInvariant(*this);

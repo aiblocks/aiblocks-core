@@ -60,16 +60,16 @@ struct LedgerHeader
 
     uint32 ledgerSeq; // sequence number of this ledger
 
-    int64 totalCoins; // total number of stroops in existence.
-                      // 10,000,000 stroops in 1 XLM
+    int64 totalCoins; // total number of sectors in existence.
+                      // 10,000,000 sectors in 1 DLO
 
     int64 feePool;       // fees burned since last inflation run
     uint32 inflationSeq; // inflation sequence number
 
     uint64 idPool; // last used global ID, used for generating objects
 
-    uint32 baseFee;     // base fee per operation in stroops
-    uint32 baseReserve; // account base reserve in stroops
+    uint32 baseFee;     // base fee per operation in sectors
+    uint32 baseReserve; // account base reserve in sectors
 
     uint32 maxTxSetSize; // maximum size a transaction set can be
 

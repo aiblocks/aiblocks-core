@@ -13,14 +13,14 @@ namespace stellar
 class Application;
 struct LedgerTxnDelta;
 
-// This Invariant is used to validate that the total number of lumens only
+// This Invariant is used to validate that the total number of delos only
 // changes during inflation. The Invariant also checks that, after inflation,
 // the totalCoins and feePool of the LedgerHeader matches the total balance
 // in the database.
-class ConservationOfLumens : public Invariant
+class ConservationOfDelos : public Invariant
 {
   public:
-    ConservationOfLumens();
+    ConservationOfDelos();
 
     static std::shared_ptr<Invariant> registerInvariant(Application& app);
 

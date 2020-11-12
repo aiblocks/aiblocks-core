@@ -26,8 +26,8 @@ using namespace stellar;
 using namespace stellar::txtest;
 
 // Offer that takes multiple other offers and remains
-// Offer selling XLM
-// Offer buying XLM
+// Offer selling DLO
+// Offer buying DLO
 // Offer with transfer rate
 // Offer for more than you have
 // Offer for something you can't hold
@@ -55,7 +55,7 @@ TEST_CASE("create offer", "[tx][offers]")
 
     // sets up issuer account
     auto issuer = root.create("issuer", minBalance2 * 10);
-    auto xlm = makeNativeAsset();
+    auto dlo = makeNativeAsset();
     auto idr = issuer.asset("IDR");
     auto usd = issuer.asset("USD");
 
@@ -167,14 +167,14 @@ TEST_CASE("create offer", "[tx][offers]")
                     market.requireChangesWithOffer(
                         {},
                         [&] {
-                            return market.addOffer(a1, {idr, xlm, oneone, 100});
+                            return market.addOffer(a1, {idr, dlo, oneone, 100});
                         }),
                     ex_MANAGE_SELL_OFFER_SELL_NO_ISSUER);
             });
 
             for_versions_from(13, *app, [&] {
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(a1, {idr, xlm, oneone, 100});
+                    return market.addOffer(a1, {idr, dlo, oneone, 100});
                 });
             });
         }
@@ -224,19 +224,19 @@ TEST_CASE("create offer", "[tx][offers]")
                     market.requireChangesWithOffer(
                         {},
                         [&] {
-                            return market.addOffer(a1, {xlm, idr, oneone, 100});
+                            return market.addOffer(a1, {dlo, idr, oneone, 100});
                         }),
                     ex_MANAGE_SELL_OFFER_BUY_NO_ISSUER);
             });
 
             for_versions_from(13, *app, [&] {
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(a1, {xlm, idr, oneone, 100});
+                    return market.addOffer(a1, {dlo, idr, oneone, 100});
                 });
             });
         }
 
-        SECTION("create offer without XLM to make for reserve")
+        SECTION("create offer without DLO to make for reserve")
         {
             auto a1 = root.create("A", minBalance2);
             a1.changeTrust(idr, trustLineLimit);
@@ -339,7 +339,7 @@ TEST_CASE("create offer", "[tx][offers]")
                         market.requireChangesWithOffer(
                             {},
                             [&] {
-                                return market.addOffer(a, {xlm, idr, p, 150});
+                                return market.addOffer(a, {dlo, idr, p, 150});
                             }),
                         ex_MANAGE_SELL_OFFER_MALFORMED);
                 }
@@ -538,23 +538,23 @@ TEST_CASE("create offer", "[tx][offers]")
 
         auto market = TestMarket{*app};
 
-        SECTION("idr -> xlm")
+        SECTION("idr -> dlo")
         {
             for_all_versions(*app, [&] {
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(a1, {xlm, idr, Price{3, 2}, 100});
+                    return market.addOffer(a1, {dlo, idr, Price{3, 2}, 100});
                 });
             });
         }
 
-        SECTION("xlm -> idr")
+        SECTION("dlo -> idr")
         {
             SECTION("create")
             {
                 for_all_versions(*app, [&] {
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(a1,
-                                               {idr, xlm, Price{3, 2}, 100});
+                                               {idr, dlo, Price{3, 2}, 100});
                     });
                 });
             }
@@ -564,7 +564,7 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 // a1 is selling a1IDrs idr
                 auto a1Offer = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(a1, {idr, xlm, Price{1, 1}, a1IDrs});
+                    return market.addOffer(a1, {idr, dlo, Price{1, 1}, a1IDrs});
                 });
 
                 auto checkCrossed = [&](TestAccount& b1, int64 actualPayment,
@@ -572,14 +572,14 @@ TEST_CASE("create offer", "[tx][offers]")
                     auto b1Before = b1.getBalance();
                     auto a1Before = a1.getBalance();
                     auto b1Offer =
-                        market.addOffer(b1, {xlm, idr, oneone, offerAmount},
+                        market.addOffer(b1, {dlo, idr, oneone, offerAmount},
                                         OfferState::DELETED);
                     market.requireBalances(
                         {{a1,
-                          {{xlm, a1Before + actualPayment},
+                          {{dlo, a1Before + actualPayment},
                            {idr, trustLineBalance - actualPayment}}},
                          {b1,
-                          {{xlm, b1Before - txfee - actualPayment},
+                          {{dlo, b1Before - txfee - actualPayment},
                            {idr, actualPayment}}}});
                 };
                 SECTION("small offer amount - cross only")
@@ -608,7 +608,7 @@ TEST_CASE("create offer", "[tx][offers]")
                                 {},
                                 [&] {
                                     return market.addOffer(
-                                        b1, {xlm, idr, oneone, offerAmount});
+                                        b1, {dlo, idr, oneone, offerAmount});
                                 }),
                             ex_MANAGE_SELL_OFFER_LOW_RESERVE);
                     });
@@ -645,7 +645,7 @@ TEST_CASE("create offer", "[tx][offers]")
                                 {},
                                 [&] {
                                     return market.addOffer(
-                                        b1, {xlm, idr, oneone, offerAmount});
+                                        b1, {dlo, idr, oneone, offerAmount});
                                 }),
                             ex_MANAGE_SELL_OFFER_LOW_RESERVE);
                     });
@@ -1525,8 +1525,8 @@ TEST_CASE("create offer", "[tx][offers]")
         biddingAccount.changeTrust(idr, 1000000000000);
         issuer.pay(askingAccount, idr, 100000000000);
 
-        auto bidding = OfferState{xlm, idr, bidPrice, bidAmount};
-        auto asking = OfferState{idr, xlm, askPrice, askAmount};
+        auto bidding = OfferState{dlo, idr, bidPrice, bidAmount};
+        auto asking = OfferState{idr, dlo, askPrice, askAmount};
 
         SECTION("bid before ask uses bid price")
         {
@@ -1543,9 +1543,9 @@ TEST_CASE("create offer", "[tx][offers]")
                 // 8224563625 / 4.1220000 = 1995284722 = 2000000000 -
                 // 4715278
                 // (rounding down)
-                auto updatedAsking = OfferState{idr, xlm, askPrice, 4715278};
+                auto updatedAsking = OfferState{idr, dlo, askPrice, 4715278};
                 // rounding error, should be 0
-                auto updatedBidding = OfferState{xlm, idr, bidPrice, 1};
+                auto updatedBidding = OfferState{dlo, idr, bidPrice, 1};
 
                 market.requireChangesWithOffer(
                     {{biddingKey, updatedBidding}}, [&] {
@@ -1558,7 +1558,7 @@ TEST_CASE("create offer", "[tx][offers]")
                 // 8224563625 / 4.1220000 = 1995284723 = 2000000000 -
                 // 4715277
                 // (rounding up)
-                auto updatedAsking = OfferState{idr, xlm, askPrice, 4715277};
+                auto updatedAsking = OfferState{idr, dlo, askPrice, 4715277};
                 market.requireChangesWithOffer(
                     {{biddingKey, OfferState::DELETED}}, [&] {
                         return market.addOffer(askingAccount, asking,
@@ -1573,7 +1573,7 @@ TEST_CASE("create offer", "[tx][offers]")
                 // price.n < price.d
                 // sheepSend = floor(8224563625 * 500 / 2061) = 1995284722
                 // wheatReceive = ceil(1995284722 * 500 / 2061) = 484057429
-                auto updatedAsking = OfferState{idr, xlm, askPrice, 4715278};
+                auto updatedAsking = OfferState{idr, dlo, askPrice, 4715278};
                 market.requireChangesWithOffer(
                     {{biddingKey, OfferState::DELETED}}, [&] {
                         return market.addOffer(askingAccount, asking,
@@ -1596,7 +1596,7 @@ TEST_CASE("create offer", "[tx][offers]")
                                                  })
                         .key;
 
-                auto updatedBidding = OfferState{xlm, idr, bidPrice, 61363625};
+                auto updatedBidding = OfferState{dlo, idr, bidPrice, 61363625};
                 market.requireChangesWithOffer(
                     {{askingKey, OfferState::DELETED}}, [&] {
                         return market.addOffer(biddingAccount, bidding,
@@ -1615,20 +1615,20 @@ TEST_CASE("create offer", "[tx][offers]")
         a1.changeTrust(usd, trustLineLimit);
         for_versions_to(9, *app, [&] {
             auto offer = market.requireChangesWithOffer({}, [&] {
-                return market.addOffer(a1, {xlm, usd, oneone, 110});
+                return market.addOffer(a1, {dlo, usd, oneone, 110});
             });
             market.requireChangesWithOffer({}, [&] {
                 return market.updateOffer(a1, offer.key.offerID,
-                                          {xlm, usd, oneone, 111},
-                                          {xlm, usd, oneone, 110});
+                                          {dlo, usd, oneone, 111},
+                                          {dlo, usd, oneone, 110});
             });
         });
         for_versions_from(10, *app, [&] {
             auto offer = market.requireChangesWithOffer({}, [&] {
-                return market.addOffer(a1, {xlm, usd, oneone, 110});
+                return market.addOffer(a1, {dlo, usd, oneone, 110});
             });
             REQUIRE_THROWS_AS(market.updateOffer(a1, offer.key.offerID,
-                                                 {xlm, usd, oneone, 111}),
+                                                 {dlo, usd, oneone, 111}),
                               ex_MANAGE_SELL_OFFER_UNDERFUNDED);
         });
     }
@@ -1776,12 +1776,12 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 auto market = TestMarket{*app};
                 auto offer = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 1000});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 1000});
                 });
                 market.requireChangesWithOffer(
                     {{offer.key, OfferState::DELETED}}, [&] {
                         return market.addOffer(acc2,
-                                               {usd, xlm, Price{1, 1}, 1000},
+                                               {usd, dlo, Price{1, 1}, 1000},
                                                OfferState::DELETED);
                     });
             });
@@ -1800,12 +1800,12 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 auto market = TestMarket{*app};
                 auto offer = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc2, {usd, xlm, Price{1, 1}, 1000});
+                    return market.addOffer(acc2, {usd, dlo, Price{1, 1}, 1000});
                 });
                 market.requireChangesWithOffer(
                     {{offer.key, OfferState::DELETED}}, [&] {
                         return market.addOffer(acc1,
-                                               {xlm, usd, Price{1, 1}, 1000},
+                                               {dlo, usd, Price{1, 1}, 1000},
                                                OfferState::DELETED);
                     });
             });
@@ -1825,24 +1825,24 @@ TEST_CASE("create offer", "[tx][offers]")
                 acc1.changeTrust(usd, 2000);
 
                 // Test when no existing offers
-                root.pay(acc1, xlm, 500 + txfee);
+                root.pay(acc1, dlo, 500 + txfee);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {xlm, usd, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 auto reserve = app->getLedgerManager().getLastReserve();
-                root.pay(acc1, xlm, 500 + txfee + reserve);
+                root.pay(acc1, dlo, 500 + txfee + reserve);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {xlm, usd, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 500});
                 });
             });
         }
@@ -1859,15 +1859,15 @@ TEST_CASE("create offer", "[tx][offers]")
                 issuer.pay(acc1, usd, INT64_MAX);
 
                 // Test when no existing offers
-                root.pay(acc1, xlm, 2 * txfee);
+                root.pay(acc1, dlo, 2 * txfee);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {usd, xlm, Price{1, 1},
+                    market.addOffer(acc1, {usd, dlo, Price{1, 1},
                                            INT64_MAX - minBalance - txfee + 1}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 auto o1 = market.requireChangesWithOffer({}, [&] {
                     return market.addOffer(acc1,
-                                           {usd, xlm, Price{1, 1},
+                                           {usd, dlo, Price{1, 1},
                                             INT64_MAX - minBalance - txfee});
                 });
 
@@ -1875,17 +1875,17 @@ TEST_CASE("create offer", "[tx][offers]")
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(
                         acc1, o1.key.offerID,
-                        {usd, xlm, Price{1, 1}, INT64_MAX - minBalance - 500});
+                        {usd, dlo, Price{1, 1}, INT64_MAX - minBalance - 500});
                 });
 
                 // Test when existing offers
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {usd, xlm, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 auto o2 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 500});
                 });
             });
         }
@@ -1903,19 +1903,19 @@ TEST_CASE("create offer", "[tx][offers]")
                 // Test when no existing offers
                 issuer.pay(acc1, usd, 500);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {usd, xlm, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 issuer.pay(acc1, usd, 500);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {usd, xlm, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 500});
                 });
             });
         }
@@ -1932,19 +1932,19 @@ TEST_CASE("create offer", "[tx][offers]")
                 acc1.changeTrust(usd, 1000);
                 issuer.pay(acc1, usd, 500);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {xlm, usd, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 acc1.changeTrust(usd, 1500);
                 REQUIRE_THROWS_AS(
-                    market.addOffer(acc1, {xlm, usd, Price{1, 1}, 501}),
+                    market.addOffer(acc1, {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
                 market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 500});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 500});
                 });
             });
         }
@@ -1963,36 +1963,36 @@ TEST_CASE("create offer", "[tx][offers]")
                 acc1.changeTrust(usd, 2000);
 
                 // Test when no existing offers
-                root.pay(acc1, xlm, 500 + txfee);
+                root.pay(acc1, dlo, 500 + txfee);
                 auto o1 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 250});
                 });
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o1.key.offerID,
-                                       {xlm, usd, Price{1, 1}, 501}),
+                                       {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o1.key.offerID,
-                                              {xlm, usd, Price{1, 1}, 500});
+                                              {dlo, usd, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 auto reserve = app->getLedgerManager().getLastReserve();
-                root.pay(acc1, xlm, 500 + txfee + reserve);
+                root.pay(acc1, dlo, 500 + txfee + reserve);
                 auto o2 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 250});
                 });
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o2.key.offerID,
-                                       {xlm, usd, Price{1, 1}, 501}),
+                                       {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o2.key.offerID,
-                                              {xlm, usd, Price{1, 1}, 500});
+                                              {dlo, usd, Price{1, 1}, 500});
                 });
             });
         }
@@ -2009,46 +2009,46 @@ TEST_CASE("create offer", "[tx][offers]")
                 issuer.pay(acc1, usd, INT64_MAX);
 
                 // Test when no existing offers
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 auto o1 = market.requireChangesWithOffer({}, [&] {
                     return market.addOffer(acc1,
-                                           {usd, xlm, Price{1, 1},
+                                           {usd, dlo, Price{1, 1},
                                             INT64_MAX - minBalance - txfee});
                 });
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 REQUIRE_THROWS_AS(
                     market.updateOffer(
                         acc1, o1.key.offerID,
-                        {usd, xlm, Price{1, 1}, INT64_MAX - minBalance + 1}),
+                        {usd, dlo, Price{1, 1}, INT64_MAX - minBalance + 1}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(
                         acc1, o1.key.offerID,
-                        {usd, xlm, Price{1, 1}, INT64_MAX - minBalance});
+                        {usd, dlo, Price{1, 1}, INT64_MAX - minBalance});
                 });
 
                 // Free some available limit
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(
                         acc1, o1.key.offerID,
-                        {usd, xlm, Price{1, 1}, INT64_MAX - minBalance - 500});
+                        {usd, dlo, Price{1, 1}, INT64_MAX - minBalance - 500});
                 });
 
                 // Test when existing offers
-                root.pay(acc1, xlm, 2 * txfee);
+                root.pay(acc1, dlo, 2 * txfee);
                 auto o2 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 250});
                 });
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o2.key.offerID,
-                                       {usd, xlm, Price{1, 1}, 501}),
+                                       {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
-                root.pay(acc1, xlm, txfee);
+                root.pay(acc1, dlo, txfee);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o2.key.offerID,
-                                              {usd, xlm, Price{1, 1}, 500});
+                                              {usd, dlo, Price{1, 1}, 500});
                 });
             });
         }
@@ -2066,29 +2066,29 @@ TEST_CASE("create offer", "[tx][offers]")
                 // Test when no existing offers
                 issuer.pay(acc1, usd, 500);
                 auto o1 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 250});
                 });
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o1.key.offerID,
-                                       {usd, xlm, Price{1, 1}, 501}),
+                                       {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o1.key.offerID,
-                                              {usd, xlm, Price{1, 1}, 500});
+                                              {usd, dlo, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 issuer.pay(acc1, usd, 500);
                 auto o2 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {usd, xlm, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {usd, dlo, Price{1, 1}, 250});
                 });
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o2.key.offerID,
-                                       {usd, xlm, Price{1, 1}, 501}),
+                                       {usd, dlo, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o2.key.offerID,
-                                              {usd, xlm, Price{1, 1}, 500});
+                                              {usd, dlo, Price{1, 1}, 500});
                 });
             });
         }
@@ -2105,29 +2105,29 @@ TEST_CASE("create offer", "[tx][offers]")
                 acc1.changeTrust(usd, 1000);
                 issuer.pay(acc1, usd, 500);
                 auto o1 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 250});
                 });
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o1.key.offerID,
-                                       {xlm, usd, Price{1, 1}, 501}),
+                                       {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o1.key.offerID,
-                                              {xlm, usd, Price{1, 1}, 500});
+                                              {dlo, usd, Price{1, 1}, 500});
                 });
 
                 // Test when existing offers
                 acc1.changeTrust(usd, 1500);
                 auto o2 = market.requireChangesWithOffer({}, [&] {
-                    return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 250});
+                    return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 250});
                 });
                 REQUIRE_THROWS_AS(
                     market.updateOffer(acc1, o2.key.offerID,
-                                       {xlm, usd, Price{1, 1}, 501}),
+                                       {dlo, usd, Price{1, 1}, 501}),
                     ex_MANAGE_SELL_OFFER_LINE_FULL);
                 market.requireChangesWithOffer({}, [&] {
                     return market.updateOffer(acc1, o2.key.offerID,
-                                              {xlm, usd, Price{1, 1}, 500});
+                                              {dlo, usd, Price{1, 1}, 500});
                 });
             });
         }
@@ -2150,9 +2150,9 @@ TEST_CASE("create offer", "[tx][offers]")
             issuer.denyTrust(idr, acc1);
 
             TestMarket market(*app);
-            REQUIRE_THROWS_AS(market.addOffer(acc1, {idr, xlm, Price{1, 1}, 1}),
+            REQUIRE_THROWS_AS(market.addOffer(acc1, {idr, dlo, Price{1, 1}, 1}),
                               ex_MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED);
-            REQUIRE_THROWS_AS(market.addOffer(acc1, {xlm, idr, Price{1, 1}, 1}),
+            REQUIRE_THROWS_AS(market.addOffer(acc1, {dlo, idr, Price{1, 1}, 1}),
                               ex_MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED);
         });
     }
@@ -2212,7 +2212,7 @@ TEST_CASE("create offer", "[tx][offers]")
 
             TestMarket market(*app);
             auto o1 = market.requireChangesWithOffer({}, [&] {
-                return market.addOffer(acc1, {xlm, usd, Price{1, 1}, 500});
+                return market.addOffer(acc1, {dlo, usd, Price{1, 1}, 500});
             });
 
             for_versions_from(10, *app, [&] {
@@ -2221,19 +2221,19 @@ TEST_CASE("create offer", "[tx][offers]")
                     acc1.changeTrust(usd, 999);
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, o1.key.offerID,
-                                           {xlm, usd, Price{2, 1}, 500}),
+                                           {dlo, usd, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
                     acc1.changeTrust(usd, 1000);
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, o1.key.offerID,
-                                                  {xlm, usd, Price{2, 1}, 500});
+                                                  {dlo, usd, Price{2, 1}, 500});
                     });
                 }
                 SECTION("decrease price")
                 {
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, o1.key.offerID,
-                                                  {xlm, usd, Price{1, 2}, 500});
+                                                  {dlo, usd, Price{1, 2}, 500});
                     });
                 }
             });
@@ -2252,7 +2252,7 @@ TEST_CASE("create offer", "[tx][offers]")
 
             TestMarket market(*app);
             auto o1 = market.requireChangesWithOffer({}, [&] {
-                return market.addOffer(acc1, {idr, xlm, Price{1, 1}, 500});
+                return market.addOffer(acc1, {idr, dlo, Price{1, 1}, 500});
             });
 
             for_versions_from(10, *app, [&] {
@@ -2260,40 +2260,40 @@ TEST_CASE("create offer", "[tx][offers]")
                 {
                     auto o2 = market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {usd, xlm, Price{1, 1},
+                                               {usd, dlo, Price{1, 1},
                                                 INT64_MAX - minBalance - 999});
                     });
 
                     root.pay(acc1, txfee);
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, o1.key.offerID,
-                                           {idr, xlm, Price{2, 1}, 500}),
+                                           {idr, dlo, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
 
                     root.pay(acc1, 2 * txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(
                             acc1, o2.key.offerID,
-                            {usd, xlm, Price{1, 1},
+                            {usd, dlo, Price{1, 1},
                              INT64_MAX - minBalance - 1000});
                     });
 
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, o1.key.offerID,
-                                                  {idr, xlm, Price{2, 1}, 500});
+                                                  {idr, dlo, Price{2, 1}, 500});
                     });
                 }
                 SECTION("decrease price")
                 {
                     auto o2 = market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(
-                            acc1, {usd, xlm, Price{1, 1},
+                            acc1, {usd, dlo, Price{1, 1},
                                    INT64_MAX - minBalance - 500 - txfee});
                     });
                     root.pay(acc1, txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, o1.key.offerID,
-                                                  {idr, xlm, Price{1, 2}, 500});
+                                                  {idr, dlo, Price{1, 2}, 500});
                     });
                 }
             });
@@ -2433,7 +2433,7 @@ TEST_CASE("create offer", "[tx][offers]")
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(
                             acc1,
-                            {cur1, xlm, Price{1, 1},
+                            {cur1, dlo, Price{1, 1},
                              INT64_MAX - acc1.getBalance() - reserve - 999});
                     });
                     root.pay(acc1, txfee);
@@ -2537,11 +2537,11 @@ TEST_CASE("create offer", "[tx][offers]")
         for_versions_from(10, *app, [&] {
             SECTION("selling native swap assets")
             {
-                checkModifyAssets(xlm, usd, usd, xlm);
+                checkModifyAssets(dlo, usd, usd, dlo);
             }
             SECTION("buying native swap assets")
             {
-                checkModifyAssets(usd, xlm, xlm, usd);
+                checkModifyAssets(usd, dlo, dlo, usd);
             }
             SECTION("non-native swap assets")
             {
@@ -2550,28 +2550,28 @@ TEST_CASE("create offer", "[tx][offers]")
 
             SECTION("selling native change selling asset")
             {
-                checkModifyAssets(xlm, usd, cur1, usd);
+                checkModifyAssets(dlo, usd, cur1, usd);
             }
             SECTION("selling native change buying asset")
             {
-                checkModifyAssets(xlm, usd, xlm, cur1);
+                checkModifyAssets(dlo, usd, dlo, cur1);
             }
             SECTION("selling native change both assets")
             {
-                checkModifyAssets(xlm, usd, cur1, cur2);
+                checkModifyAssets(dlo, usd, cur1, cur2);
             }
 
             SECTION("buying native change buying asset")
             {
-                checkModifyAssets(usd, xlm, usd, cur1);
+                checkModifyAssets(usd, dlo, usd, cur1);
             }
             SECTION("buying native change selling asset")
             {
-                checkModifyAssets(usd, xlm, cur1, xlm);
+                checkModifyAssets(usd, dlo, cur1, dlo);
             }
             SECTION("buying native change both assets")
             {
-                checkModifyAssets(usd, xlm, cur1, cur2);
+                checkModifyAssets(usd, dlo, cur1, cur2);
             }
 
             SECTION("non-native change selling asset non-native")
@@ -2589,11 +2589,11 @@ TEST_CASE("create offer", "[tx][offers]")
 
             SECTION("non-native change selling asset native")
             {
-                checkModifyAssets(idr, usd, xlm, usd);
+                checkModifyAssets(idr, usd, dlo, usd);
             }
             SECTION("non-native change buying asset native")
             {
-                checkModifyAssets(idr, usd, idr, xlm);
+                checkModifyAssets(idr, usd, idr, dlo);
             }
         });
     }
@@ -2614,20 +2614,20 @@ TEST_CASE("create offer", "[tx][offers]")
                 TestMarket market(*app);
                 for_versions_from(10, *app, [&] {
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {xlm, idr, Price{2, 1}, 501}),
+                        market.addOffer(acc1, {dlo, idr, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LOW_RESERVE);
                     root.pay(acc1, reserve + txfee);
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {xlm, idr, Price{2, 1}, 501}),
+                        market.addOffer(acc1, {dlo, idr, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
                     root.pay(acc1, txfee);
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {xlm, idr, Price{2, 1}, 500}),
+                        market.addOffer(acc1, {dlo, idr, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                     root.pay(acc1, txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {xlm, idr, Price{2, 1}, 499});
+                                               {dlo, idr, Price{2, 1}, 499});
                     });
                 });
             }
@@ -2648,25 +2648,25 @@ TEST_CASE("create offer", "[tx][offers]")
                 for_versions_from(10, *app, [&] {
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(
-                            acc1, {usd, xlm, Price{1, 1},
+                            acc1, {usd, dlo, Price{1, 1},
                                    INT64_MAX - minBalance - reserve - 1000});
                     });
 
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {idr, xlm, Price{2, 1}, 501}),
+                        market.addOffer(acc1, {idr, dlo, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LOW_RESERVE);
                     root.pay(acc1, reserve + txfee);
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {idr, xlm, Price{2, 1}, 501}),
+                        market.addOffer(acc1, {idr, dlo, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
                     root.pay(acc1, txfee);
                     REQUIRE_THROWS_AS(
-                        market.addOffer(acc1, {idr, xlm, Price{2, 1}, 500}),
+                        market.addOffer(acc1, {idr, dlo, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                     root.pay(acc1, txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {idr, xlm, Price{2, 1}, 499});
+                                               {idr, dlo, Price{2, 1}, 499});
                     });
                 });
             }
@@ -2718,23 +2718,23 @@ TEST_CASE("create offer", "[tx][offers]")
                 for_versions_from(10, *app, [&] {
                     auto offer = market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {xlm, idr, Price{2, 1}, 250});
+                                               {dlo, idr, Price{2, 1}, 250});
                     });
                     auto offerID = offer.key.offerID;
 
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, offerID,
-                                           {xlm, idr, Price{2, 1}, 501}),
+                                           {dlo, idr, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
                     root.pay(acc1, txfee);
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, offerID,
-                                           {xlm, idr, Price{2, 1}, 500}),
+                                           {dlo, idr, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                     root.pay(acc1, txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, offerID,
-                                                  {xlm, idr, Price{2, 1}, 499});
+                                                  {dlo, idr, Price{2, 1}, 499});
                     });
                 });
             }
@@ -2754,29 +2754,29 @@ TEST_CASE("create offer", "[tx][offers]")
                 for_versions_from(10, *app, [&] {
                     market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {usd, xlm, Price{1, 1},
+                                               {usd, dlo, Price{1, 1},
                                                 INT64_MAX - minBalance - 1000});
                     });
 
                     auto offer = market.requireChangesWithOffer({}, [&] {
                         return market.addOffer(acc1,
-                                               {idr, xlm, Price{2, 1}, 250});
+                                               {idr, dlo, Price{2, 1}, 250});
                     });
                     auto offerID = offer.key.offerID;
 
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, offerID,
-                                           {idr, xlm, Price{2, 1}, 501}),
+                                           {idr, dlo, Price{2, 1}, 501}),
                         ex_MANAGE_SELL_OFFER_LINE_FULL);
                     root.pay(acc1, txfee);
                     REQUIRE_THROWS_AS(
                         market.updateOffer(acc1, offerID,
-                                           {idr, xlm, Price{2, 1}, 500}),
+                                           {idr, dlo, Price{2, 1}, 500}),
                         ex_MANAGE_SELL_OFFER_UNDERFUNDED);
                     root.pay(acc1, txfee);
                     market.requireChangesWithOffer({}, [&] {
                         return market.updateOffer(acc1, offerID,
-                                                  {idr, xlm, Price{2, 1}, 499});
+                                                  {idr, dlo, Price{2, 1}, 499});
                     });
                 });
             }
@@ -3254,22 +3254,22 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 SECTION("native for non-native")
                 {
-                    runTest(usd, xlm, false);
+                    runTest(usd, dlo, false);
                 }
 
                 SECTION("sponsored, native for non-native")
                 {
-                    runTest(usd, xlm, true);
+                    runTest(usd, dlo, true);
                 }
 
                 SECTION("non-native for native")
                 {
-                    runTest(xlm, usd, false);
+                    runTest(dlo, usd, false);
                 }
 
                 SECTION("sponsored, non-native for native")
                 {
-                    runTest(xlm, usd, true);
+                    runTest(dlo, usd, true);
                 }
             });
         }
@@ -3462,7 +3462,7 @@ TEST_CASE("create offer", "[tx][offers]")
                     {
                         bExt = 2;
                     }
-                    else if (buying == xlm || selling == xlm)
+                    else if (buying == dlo || selling == dlo)
                     {
                         bExt = 1;
                     }
@@ -3484,22 +3484,22 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 SECTION("native for non-native")
                 {
-                    runTest(usd, xlm, false);
+                    runTest(usd, dlo, false);
                 }
 
                 SECTION("sponsored, native for non-native")
                 {
-                    runTest(usd, xlm, true);
+                    runTest(usd, dlo, true);
                 }
 
                 SECTION("non-native for native")
                 {
-                    runTest(xlm, usd, false);
+                    runTest(dlo, usd, false);
                 }
 
                 SECTION("sponsored, non-native for native")
                 {
-                    runTest(xlm, usd, true);
+                    runTest(dlo, usd, true);
                 }
             });
         }
@@ -3696,12 +3696,12 @@ TEST_CASE("create offer", "[tx][offers]")
 
                 SECTION("sponsored, native for non-native")
                 {
-                    runTest(usd, xlm);
+                    runTest(usd, dlo);
                 }
 
                 SECTION("sponsored, non-native for native")
                 {
-                    runTest(xlm, usd);
+                    runTest(dlo, usd);
                 }
             });
         }
@@ -3741,28 +3741,28 @@ TEST_CASE("create offer", "[tx][offers]")
         auto tx = transactionFrameFromOps(
             app->getNetworkID(), acc1,
             {sponsor.op(beginSponsoringFutureReserves(acc1)),
-             acc1.op(manageOffer(0, usd, xlm, Price{1, 1}, 100)),
-             acc1.op(manageOffer(0, xlm, usd, Price{2, 1}, 100)),
-             acc1.op(manageOffer(0, idr, xlm, Price{1, 1}, 100)),
+             acc1.op(manageOffer(0, usd, dlo, Price{1, 1}, 100)),
+             acc1.op(manageOffer(0, dlo, usd, Price{2, 1}, 100)),
+             acc1.op(manageOffer(0, idr, dlo, Price{1, 1}, 100)),
              acc1.op(endSponsoringFutureReserves())},
             {sponsor});
 
-        uint64_t offerIdUsdXlm = 0;
-        uint64_t offerIdXlmUsd = 0;
-        uint64_t offerIdIdrXlm = 0;
+        uint64_t offerIdUsdDlo = 0;
+        uint64_t offerIdDloUsd = 0;
+        uint64_t offerIdIdrDlo = 0;
         {
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            offerIdUsdXlm = ltx.loadHeader().current().idPool + 1;
-            offerIdXlmUsd = ltx.loadHeader().current().idPool + 2;
-            offerIdIdrXlm = ltx.loadHeader().current().idPool + 3;
+            offerIdUsdDlo = ltx.loadHeader().current().idPool + 1;
+            offerIdDloUsd = ltx.loadHeader().current().idPool + 2;
+            offerIdIdrDlo = ltx.loadHeader().current().idPool + 3;
 
             TransactionMeta txm(2);
             REQUIRE(tx->checkValid(ltx, 0, 0, 0));
             REQUIRE(tx->apply(*app, ltx, txm));
 
-            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdUsdXlm));
-            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdXlmUsd));
-            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdIdrXlm));
+            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdUsdDlo));
+            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdDloUsd));
+            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdIdrDlo));
 
             checkSponsorship(ltx, acc1, 0, &sponsor.getPublicKey(), 5, 2, 0, 3);
             checkSponsorship(ltx, sponsor, 0, nullptr, 0, 2, 3, 0);
@@ -3774,9 +3774,9 @@ TEST_CASE("create offer", "[tx][offers]")
 
         {
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            REQUIRE(!loadOffer(ltx, acc1.getPublicKey(), offerIdUsdXlm));
-            REQUIRE(!loadOffer(ltx, acc1.getPublicKey(), offerIdXlmUsd));
-            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdIdrXlm));
+            REQUIRE(!loadOffer(ltx, acc1.getPublicKey(), offerIdUsdDlo));
+            REQUIRE(!loadOffer(ltx, acc1.getPublicKey(), offerIdDloUsd));
+            REQUIRE(loadOffer(ltx, acc1.getPublicKey(), offerIdIdrDlo));
 
             checkSponsorship(ltx, acc1, 0, &sponsor.getPublicKey(), 3, 2, 0, 1);
             checkSponsorship(ltx, sponsor, 0, nullptr, 0, 2, 1, 0);
