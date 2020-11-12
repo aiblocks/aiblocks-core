@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,7 +19,7 @@
 #include "overlay/OverlayMetrics.h"
 #include "overlay/PeerAuth.h"
 #include "overlay/PeerManager.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "overlay/SurveyManager.h"
 #include "util/Decoder.h"
 #include "util/Logging.h"
@@ -38,7 +38,7 @@
 // LATER: need to add some way of docking peers that are misbehaving by sending
 // you bad data
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace std;
@@ -72,7 +72,7 @@ Peer::sendHello()
     ZoneScoped;
     CLOG(DEBUG, "Overlay") << "Peer::sendHello to " << toString() << " @"
                            << mApp.getConfig().PEER_PORT;
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(HELLO);
     Hello& elo = msg.hello();
     elo.ledgerVersion = mApp.getConfig().LEDGER_PROTOCOL_VERSION;
@@ -188,7 +188,7 @@ void
 Peer::sendAuth()
 {
     ZoneScoped;
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(AUTH);
     sendMessage(msg);
 }
@@ -222,7 +222,7 @@ void
 Peer::sendDontHave(MessageType type, uint256 const& itemID)
 {
     ZoneScoped;
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(DONT_HAVE);
     msg.dontHave().reqHash = itemID;
     msg.dontHave().type = type;
@@ -234,7 +234,7 @@ void
 Peer::sendSCPQuorumSet(SCPQuorumSetPtr qSet)
 {
     ZoneScoped;
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(SCP_QUORUMSET);
     msg.qSet() = *qSet;
 
@@ -245,7 +245,7 @@ void
 Peer::sendGetTxSet(uint256 const& setID)
 {
     ZoneScoped;
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(GET_TX_SET);
     newMsg.txSetHash() = setID;
 
@@ -256,7 +256,7 @@ void
 Peer::sendGetQuorumSet(uint256 const& setID)
 {
     ZoneScoped;
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(GET_SCP_QUORUMSET);
     newMsg.qSetHash() = setID;
 
@@ -267,7 +267,7 @@ void
 Peer::sendGetPeers()
 {
     ZoneScoped;
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(GET_PEERS);
 
     sendMessage(newMsg);
@@ -277,7 +277,7 @@ void
 Peer::sendGetScpState(uint32 ledgerSeq)
 {
     ZoneScoped;
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(GET_SCP_STATE);
     newMsg.getSCPLedgerSeq() = ledgerSeq;
 
@@ -288,7 +288,7 @@ void
 Peer::sendPeers()
 {
     ZoneScoped;
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(PEERS);
     uint32 maxPeerCount = std::min<uint32>(50, newMsg.peers().max_size());
 
@@ -312,7 +312,7 @@ void
 Peer::sendError(ErrorCode error, std::string const& message)
 {
     ZoneScoped;
-    StellarMessage m;
+    AiBlocksMessage m;
     m.type(ERROR_MSG);
     m.error().code = error;
     m.error().msg = message;
@@ -329,7 +329,7 @@ Peer::sendErrorAndDrop(ErrorCode error, std::string const& message,
 }
 
 std::string
-Peer::msgSummary(StellarMessage const& msg)
+Peer::msgSummary(AiBlocksMessage const& msg)
 {
     switch (msg.type())
     {
@@ -394,7 +394,7 @@ Peer::msgSummary(StellarMessage const& msg)
 }
 
 void
-Peer::sendMessage(StellarMessage const& msg, bool log)
+Peer::sendMessage(AiBlocksMessage const& msg, bool log)
 {
     ZoneScoped;
     if (log && Logging::logTrace("Overlay"))
@@ -562,7 +562,7 @@ Peer::recvMessage(AuthenticatedMessage const& msg)
 }
 
 void
-Peer::recvMessage(StellarMessage const& stellarMsg)
+Peer::recvMessage(AiBlocksMessage const& aiblocksMsg)
 {
     ZoneScoped;
     if (shouldAbort())
@@ -572,12 +572,12 @@ Peer::recvMessage(StellarMessage const& stellarMsg)
 
     std::string cat;
     Scheduler::ActionType type = Scheduler::ActionType::NORMAL_ACTION;
-    switch (stellarMsg.type())
+    switch (aiblocksMsg.type())
     {
     // group messages used during handshake, process those synchronously
     case MessageType::HELLO:
     case MessageType::AUTH:
-        Peer::recvRawMessage(stellarMsg);
+        Peer::recvRawMessage(aiblocksMsg);
         return;
 
     // control messages
@@ -615,10 +615,10 @@ Peer::recvMessage(StellarMessage const& stellarMsg)
 
     std::weak_ptr<Peer> weak(static_pointer_cast<Peer>(shared_from_this()));
     std::string err =
-        fmt::format("Error RecvMessage T:{} cat:{} {} @{}", stellarMsg.type(),
+        fmt::format("Error RecvMessage T:{} cat:{} {} @{}", aiblocksMsg.type(),
                     cat, toString(), mApp.getConfig().PEER_PORT);
 
-    mApp.postOnMainThread([ err, weak, sm = StellarMessage(stellarMsg) ]() {
+    mApp.postOnMainThread([ err, weak, sm = AiBlocksMessage(aiblocksMsg) ]() {
         auto self = weak.lock();
         if (self)
         {
@@ -644,7 +644,7 @@ Peer::recvMessage(StellarMessage const& stellarMsg)
 }
 
 void
-Peer::recvRawMessage(StellarMessage const& stellarMsg)
+Peer::recvRawMessage(AiBlocksMessage const& aiblocksMsg)
 {
     ZoneScoped;
     auto peerStr = toString();
@@ -655,132 +655,132 @@ Peer::recvRawMessage(StellarMessage const& stellarMsg)
         return;
     }
 
-    if (!isAuthenticated() && (stellarMsg.type() != HELLO) &&
-        (stellarMsg.type() != AUTH) && (stellarMsg.type() != ERROR_MSG))
+    if (!isAuthenticated() && (aiblocksMsg.type() != HELLO) &&
+        (aiblocksMsg.type() != AUTH) && (aiblocksMsg.type() != ERROR_MSG))
     {
         drop(fmt::format("received {} before completed handshake",
-                         stellarMsg.type()),
+                         aiblocksMsg.type()),
              Peer::DropDirection::WE_DROPPED_REMOTE,
              Peer::DropMode::IGNORE_WRITE_QUEUE);
         return;
     }
 
-    assert(isAuthenticated() || stellarMsg.type() == HELLO ||
-           stellarMsg.type() == AUTH || stellarMsg.type() == ERROR_MSG);
-    mApp.getOverlayManager().recordMessageMetric(stellarMsg,
+    assert(isAuthenticated() || aiblocksMsg.type() == HELLO ||
+           aiblocksMsg.type() == AUTH || aiblocksMsg.type() == ERROR_MSG);
+    mApp.getOverlayManager().recordMessageMetric(aiblocksMsg,
                                                  shared_from_this());
 
-    switch (stellarMsg.type())
+    switch (aiblocksMsg.type())
     {
     case ERROR_MSG:
     {
         auto t = getOverlayMetrics().mRecvErrorTimer.TimeScope();
-        recvError(stellarMsg);
+        recvError(aiblocksMsg);
     }
     break;
 
     case HELLO:
     {
         auto t = getOverlayMetrics().mRecvHelloTimer.TimeScope();
-        this->recvHello(stellarMsg.hello());
+        this->recvHello(aiblocksMsg.hello());
     }
     break;
 
     case AUTH:
     {
         auto t = getOverlayMetrics().mRecvAuthTimer.TimeScope();
-        this->recvAuth(stellarMsg);
+        this->recvAuth(aiblocksMsg);
     }
     break;
 
     case DONT_HAVE:
     {
         auto t = getOverlayMetrics().mRecvDontHaveTimer.TimeScope();
-        recvDontHave(stellarMsg);
+        recvDontHave(aiblocksMsg);
     }
     break;
 
     case GET_PEERS:
     {
         auto t = getOverlayMetrics().mRecvGetPeersTimer.TimeScope();
-        recvGetPeers(stellarMsg);
+        recvGetPeers(aiblocksMsg);
     }
     break;
 
     case PEERS:
     {
         auto t = getOverlayMetrics().mRecvPeersTimer.TimeScope();
-        recvPeers(stellarMsg);
+        recvPeers(aiblocksMsg);
     }
     break;
 
     case SURVEY_REQUEST:
     {
         auto t = getOverlayMetrics().mRecvSurveyRequestTimer.TimeScope();
-        recvSurveyRequestMessage(stellarMsg);
+        recvSurveyRequestMessage(aiblocksMsg);
     }
     break;
 
     case SURVEY_RESPONSE:
     {
         auto t = getOverlayMetrics().mRecvSurveyResponseTimer.TimeScope();
-        recvSurveyResponseMessage(stellarMsg);
+        recvSurveyResponseMessage(aiblocksMsg);
     }
     break;
 
     case GET_TX_SET:
     {
         auto t = getOverlayMetrics().mRecvGetTxSetTimer.TimeScope();
-        recvGetTxSet(stellarMsg);
+        recvGetTxSet(aiblocksMsg);
     }
     break;
 
     case TX_SET:
     {
         auto t = getOverlayMetrics().mRecvTxSetTimer.TimeScope();
-        recvTxSet(stellarMsg);
+        recvTxSet(aiblocksMsg);
     }
     break;
 
     case TRANSACTION:
     {
         auto t = getOverlayMetrics().mRecvTransactionTimer.TimeScope();
-        recvTransaction(stellarMsg);
+        recvTransaction(aiblocksMsg);
     }
     break;
 
     case GET_SCP_QUORUMSET:
     {
         auto t = getOverlayMetrics().mRecvGetSCPQuorumSetTimer.TimeScope();
-        recvGetSCPQuorumSet(stellarMsg);
+        recvGetSCPQuorumSet(aiblocksMsg);
     }
     break;
 
     case SCP_QUORUMSET:
     {
         auto t = getOverlayMetrics().mRecvSCPQuorumSetTimer.TimeScope();
-        recvSCPQuorumSet(stellarMsg);
+        recvSCPQuorumSet(aiblocksMsg);
     }
     break;
 
     case SCP_MESSAGE:
     {
         auto t = getOverlayMetrics().mRecvSCPMessageTimer.TimeScope();
-        recvSCPMessage(stellarMsg);
+        recvSCPMessage(aiblocksMsg);
     }
     break;
 
     case GET_SCP_STATE:
     {
         auto t = getOverlayMetrics().mRecvGetSCPStateTimer.TimeScope();
-        recvGetSCPState(stellarMsg);
+        recvGetSCPState(aiblocksMsg);
     }
     break;
     }
 }
 
 void
-Peer::recvDontHave(StellarMessage const& msg)
+Peer::recvDontHave(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     maybeProcessPingResponse(msg.dontHave().reqHash);
@@ -790,13 +790,13 @@ Peer::recvDontHave(StellarMessage const& msg)
 }
 
 void
-Peer::recvGetTxSet(StellarMessage const& msg)
+Peer::recvGetTxSet(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     auto self = shared_from_this();
     if (auto txSet = mApp.getHerder().getTxSet(msg.txSetHash()))
     {
-        StellarMessage newMsg;
+        AiBlocksMessage newMsg;
         newMsg.type(TX_SET);
         txSet->toXDR(newMsg.txSet());
 
@@ -809,7 +809,7 @@ Peer::recvGetTxSet(StellarMessage const& msg)
 }
 
 void
-Peer::recvTxSet(StellarMessage const& msg)
+Peer::recvTxSet(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     TxSetFrame frame(mApp.getNetworkID(), msg.txSet());
@@ -817,7 +817,7 @@ Peer::recvTxSet(StellarMessage const& msg)
 }
 
 void
-Peer::recvTransaction(StellarMessage const& msg)
+Peer::recvTransaction(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     auto transaction = TransactionFrameBase::makeTransactionFromWire(
@@ -890,7 +890,7 @@ Peer::getPing() const
 }
 
 void
-Peer::recvGetSCPQuorumSet(StellarMessage const& msg)
+Peer::recvGetSCPQuorumSet(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     maybeProcessPingResponse(msg.qSetHash());
@@ -911,7 +911,7 @@ Peer::recvGetSCPQuorumSet(StellarMessage const& msg)
     }
 }
 void
-Peer::recvSCPQuorumSet(StellarMessage const& msg)
+Peer::recvSCPQuorumSet(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     Hash hash = sha256(xdr::xdr_to_opaque(msg.qSet()));
@@ -919,7 +919,7 @@ Peer::recvSCPQuorumSet(StellarMessage const& msg)
 }
 
 void
-Peer::recvSCPMessage(StellarMessage const& msg)
+Peer::recvSCPMessage(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     SCPEnvelope const& envelope = msg.envelope();
@@ -966,7 +966,7 @@ Peer::recvSCPMessage(StellarMessage const& msg)
 }
 
 void
-Peer::recvGetSCPState(StellarMessage const& msg)
+Peer::recvGetSCPState(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     uint32 seq = msg.getSCPLedgerSeq();
@@ -974,7 +974,7 @@ Peer::recvGetSCPState(StellarMessage const& msg)
 }
 
 void
-Peer::recvError(StellarMessage const& msg)
+Peer::recvError(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     std::string codeStr = "UNKNOWN";
@@ -1180,7 +1180,7 @@ Peer::recvHello(Hello const& elo)
 }
 
 void
-Peer::recvAuth(StellarMessage const& msg)
+Peer::recvAuth(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     if (mState != GOT_HELLO)
@@ -1220,14 +1220,14 @@ Peer::recvAuth(StellarMessage const& msg)
 }
 
 void
-Peer::recvGetPeers(StellarMessage const& msg)
+Peer::recvGetPeers(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     sendPeers();
 }
 
 void
-Peer::recvPeers(StellarMessage const& msg)
+Peer::recvPeers(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     for (auto const& peer : msg.peers())
@@ -1274,7 +1274,7 @@ Peer::recvPeers(StellarMessage const& msg)
 }
 
 void
-Peer::recvSurveyRequestMessage(StellarMessage const& msg)
+Peer::recvSurveyRequestMessage(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     mApp.getOverlayManager().getSurveyManager().relayOrProcessRequest(
@@ -1282,7 +1282,7 @@ Peer::recvSurveyRequestMessage(StellarMessage const& msg)
 }
 
 void
-Peer::recvSurveyResponseMessage(StellarMessage const& msg)
+Peer::recvSurveyResponseMessage(AiBlocksMessage const& msg)
 {
     ZoneScoped;
     mApp.getOverlayManager().getSurveyManager().relayOrProcessResponse(

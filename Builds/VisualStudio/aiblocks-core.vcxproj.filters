@@ -339,7 +339,7 @@
     <ClCompile Include="..\..\src\invariant\LedgerEntryIsValid.cpp">
       <Filter>invariant</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\main\StellarCoreVersion.cpp">
+    <ClCompile Include="..\..\src\main\AiBlocksCoreVersion.cpp">
       <Filter>main\generated</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\invariant\LiabilitiesMatchOffers.cpp">
@@ -1265,22 +1265,22 @@
     <ClInclude Include="..\..\lib\util\basen.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-ledger.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-ledger.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-ledger-entries.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-ledger-entries.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-overlay.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-overlay.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-SCP.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-SCP.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-transaction.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-transaction.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
-    <ClInclude Include="src\generated\xdr\Stellar-types.h">
+    <ClInclude Include="src\generated\xdr\AiBlocks-types.h">
       <Filter>xdr\generated</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\catch.hpp">
@@ -1619,7 +1619,7 @@
     <ClInclude Include="..\..\src\ledger\TrustLineWrapper.h">
       <Filter>ledger</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\main\StellarCoreVersion.h">
+    <ClInclude Include="..\..\src\main\AiBlocksCoreVersion.h">
       <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\main\Application.h">
@@ -1793,7 +1793,7 @@
     <ClInclude Include="..\..\src\overlay\RandomPeerSource.h">
       <Filter>overlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\overlay\StellarXDR.h">
+    <ClInclude Include="..\..\src\overlay\AiBlocksXDR.h">
       <Filter>overlay</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\overlay\TCPPeer.h">
@@ -2005,13 +2005,13 @@
     <None Include="..\..\docs\readme.md">
       <Filter>docs</Filter>
     </None>
-    <None Include="..\..\docs\stellar-core_example.cfg">
+    <None Include="..\..\docs\aiblocks-core_example.cfg">
       <Filter>docs</Filter>
     </None>
-    <None Include="..\..\docs\stellar-core_standalone.cfg">
+    <None Include="..\..\docs\aiblocks-core_standalone.cfg">
       <Filter>docs</Filter>
     </None>
-    <None Include="..\..\docs\stellar-core_testnet.cfg">
+    <None Include="..\..\docs\aiblocks-core_testnet.cfg">
       <Filter>docs</Filter>
     </None>
     <None Include="..\..\docs\transaction.md">
@@ -2035,10 +2035,10 @@
     <None Include="..\..\CONTRIBUTING.md" />
     <None Include="..\..\README" />
     <None Include="..\..\travis-build.sh" />
-    <None Include="..\..\src\history\serialize-tests\stellar-history.livenet.15686975.json">
+    <None Include="..\..\src\history\serialize-tests\aiblocks-history.livenet.15686975.json">
       <Filter>history\tests\serialize-tests</Filter>
     </None>
-    <None Include="..\..\src\history\serialize-tests\stellar-history.testnet.6714239.json">
+    <None Include="..\..\src\history\serialize-tests\aiblocks-history.testnet.6714239.json">
       <Filter>history\tests\serialize-tests</Filter>
     </None>
     <None Include="..\..\performance-eval\performance-eval.md" />
@@ -2072,10 +2072,10 @@
     <None Include="..\..\docs\software\security-protocol-release-notes.md">
       <Filter>docs\software</Filter>
     </None>
-    <None Include="..\..\docs\stellar-core_testnet_legacy.cfg">
+    <None Include="..\..\docs\aiblocks-core_testnet_legacy.cfg">
       <Filter>docs</Filter>
     </None>
-    <None Include="..\..\docs\stellar-core_example_validators.cfg">
+    <None Include="..\..\docs\aiblocks-core_example_validators.cfg">
       <Filter>docs</Filter>
     </None>
     <None Include="..\..\.github\ISSUE_TEMPLATE\bug-report.md">
@@ -2098,25 +2098,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\src\xdr\Stellar-ledger.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-ledger.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\xdr\Stellar-transaction.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-transaction.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\xdr\Stellar-types.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-types.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\xdr\Stellar-overlay.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-overlay.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\xdr\Stellar-ledger-entries.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-ledger-entries.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\xdr\Stellar-SCP.x">
+    <CustomBuild Include="..\..\src\xdr\AiBlocks-SCP.x">
       <Filter>xdr</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\main\StellarCoreVersion.cpp.in">
+    <CustomBuild Include="..\..\src\main\AiBlocksCoreVersion.cpp.in">
       <Filter>main</Filter>
     </CustomBuild>
   </ItemGroup>

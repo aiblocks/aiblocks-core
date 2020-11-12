@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <functional>
 
-namespace stellar
+namespace aiblocks
 {
 using namespace std::placeholders;
 
@@ -114,12 +114,12 @@ NominationProtocol::isSane(SCPStatement const& st)
 
     res = res && (std::adjacent_find(
                       nom.votes.begin(), nom.votes.end(),
-                      [](stellar::Value const& l, stellar::Value const& r) {
+                      [](aiblocks::Value const& l, aiblocks::Value const& r) {
                           return !(l < r);
                       }) == nom.votes.end());
     res = res && (std::adjacent_find(
                       nom.accepted.begin(), nom.accepted.end(),
-                      [](stellar::Value const& l, stellar::Value const& r) {
+                      [](aiblocks::Value const& l, aiblocks::Value const& r) {
                           return !(l < r);
                       }) == nom.accepted.end());
 

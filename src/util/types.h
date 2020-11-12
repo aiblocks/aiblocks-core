@@ -1,17 +1,17 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "lib/util/uint128_t.h"
 #include "numeric.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "xdrpp/message.h"
 #include <type_traits>
 #include <vector>
 
-namespace stellar
+namespace aiblocks
 {
 typedef std::vector<unsigned char> Blob;
 
@@ -76,13 +76,13 @@ assetToString(const Asset& asset)
     auto r = std::string{};
     switch (asset.type())
     {
-    case stellar::ASSET_TYPE_NATIVE:
+    case aiblocks::ASSET_TYPE_NATIVE:
         r = std::string{"DLO"};
         break;
-    case stellar::ASSET_TYPE_CREDIT_ALPHANUM4:
+    case aiblocks::ASSET_TYPE_CREDIT_ALPHANUM4:
         assetCodeToStr(asset.alphaNum4().assetCode, r);
         break;
-    case stellar::ASSET_TYPE_CREDIT_ALPHANUM12:
+    case aiblocks::ASSET_TYPE_CREDIT_ALPHANUM12:
         assetCodeToStr(asset.alphaNum12().assetCode, r);
         break;
     }

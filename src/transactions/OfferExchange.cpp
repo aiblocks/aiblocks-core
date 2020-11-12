@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,7 +15,7 @@
 #include "util/Logging.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 // returns the amount of wheat that would be traded
 // while buying as much sheep as possible
@@ -985,7 +985,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
 
     int64_t newAmount = offer.amount;
     {
-        auto accountB = stellar::loadAccountWithoutRecord(ltx, accountBID);
+        auto accountB = aiblocks::loadAccountWithoutRecord(ltx, accountBID);
         if (!accountB)
         {
             throw std::runtime_error(
@@ -1010,7 +1010,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
     // Note: No changes have been stored before this point.
     if (newAmount == 0)
     { // entire offer is taken
-        auto accountB = stellar::loadAccount(ltx, accountBID);
+        auto accountB = aiblocks::loadAccount(ltx, accountBID);
         removeEntryWithPossibleSponsorship(
             ltx, ltx.loadHeader(), sellingWheatOffer.current(), accountB);
         sellingWheatOffer.erase();
@@ -1031,7 +1031,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
         auto header = ltxInner.loadHeader();
         if (sheep.type() == ASSET_TYPE_NATIVE)
         {
-            auto accountB = stellar::loadAccount(ltxInner, accountBID);
+            auto accountB = aiblocks::loadAccount(ltxInner, accountBID);
             if (!addBalance(header, accountB, numSheepSend))
             {
                 return CrossOfferResult::eOfferCantConvert;
@@ -1040,7 +1040,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
         else
         {
             auto sheepLineAccountB =
-                stellar::loadTrustLine(ltxInner, accountBID, sheep);
+                aiblocks::loadTrustLine(ltxInner, accountBID, sheep);
             if (!sheepLineAccountB.addBalance(header, numSheepSend))
             {
                 return CrossOfferResult::eOfferCantConvert;
@@ -1059,7 +1059,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
         auto header = ltxInner.loadHeader();
         if (wheat.type() == ASSET_TYPE_NATIVE)
         {
-            auto accountB = stellar::loadAccount(ltxInner, accountBID);
+            auto accountB = aiblocks::loadAccount(ltxInner, accountBID);
             if (!addBalance(header, accountB, -numWheatReceived))
             {
                 return CrossOfferResult::eOfferCantConvert;
@@ -1068,7 +1068,7 @@ crossOffer(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
         else
         {
             auto wheatLineAccountB =
-                stellar::loadTrustLine(ltxInner, accountBID, wheat);
+                aiblocks::loadTrustLine(ltxInner, accountBID, wheat);
             if (!wheatLineAccountB.addBalance(header, -numWheatReceived))
             {
                 return CrossOfferResult::eOfferCantConvert;
@@ -1100,7 +1100,7 @@ crossOfferV10(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
     AccountID accountBID = offer.sellerID;
     int64_t offerID = offer.offerID;
 
-    if (!stellar::loadAccountWithoutRecord(ltx, accountBID))
+    if (!aiblocks::loadAccountWithoutRecord(ltx, accountBID))
     {
         throw std::runtime_error(
             "invalid database state: offer must have matching account");
@@ -1115,7 +1115,7 @@ crossOfferV10(AbstractLedgerTxn& ltx, LedgerTxnEntry& sellingWheatOffer,
     LedgerTxnEntry accountB;
     if (wheat.type() == ASSET_TYPE_NATIVE || sheep.type() == ASSET_TYPE_NATIVE)
     {
-        accountB = stellar::loadAccount(ltx, accountBID);
+        accountB = aiblocks::loadAccount(ltx, accountBID);
     }
     auto sheepLineAccountB = loadTrustLineIfNotNative(ltx, accountBID, sheep);
     auto wheatLineAccountB = loadTrustLineIfNotNative(ltx, accountBID, wheat);

@@ -1,17 +1,17 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "QuorumSetUtils.h"
 
 #include "util/XDROperators.h"
-#include "xdr/Stellar-SCP.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-SCP.h"
+#include "xdr/AiBlocks-types.h"
 
 #include <algorithm>
 #include <set>
 
-namespace stellar
+namespace aiblocks
 {
 uint32 const MAXIMUM_QUORUM_NESTING_LEVEL = 4;
 

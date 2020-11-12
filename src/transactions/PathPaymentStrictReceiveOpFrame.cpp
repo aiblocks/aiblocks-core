@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,7 +11,7 @@
 #include "util/XDROperators.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 PathPaymentStrictReceiveOpFrame::PathPaymentStrictReceiveOpFrame(
@@ -41,13 +41,13 @@ PathPaymentStrictReceiveOpFrame::doApply(AbstractLedgerTxn& ltx)
     if (ltx.loadHeader().current().ledgerVersion < 8)
     {
         doesSourceAccountExist =
-            (bool)stellar::loadAccountWithoutRecord(ltx, getSourceID());
+            (bool)aiblocks::loadAccountWithoutRecord(ltx, getSourceID());
     }
 
     bool bypassIssuerCheck = shouldBypassIssuerCheck(mPathPayment.path);
     if (!bypassIssuerCheck)
     {
-        if (!stellar::loadAccountWithoutRecord(ltx, getDestID()))
+        if (!aiblocks::loadAccountWithoutRecord(ltx, getDestID()))
         {
             setResultNoDest();
             return false;

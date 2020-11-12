@@ -1,9 +1,9 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include <limits>
-#define STELLAR_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
+#define AIBLOCKS_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
 #include "ApplicationImpl.h"
 
 // ASIO is somewhat particular about when it gets included -- it wants to be the
@@ -32,7 +32,7 @@
 #include "main/CommandHandler.h"
 #include "main/ExternalQueue.h"
 #include "main/Maintainer.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "medida/counter.h"
 #include "medida/meter.h"
 #include "medida/metrics_registry.h"
@@ -62,7 +62,7 @@
 
 static const int SHUTDOWN_DELAY_SECONDS = 1;
 
-namespace stellar
+namespace aiblocks
 {
 
 ApplicationImpl::ApplicationImpl(VirtualClock& clock, Config const& cfg)
@@ -94,7 +94,7 @@ ApplicationImpl::ApplicationImpl(VirtualClock& clock, Config const& cfg)
 
     mNetworkID = sha256(mConfig.NETWORK_PASSPHRASE);
 
-    TracyAppInfo(STELLAR_CORE_VERSION.c_str(), STELLAR_CORE_VERSION.size());
+    TracyAppInfo(AIBLOCKS_CORE_VERSION.c_str(), AIBLOCKS_CORE_VERSION.size());
     TracyAppInfo(mConfig.NETWORK_PASSPHRASE.c_str(),
                  mConfig.NETWORK_PASSPHRASE.size());
     std::string nodeStr("Node: ");
@@ -275,7 +275,7 @@ ApplicationImpl::getJsonInfo()
 
     auto& info = root["info"];
 
-    info["build"] = STELLAR_CORE_VERSION;
+    info["build"] = AIBLOCKS_CORE_VERSION;
     info["protocol_version"] = getConfig().LEDGER_PROTOCOL_VERSION;
     info["state"] = getStateHuman();
     info["startedOn"] = VirtualClock::systemPointToISOString(mStartedOn);
@@ -622,8 +622,8 @@ ApplicationImpl::manualClose(optional<uint32_t> const& manualLedgerSeq,
     }
 
     throw std::invalid_argument(
-        "Set MANUAL_CLOSE=true in the stellar-core.cfg if you want to "
-        "close every ledger manually. Otherwise, run stellar-core "
+        "Set MANUAL_CLOSE=true in the aiblocks-core.cfg if you want to "
+        "close every ledger manually. Otherwise, run aiblocks-core "
         "with --wait-for-consensus flag to close ledger once and "
         "trigger consensus. Ensure NODE_IS_VALIDATOR is set to true.");
 }

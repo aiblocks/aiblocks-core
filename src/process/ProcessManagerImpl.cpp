@@ -1,8 +1,8 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
-#define STELLAR_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
+#define AIBLOCKS_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
 #include "process/ProcessManagerImpl.h"
 // ASIO is somewhat particular about when it gets included -- it wants to be the
 // first to include <windows.h> -- so we try to include it before everything
@@ -40,7 +40,7 @@
 extern char** environ;
 #endif
 
-namespace stellar
+namespace aiblocks
 {
 
 static const asio::error_code ABORT_ERROR_CODE(asio::error::operation_aborted,

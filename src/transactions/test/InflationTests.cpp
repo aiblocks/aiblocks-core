@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -23,8 +23,8 @@
 #include "util/XDROperators.h"
 #include <functional>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 static const unsigned maxWinners = 2000u;
 
@@ -53,7 +53,7 @@ createTestAccounts(Application& app, int nbAccounts,
             root.create(to, bal);
 
             LedgerTxn ltx(app.getLedgerTxnRoot());
-            auto account = stellar::loadAccount(ltx, to.getPublicKey());
+            auto account = aiblocks::loadAccount(ltx, to.getPublicKey());
             auto& ae = account.current().data.account();
             ae.inflationDest.activate() =
                 getTestAccount(getVote(i)).getPublicKey();
@@ -141,7 +141,7 @@ simulateInflation(int ledgerVersion, int nbAccounts, int64& totCoins,
             LedgerTxn ltx(app.getLedgerTxnRoot());
             auto header = ltx.loadHeader();
             auto winner =
-                stellar::loadAccount(ltx, getTestAccount(w).getPublicKey());
+                aiblocks::loadAccount(ltx, getTestAccount(w).getPublicKey());
             toDoleToThis =
                 std::min(getMaxAmountReceive(header, winner), toDoleToThis);
         }
@@ -199,7 +199,7 @@ doInflation(Application& app, int ledgerVersion, int nbAccounts,
         {
             LedgerTxn ltx(app.getLedgerTxnRoot());
             auto account =
-                stellar::loadAccount(ltx, getTestAccount(i).getPublicKey());
+                aiblocks::loadAccount(ltx, getTestAccount(i).getPublicKey());
             auto const& ae = account.current().data.account();
             balances[i] = ae.balance;
             // double check that inflationDest is setup properly
@@ -254,7 +254,7 @@ doInflation(Application& app, int ledgerVersion, int nbAccounts,
         {
             {
                 LedgerTxn ltx(app.getLedgerTxnRoot());
-                auto account = stellar::loadAccount(ltx, k.getPublicKey());
+                auto account = aiblocks::loadAccount(ltx, k.getPublicKey());
                 auto const& ae = account.current().data.account();
                 REQUIRE(expectedBalances[i] == ae.balance);
             }
@@ -360,7 +360,7 @@ TEST_CASE("inflation", "[tx][inflation]")
     SECTION("total coins")
     {
         REQUIRE(getFeePool() == 0);
-        REQUIRE(getTotalCoins() == 1000000000000000000);
+        REQUIRE(getTotalCoins() == 1000000000000000);
 
         auto voter1 = TestAccount{*app, getAccount("voter1"), 0};
         auto voter2 = TestAccount{*app, getAccount("voter2"), 0};
@@ -380,7 +380,7 @@ TEST_CASE("inflation", "[tx][inflation]")
                       {voter1tx, voter2tx, target1tx, target2tx});
 
         REQUIRE(getFeePool() == 1000000299);
-        REQUIRE(getTotalCoins() == 1000000000000000000);
+        REQUIRE(getTotalCoins() == 1000000000000000);
 
         auto setInflationDestination1 = voter1.tx(
             {setOptions(setInflationDestination(target1.getPublicKey()))});
@@ -391,7 +391,7 @@ TEST_CASE("inflation", "[tx][inflation]")
                       {setInflationDestination1, setInflationDestination2});
 
         REQUIRE(getFeePool() == 1000000499);
-        REQUIRE(getTotalCoins() == 1000000000000000000);
+        REQUIRE(getTotalCoins() == 1000000000000000);
 
         auto beforeInflationRoot = root.getBalance();
         auto beforeInflationVoter1 = voter1.getBalance();

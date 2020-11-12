@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -16,14 +16,14 @@
 #include "util/Decoder.h"
 #include "util/Math.h"
 #include "util/optional.h"
-#include "xdr/Stellar-ledger-entries.h"
-#include "xdr/Stellar-transaction.h"
+#include "xdr/AiBlocks-ledger-entries.h"
+#include "xdr/AiBlocks-transaction.h"
 #include "xdrpp/marshal.h"
 #include <fmt/format.h>
 #include <stdexcept>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 TEST_CASE("transaction envelope bridge", "[commandhandler]")
 {
@@ -457,7 +457,7 @@ TEST_CASE("manualclose", "[commandhandler]")
 
             auto dataOp = txtest::manageData(de.dataName, &de.dataValue);
             auto txFrame = root.tx({dataOp});
-            REQUIRE(txFrame->getEnvelope().type() == stellar::ENVELOPE_TYPE_TX);
+            REQUIRE(txFrame->getEnvelope().type() == aiblocks::ENVELOPE_TYPE_TX);
             txFrame->getEnvelope().v1().tx.timeBounds.activate();
             txFrame->getEnvelope().v1().tx.timeBounds->minTime = 0;
             TimePoint const maxTime =

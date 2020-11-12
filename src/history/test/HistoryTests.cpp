@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -32,7 +32,7 @@
 #include <fmt/format.h>
 #include <lib/catch.hpp>
 
-using namespace stellar;
+using namespace aiblocks;
 using namespace historytestutils;
 
 TEST_CASE("checkpoint containing ledger", "[history]")
@@ -888,8 +888,8 @@ TEST_CASE("Catchup non-initentry buckets to initentry-supporting works",
                 << txSet->size(lm.getLastClosedLedgerHeader().header)
                 << " txs (txhash:" << hexAbbrev(txSet->getContentsHash())
                 << ")";
-            StellarValue sv(txSet->getContentsHash(), closeTime, upgrades,
-                            STELLAR_VALUE_BASIC);
+            AiBlocksValue sv(txSet->getContentsHash(), closeTime, upgrades,
+                            AIBLOCKS_VALUE_BASIC);
             lm.closeLedger(LedgerCloseData(ledgerSeq, txSet, sv));
         }
 
@@ -1197,9 +1197,9 @@ TEST_CASE("Catchup manual", "[history][catchup][acceptance]")
     auto dbMode = Config::TESTDB_IN_MEMORY_SQLITE;
 
     // Test every 10th scenario
-    for (auto i = 0; i < stellar::gCatchupRangeCases.size(); i += 10)
+    for (auto i = 0; i < aiblocks::gCatchupRangeCases.size(); i += 10)
     {
-        auto test = stellar::gCatchupRangeCases[i];
+        auto test = aiblocks::gCatchupRangeCases[i];
         auto configuration = test.second;
         auto name =
             fmt::format("lcl = {}, to ledger = {}, count = {}", test.first,

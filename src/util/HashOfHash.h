@@ -1,10 +1,10 @@
 #pragma once
-#include <xdr/Stellar-types.h>
+#include <xdr/AiBlocks-types.h>
 
 namespace std
 {
-template <> struct hash<stellar::uint256>
+template <> struct hash<aiblocks::uint256>
 {
-    size_t operator()(stellar::uint256 const& x) const noexcept;
+    size_t operator()(aiblocks::uint256 const& x) const noexcept;
 };
 }

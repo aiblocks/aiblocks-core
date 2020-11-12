@@ -1,4 +1,4 @@
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,8 +19,8 @@
 #include <deque>
 #include <limits>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 namespace
 {
@@ -272,7 +272,7 @@ TEST_CASE("pathpayment", "[tx][pathpayment]")
     SECTION("path payment DLO with not enough funds")
     {
         auto market = TestMarket{*app};
-        // see https://github.com/stellar/stellar-core/pull/1239
+        // see https://github.com/aiblocks/aiblocks-core/pull/1239
         auto minimumAccount =
             root.create("minimum-account", minBalanceNoTx + 2 * txfee + 20);
         for_all_versions(*app, [&] {
@@ -4079,7 +4079,7 @@ TEST_CASE("pathpayment", "[tx][pathpayment]")
                                      int64_t offerId, int64_t difference) {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto offer =
-                    stellar::loadOffer(ltx, account.getPublicKey(), offerId);
+                    aiblocks::loadOffer(ltx, account.getPublicKey(), offerId);
                 auto const& oe = offer.current().data.offer();
                 REQUIRE(oe.amount == offerAmount + difference);
             };

@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,7 +19,7 @@
 #include <numeric>
 #include <sstream>
 
-namespace stellar
+namespace aiblocks
 {
 using namespace std::placeholders;
 
@@ -1984,7 +1984,7 @@ BallotProtocol::validateValues(SCPStatement const& st)
 
     SCPDriver::ValidationLevel res = std::accumulate(
         values.begin(), values.end(), SCPDriver::kFullyValidatedValue,
-        [&](SCPDriver::ValidationLevel lv, stellar::Value const& v) {
+        [&](SCPDriver::ValidationLevel lv, aiblocks::Value const& v) {
             if (lv > SCPDriver::kInvalidValue)
             {
                 auto tr = mSlot.getSCPDriver().validateValue(

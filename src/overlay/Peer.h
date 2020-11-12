@@ -1,13 +1,13 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "util/asio.h"
 #include "database/Database.h"
 #include "overlay/PeerBareAddress.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/NonCopyable.h"
 #include "util/Timer.h"
 #include "xdrpp/message.h"
@@ -18,7 +18,7 @@ class Timer;
 class Meter;
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 typedef std::shared_ptr<SCPQuorumSet> SCPQuorumSetPtr;
@@ -149,29 +149,29 @@ class Peer : public std::enable_shared_from_this<Peer>,
     OverlayMetrics& getOverlayMetrics();
 
     bool shouldAbort() const;
-    void recvRawMessage(StellarMessage const& msg);
-    void recvMessage(StellarMessage const& msg);
+    void recvRawMessage(AiBlocksMessage const& msg);
+    void recvMessage(AiBlocksMessage const& msg);
     void recvMessage(AuthenticatedMessage const& msg);
     void recvMessage(xdr::msg_ptr const& xdrBytes);
 
-    virtual void recvError(StellarMessage const& msg);
+    virtual void recvError(AiBlocksMessage const& msg);
     void updatePeerRecordAfterEcho();
     void updatePeerRecordAfterAuthentication();
-    void recvAuth(StellarMessage const& msg);
-    void recvDontHave(StellarMessage const& msg);
-    void recvGetPeers(StellarMessage const& msg);
+    void recvAuth(AiBlocksMessage const& msg);
+    void recvDontHave(AiBlocksMessage const& msg);
+    void recvGetPeers(AiBlocksMessage const& msg);
     void recvHello(Hello const& elo);
-    void recvPeers(StellarMessage const& msg);
-    void recvSurveyRequestMessage(StellarMessage const& msg);
-    void recvSurveyResponseMessage(StellarMessage const& msg);
+    void recvPeers(AiBlocksMessage const& msg);
+    void recvSurveyRequestMessage(AiBlocksMessage const& msg);
+    void recvSurveyResponseMessage(AiBlocksMessage const& msg);
 
-    void recvGetTxSet(StellarMessage const& msg);
-    void recvTxSet(StellarMessage const& msg);
-    void recvTransaction(StellarMessage const& msg);
-    void recvGetSCPQuorumSet(StellarMessage const& msg);
-    void recvSCPQuorumSet(StellarMessage const& msg);
-    void recvSCPMessage(StellarMessage const& msg);
-    void recvGetSCPState(StellarMessage const& msg);
+    void recvGetTxSet(AiBlocksMessage const& msg);
+    void recvTxSet(AiBlocksMessage const& msg);
+    void recvTransaction(AiBlocksMessage const& msg);
+    void recvGetSCPQuorumSet(AiBlocksMessage const& msg);
+    void recvSCPQuorumSet(AiBlocksMessage const& msg);
+    void recvSCPMessage(AiBlocksMessage const& msg);
+    void recvGetSCPState(AiBlocksMessage const& msg);
 
     void sendHello();
     void sendAuth();
@@ -211,7 +211,7 @@ class Peer : public std::enable_shared_from_this<Peer>,
         return mApp;
     }
 
-    std::string msgSummary(StellarMessage const& stellarMsg);
+    std::string msgSummary(AiBlocksMessage const& aiblocksMsg);
     void sendGetTxSet(uint256 const& setID);
     void sendGetQuorumSet(uint256 const& setID);
     void sendGetPeers();
@@ -219,7 +219,7 @@ class Peer : public std::enable_shared_from_this<Peer>,
     void sendErrorAndDrop(ErrorCode error, std::string const& message,
                           DropMode dropMode);
 
-    void sendMessage(StellarMessage const& msg, bool log = true);
+    void sendMessage(AiBlocksMessage const& msg, bool log = true);
 
     PeerRole
     getRole() const

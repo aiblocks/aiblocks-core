@@ -1,4 +1,4 @@
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -17,9 +17,9 @@
 #include "scp/Slot.h"
 #include "util/Logging.h"
 #include "util/Math.h"
-#include "xdr/Stellar-SCP.h"
-#include "xdr/Stellar-ledger-entries.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-SCP.h"
+#include "xdr/AiBlocks-ledger-entries.h"
+#include "xdr/AiBlocks-ledger.h"
 #include <Tracy.hpp>
 #include <algorithm>
 #include <fmt/format.h>
@@ -28,7 +28,7 @@
 #include <stdexcept>
 #include <xdrpp/marshal.h>
 
-namespace stellar
+namespace aiblocks
 {
 uint32_t const HerderSCPDriver::FIRST_PROTOCOL_WITH_TXSET_CLOSETIME_AFFINITY =
     14;
@@ -120,7 +120,7 @@ HerderSCPDriver::getState() const
 }
 
 void
-HerderSCPDriver::restoreSCPState(uint64_t index, StellarValue const& value)
+HerderSCPDriver::restoreSCPState(uint64_t index, AiBlocksValue const& value)
 {
     mTrackingSCP = std::make_unique<ConsensusData>(index, value);
 }
@@ -193,7 +193,7 @@ HerderSCPDriver::emitEnvelope(SCPEnvelope const& envelope)
 
 bool
 HerderSCPDriver::checkCloseTime(uint64_t slotIndex, uint64_t lastCloseTime,
-                                StellarValue const& b) const
+                                AiBlocksValue const& b) const
 {
     // Check closeTime (not too old)
     if (b.closeTime <= lastCloseTime)
@@ -217,15 +217,15 @@ HerderSCPDriver::checkCloseTime(uint64_t slotIndex, uint64_t lastCloseTime,
 }
 
 SCPDriver::ValidationLevel
-HerderSCPDriver::validateValueHelper(uint64_t slotIndex, StellarValue const& b,
+HerderSCPDriver::validateValueHelper(uint64_t slotIndex, AiBlocksValue const& b,
                                      bool nomination) const
 {
     uint64_t lastCloseTime;
     ZoneScoped;
-    if (b.ext.v() == STELLAR_VALUE_SIGNED)
+    if (b.ext.v() == AIBLOCKS_VALUE_SIGNED)
     {
         ZoneNamedN(sigZone, "signature check", true);
-        if (!mHerder.verifyStellarValueSignature(b))
+        if (!mHerder.verifyAiBlocksValueSignature(b))
         {
             return SCPDriver::kInvalidValue;
         }
@@ -331,15 +331,15 @@ HerderSCPDriver::validateValueHelper(uint64_t slotIndex, StellarValue const& b,
     }
 
     bool const expectSignedValue =
-        nomination || (compositeValueType() == STELLAR_VALUE_SIGNED);
-    if (!expectSignedValue && (b.ext.v() != STELLAR_VALUE_BASIC))
+        nomination || (compositeValueType() == AIBLOCKS_VALUE_SIGNED);
+    if (!expectSignedValue && (b.ext.v() != AIBLOCKS_VALUE_BASIC))
     {
         CLOG(TRACE, "Herder")
             << "HerderSCPDriver::validateValue"
             << " i: " << slotIndex << " invalid value type - expected BASIC";
         return SCPDriver::kInvalidValue;
     }
-    if (expectSignedValue && (b.ext.v() != STELLAR_VALUE_SIGNED))
+    if (expectSignedValue && (b.ext.v() != AIBLOCKS_VALUE_SIGNED))
     {
         CLOG(TRACE, "Herder")
             << "HerderSCPDriver::validateValue"
@@ -387,7 +387,7 @@ HerderSCPDriver::validateValue(uint64_t slotIndex, Value const& value,
                                bool nomination)
 {
     ZoneScoped;
-    StellarValue b;
+    AiBlocksValue b;
     try
     {
         ZoneNamedN(xdrZone, "XDR deserialize", true);
@@ -447,7 +447,7 @@ ValueWrapperPtr
 HerderSCPDriver::extractValidValue(uint64_t slotIndex, Value const& value)
 {
     ZoneScoped;
-    StellarValue b;
+    AiBlocksValue b;
     try
     {
         xdr::xdr_from_opaque(value, b);
@@ -477,7 +477,7 @@ HerderSCPDriver::extractValidValue(uint64_t slotIndex, Value const& value)
             }
         }
 
-        res = wrapStellarValue(b);
+        res = wrapAiBlocksValue(b);
     }
 
     return res;
@@ -494,7 +494,7 @@ HerderSCPDriver::toShortString(PublicKey const& pk) const
 std::string
 HerderSCPDriver::getValueString(Value const& v) const
 {
-    StellarValue b;
+    AiBlocksValue b;
     if (v.empty())
     {
         return "[:empty:]";
@@ -504,7 +504,7 @@ HerderSCPDriver::getValueString(Value const& v) const
     {
         xdr::xdr_from_opaque(v, b);
 
-        return stellarValueToString(mApp.getConfig(), b);
+        return aiblocksValueToString(mApp.getConfig(), b);
     }
     catch (...)
     {
@@ -633,7 +633,7 @@ HerderSCPDriver::combineCandidates(uint64_t slotIndex,
 
     Hash h;
 
-    StellarValue comp(h, 0, emptyUpgradeSteps, STELLAR_VALUE_BASIC);
+    AiBlocksValue comp(h, 0, emptyUpgradeSteps, AIBLOCKS_VALUE_BASIC);
 
     std::map<LedgerUpgradeType, LedgerUpgrade> upgrades;
 
@@ -643,14 +643,14 @@ HerderSCPDriver::combineCandidates(uint64_t slotIndex,
 
     Hash candidatesHash;
 
-    std::vector<StellarValue> candidateValues;
+    std::vector<AiBlocksValue> candidateValues;
 
     TimePoint maxCloseTime = 0;
 
     for (auto const& c : candidates)
     {
         candidateValues.emplace_back();
-        StellarValue& sv = candidateValues.back();
+        AiBlocksValue& sv = candidateValues.back();
 
         xdr::xdr_from_opaque(c->getValue(), sv);
         candidatesHash ^= sha256(c->getValue());
@@ -731,7 +731,7 @@ HerderSCPDriver::combineCandidates(uint64_t slotIndex,
     if (!curProtocolPreservesTxSetCloseTimeAffinity())
     {
         comp.closeTime = maxCloseTime;
-        comp.ext.v(STELLAR_VALUE_BASIC);
+        comp.ext.v(AIBLOCKS_VALUE_BASIC);
     }
     comp.upgrades.clear();
     for (auto const& upgrade : upgrades)
@@ -740,12 +740,12 @@ HerderSCPDriver::combineCandidates(uint64_t slotIndex,
         comp.upgrades.emplace_back(v.begin(), v.end());
     }
 
-    auto res = wrapStellarValue(comp);
+    auto res = wrapAiBlocksValue(comp);
     return res;
 }
 
 bool
-HerderSCPDriver::toStellarValue(Value const& v, StellarValue& sv)
+HerderSCPDriver::toAiBlocksValue(Value const& v, AiBlocksValue& sv)
 {
     try
     {
@@ -768,7 +768,7 @@ HerderSCPDriver::valueExternalized(uint64_t slotIndex, Value const& value)
         it = mSCPTimers.erase(it);
     }
 
-    StellarValue b;
+    AiBlocksValue b;
     try
     {
         xdr::xdr_from_opaque(value, b);
@@ -776,9 +776,9 @@ HerderSCPDriver::valueExternalized(uint64_t slotIndex, Value const& value)
     catch (...)
     {
         // This may not be possible as all messages are validated and should
-        // therefore contain a valid StellarValue.
+        // therefore contain a valid AiBlocksValue.
         CLOG(ERROR, "Herder") << "HerderSCPDriver::valueExternalized"
-                              << " Externalized StellarValue malformed";
+                              << " Externalized AiBlocksValue malformed";
         CLOG(ERROR, "Herder") << REPORT_INTERNAL_BUG;
         // no point in continuing as 'b' contains garbage at this point
         abort();
@@ -865,12 +865,12 @@ HerderSCPDriver::logQuorumInformation(uint64_t index)
 }
 
 void
-HerderSCPDriver::nominate(uint64_t slotIndex, StellarValue const& value,
+HerderSCPDriver::nominate(uint64_t slotIndex, AiBlocksValue const& value,
                           TxSetFramePtr proposedSet,
-                          StellarValue const& previousValue)
+                          AiBlocksValue const& previousValue)
 {
     ZoneScoped;
-    mCurrentValue = wrapStellarValue(value);
+    mCurrentValue = wrapAiBlocksValue(value);
     mLedgerSeqNominating = static_cast<uint32_t>(slotIndex);
 
     auto valueHash = sha256(xdr::xdr_to_opaque(mCurrentValue->getValue()));
@@ -1270,11 +1270,11 @@ HerderSCPDriver::purgeSlots(uint64_t maxSlotIndex)
     getSCP().purgeSlots(maxSlotIndex);
 }
 
-StellarValueType
+AiBlocksValueType
 HerderSCPDriver::compositeValueType() const
 {
-    return curProtocolPreservesTxSetCloseTimeAffinity() ? STELLAR_VALUE_SIGNED
-                                                        : STELLAR_VALUE_BASIC;
+    return curProtocolPreservesTxSetCloseTimeAffinity() ? AIBLOCKS_VALUE_SIGNED
+                                                        : AIBLOCKS_VALUE_BASIC;
 }
 
 void
@@ -1291,7 +1291,7 @@ class SCPHerderValueWrapper : public ValueWrapper
     TxSetFramePtr mTxSet;
 
   public:
-    explicit SCPHerderValueWrapper(StellarValue const& sv, Value const& value,
+    explicit SCPHerderValueWrapper(AiBlocksValue const& sv, Value const& value,
                                    HerderImpl& herder)
         : ValueWrapper(value), mHerder(herder)
     {
@@ -1308,8 +1308,8 @@ class SCPHerderValueWrapper : public ValueWrapper
 ValueWrapperPtr
 HerderSCPDriver::wrapValue(Value const& val)
 {
-    StellarValue sv;
-    auto b = mHerder.getHerderSCPDriver().toStellarValue(val, sv);
+    AiBlocksValue sv;
+    auto b = mHerder.getHerderSCPDriver().toAiBlocksValue(val, sv);
     if (!b)
     {
         throw std::runtime_error(fmt::format(
@@ -1320,7 +1320,7 @@ HerderSCPDriver::wrapValue(Value const& val)
 }
 
 ValueWrapperPtr
-HerderSCPDriver::wrapStellarValue(StellarValue const& sv)
+HerderSCPDriver::wrapAiBlocksValue(AiBlocksValue const& sv)
 {
     auto val = xdr::xdr_to_opaque(sv);
     auto res = std::make_shared<SCPHerderValueWrapper>(sv, val, mHerder);

@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,7 +19,7 @@
 
 #include "main/Config.h"
 
-using namespace stellar;
+using namespace aiblocks;
 using namespace std;
 
 TEST_CASE("genesisledger", "[ledger]")
@@ -41,7 +41,7 @@ TEST_CASE("genesisledger", "[ledger]")
     REQUIRE(binToHex(header.bucketListHash) ==
             "4e6a8404d33b17eee7031af0b3606b6af8e36fe5a3bff59e4e5e420bd0ad3bf4");
     REQUIRE(header.ledgerSeq == 1);
-    REQUIRE(header.totalCoins == 1000000000000000000);
+    REQUIRE(header.totalCoins == 1000000000000000);
     REQUIRE(header.feePool == 0);
     REQUIRE(header.inflationSeq == 0);
     REQUIRE(header.idPool == 0);
@@ -72,8 +72,8 @@ TEST_CASE("ledgerheader", "[ledger]")
         TxSetFramePtr txSet = make_shared<TxSetFrame>(lastHash);
 
         // close this ledger
-        StellarValue sv(txSet->getContentsHash(), 1, emptyUpgradeSteps,
-                        STELLAR_VALUE_BASIC);
+        AiBlocksValue sv(txSet->getContentsHash(), 1, emptyUpgradeSteps,
+                        AIBLOCKS_VALUE_BASIC);
         LedgerCloseData ledgerData(lcl.header.ledgerSeq + 1, txSet, sv);
         app->getLedgerManager().closeLedger(ledgerData);
 

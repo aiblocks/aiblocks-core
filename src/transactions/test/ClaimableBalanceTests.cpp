@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,8 +15,8 @@
 #include "util/Math.h"
 #include <fmt/format.h>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 static Claimant
 makeClaimant(AccountID const& account, ClaimPredicate const& pred)
@@ -881,7 +881,7 @@ TEST_CASE("claimableBalance", "[tx][claimablebalance]")
                     // The balance created in validateBalancesOnCreateAndClaim
                     // is the one that was claimed
                     LedgerTxn ltx(app->getLedgerTxnRoot());
-                    REQUIRE(stellar::loadClaimableBalance(ltx, balanceID));
+                    REQUIRE(aiblocks::loadClaimableBalance(ltx, balanceID));
                 }
             }
 
@@ -1021,9 +1021,9 @@ TEST_CASE("claimableBalance", "[tx][claimablebalance]")
 
             LedgerTxn ltx(app->getLedgerTxnRoot());
             auto entry1 =
-                stellar::loadClaimableBalance(ltx, acc1.getBalanceID(0));
+                aiblocks::loadClaimableBalance(ltx, acc1.getBalanceID(0));
             auto entry2 =
-                stellar::loadClaimableBalance(ltx, acc1.getBalanceID(1));
+                aiblocks::loadClaimableBalance(ltx, acc1.getBalanceID(1));
 
             REQUIRE((entry1 && entry2));
 

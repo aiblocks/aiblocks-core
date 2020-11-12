@@ -1,4 +1,4 @@
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -9,7 +9,7 @@
 #include <fmt/format.h>
 #include <numeric>
 
-namespace stellar
+namespace aiblocks
 {
 
 static int64_t
@@ -83,7 +83,7 @@ ConservationOfDelos::checkOnOperationApply(Operation const& operation,
     int64_t deltaBalances = std::accumulate(
         ltxDelta.entry.begin(), ltxDelta.entry.end(), static_cast<int64_t>(0),
         [](int64_t lhs, decltype(ltxDelta.entry)::value_type const& rhs) {
-            return lhs + stellar::calculateDeltaBalance(rhs.second.current,
+            return lhs + aiblocks::calculateDeltaBalance(rhs.second.current,
                                                         rhs.second.previous);
         });
 

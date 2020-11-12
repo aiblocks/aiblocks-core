@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -41,11 +41,11 @@
 #include <algorithm>
 #include <numeric>
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace std;
-using namespace stellar::txbridge;
+using namespace aiblocks::txbridge;
 
 TransactionFrame::TransactionFrame(Hash const& networkID,
                                    TransactionEnvelope const& envelope)
@@ -248,7 +248,7 @@ TransactionFrame::loadAccount(AbstractLedgerTxn& ltx,
         mCachedAccount->ledgerEntry().data.account().accountID == accountID)
     {
         // this is buggy caching that existed in old versions of the protocol
-        auto res = stellar::loadAccount(ltx, accountID);
+        auto res = aiblocks::loadAccount(ltx, accountID);
         if (res)
         {
             res.currentGeneralized() = *mCachedAccount;
@@ -264,7 +264,7 @@ TransactionFrame::loadAccount(AbstractLedgerTxn& ltx,
     }
     else
     {
-        return stellar::loadAccount(ltx, accountID);
+        return aiblocks::loadAccount(ltx, accountID);
     }
 }
 
@@ -564,7 +564,7 @@ TransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx, int64_t baseFee)
         // Note: TransactionUtil addBalance checks that reserve plus liabilities
         // are respected. In this case, we allow it to fall below that since it
         // will be caught later in commonValid.
-        stellar::addBalance(acc.balance, -fee);
+        aiblocks::addBalance(acc.balance, -fee);
         header.current().feePool += fee;
     }
     // in v10 we update sequence numbers during apply
@@ -611,7 +611,7 @@ TransactionFrame::removeAccountSigner(AbstractLedgerTxn& ltxOuter,
     ZoneScoped;
     LedgerTxn ltx(ltxOuter);
 
-    auto account = stellar::loadAccount(ltx, accountID);
+    auto account = aiblocks::loadAccount(ltx, accountID);
     if (!account)
     {
         return; // probably account was removed due to merge operation
@@ -910,10 +910,10 @@ TransactionFrame::apply(Application& app, AbstractLedgerTxn& ltx,
     return apply(app, ltx, meta, true);
 }
 
-StellarMessage
-TransactionFrame::toStellarMessage() const
+AiBlocksMessage
+TransactionFrame::toAiBlocksMessage() const
 {
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(TRANSACTION);
     msg.transaction() = mEnvelope;
     return msg;

@@ -40,7 +40,7 @@ extern "C" {
 
 using namespace std::placeholders;
 
-namespace stellar
+namespace aiblocks
 {
 
 template <typename T>
@@ -236,7 +236,7 @@ getSecureCreds(std::string const& prompt)
     SecureZeroMemory(pszPwd, sizeof(pszPwd));
     dwErr = CredUIPromptForCredentials(
         &cui,                              // CREDUI_INFO structure
-        TEXT("Stellar"),                   // Target for credentials
+        TEXT("AiBlocks"),                   // Target for credentials
                                            //   (usually a server)
         NULL,                              // Reserved
         0,                                 // Reason
@@ -333,10 +333,10 @@ signtxn(std::string const& filename, std::string netId, bool base64)
     try
     {
         if (netId.empty())
-            netId = getenv("STELLAR_NETWORK_ID");
+            netId = getenv("AIBLOCKS_NETWORK_ID");
         if (netId.empty())
             throw std::runtime_error("missing --netid argument or "
-                                     "STELLAR_NETWORK_ID environment variable");
+                                     "AIBLOCKS_NETWORK_ID environment variable");
 
         const bool txn_stdin =
             filename == Config::STDIN_SPECIAL_NAME || filename.empty();

@@ -8,7 +8,7 @@ When submitting changes that may impact the network's performance, we require to
 
 * Execution (real) time
 * CPU utilization at various interval, and/or percentile
-* Disk I/O at the operating system level (ie: unit is typically in blocks/s), both reads and writes of the stellar-core process
+* Disk I/O at the operating system level (ie: unit is typically in blocks/s), both reads and writes of the aiblocks-core process
 * SQL: rate of operations (read and writes), Disk I/O of the SQL process if available (*PostgreSQL*)
 * Memory utilization
 
@@ -75,7 +75,7 @@ Inject transactions, wait until they are incorporated into a ledger.
 This scenario looks at the overhead of flooding transactions and SCP messages (required for transactions to be included in a ledger).
 
 ### Built-in load generator
-stellar-core has a built-in load generator that allows to inject transactions on private networks.
+aiblocks-core has a built-in load generator that allows to inject transactions on private networks.
 See the `generateload` [command](docs/software/commands.md) for more detail.
 
 ## Micro-benchmarks
@@ -92,7 +92,7 @@ Calling the `metrics` [command](docs/software/commands.md) allows to gather the 
 
 ### Notable metrics
 
-See [docs/metrics](docs/metrics.md) for information on metrics exposed by stellar-core.
+See [docs/metrics](docs/metrics.md) for information on metrics exposed by aiblocks-core.
 
 ## System metrics
 Tools used to gather those metrics are O/S specific.
@@ -205,13 +205,13 @@ excluding startup/shutdown.
 Note: on some systems, the quality of symbols differs depending on the tool-chain. If you don't get good stack traces, try switching to gcc/g++.
 
 In order to improve the quality of stack traces:
-* Use your own version of dependencies (sqlite, etc) with the same compile options (done for you by stellar-core's configure script) 
+* Use your own version of dependencies (sqlite, etc) with the same compile options (done for you by aiblocks-core's configure script) 
 * Use alternate libraries such as google-tcmalloc
 ```
 # you may need to install a package such as libtcmalloc-minimal4 for this to work
 export LDFLAGS=-ltcmalloc_minimal
-# alternatively, you can start "stellar-core", with something like
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc_minimal.so ./stellar-core ...
+# alternatively, you can start "aiblocks-core", with something like
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc_minimal.so ./aiblocks-core ...
 ```
 * use clang/clang++ and a custom `libc++` compiled with the same compilation options that you use.
     * See [building a custom libc++](CONTRIBUTING.md#building-a-custom-libc)
@@ -239,9 +239,9 @@ You can just pull a local copy with
 ### Example perf sessions
 #### Sampling session
 
-This example grabs 60 seconds of data from a running stellar-core instance.
+This example grabs 60 seconds of data from a running aiblocks-core instance.
 
-    perf record -F 99 -p $(pgrep stellar-core) --call-graph dwarf,20000 -o perf-cpu.data -- sleep 60
+    perf record -F 99 -p $(pgrep aiblocks-core) --call-graph dwarf,20000 -o perf-cpu.data -- sleep 60
 
 To view the report: `perf report -n  -F +period -i perf-cpu.data`
 
@@ -254,13 +254,13 @@ This generates a report that looks like [this](sample-reports/folded-cpu.svg)
 
 #### "Off CPU" session
 
-Records for 60 seconds events related to when a running stellar-core process is waiting on something.
+Records for 60 seconds events related to when a running aiblocks-core process is waiting on something.
 
 As most threads "sleep" (waiting for some work), most of the interesting data in this report is in the smaller parts of the report (as the cummulative time of threads waiting for work is dominant).
 
 Note: "counts" in this report represent time in milliseconds.
 
-    perf record -e 'sched:sched_stat_sleep,sched:sched_switch,sched:sched_process_exit' -p $(pgrep stellar-core) --call-graph dwarf -o perf-offcpu-raw.data  -- sleep 60
+    perf record -e 'sched:sched_stat_sleep,sched:sched_switch,sched:sched_process_exit' -p $(pgrep aiblocks-core) --call-graph dwarf -o perf-offcpu-raw.data  -- sleep 60
     sudo perf inject -f -v -s -i perf-offcpu-raw.data -o perf-offcpu.data
     sudo chown user.user perf-offcpu.data
 
@@ -292,7 +292,7 @@ solution is, as root to run
 
 ### Tracy
 
-Stellar-core has built-in support for Tracy traces.
+AiBlocks-core has built-in support for Tracy traces.
 
 To install the visualizer, follow the [build and install instructions](https://github.com/wolfpld/tracy) from the main Tracy site.
 
@@ -305,7 +305,7 @@ install the required pre-requesites to build clients, run in a shell:
 
 Then build one of the servers.
 
-Solutions for servers compatible with the version of stellar-core can be found under:
+Solutions for servers compatible with the version of aiblocks-core can be found under:
 
     * lib/tracy/profiler/build/win32 (GUI)
     * lib/tracy/capture/build/win32

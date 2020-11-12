@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace stellar
+namespace aiblocks
 {
 
 InferredQuorum::InferredQuorum()

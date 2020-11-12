@@ -1,15 +1,15 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "TxSetFrame.h"
 #include "main/Config.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include <string>
 
-namespace stellar
+namespace aiblocks
 {
 
 /**
@@ -24,7 +24,7 @@ class LedgerCloseData
   public:
     LedgerCloseData(uint32_t ledgerSeq,
                     std::shared_ptr<AbstractTxSetFrameForApply> txSet,
-                    StellarValue const& v);
+                    AiBlocksValue const& v);
 
     uint32_t
     getLedgerSeq() const
@@ -36,7 +36,7 @@ class LedgerCloseData
     {
         return mTxSet;
     }
-    StellarValue const&
+    AiBlocksValue const&
     getValue() const
     {
         return mValue;
@@ -45,10 +45,10 @@ class LedgerCloseData
   private:
     uint32_t mLedgerSeq;
     std::shared_ptr<AbstractTxSetFrameForApply> mTxSet;
-    StellarValue mValue;
+    AiBlocksValue mValue;
 };
 
-std::string stellarValueToString(Config const& c, StellarValue const& sv);
+std::string aiblocksValueToString(Config const& c, AiBlocksValue const& sv);
 
 #define emptyUpgradeSteps (xdr::xvector<UpgradeType, 6>(0))
 }

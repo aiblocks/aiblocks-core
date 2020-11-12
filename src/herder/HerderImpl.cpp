@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -43,7 +43,7 @@
 
 using namespace std;
 
-namespace stellar
+namespace aiblocks
 {
 
 constexpr auto const TRANSACTION_QUEUE_SIZE = 4;
@@ -154,7 +154,7 @@ HerderImpl::shutdown()
 }
 
 void
-HerderImpl::processExternalized(uint64 slotIndex, StellarValue const& value)
+HerderImpl::processExternalized(uint64 slotIndex, AiBlocksValue const& value)
 {
     ZoneScoped;
     bool validated = getSCP().isSlotFullyValidated(slotIndex);
@@ -206,7 +206,7 @@ HerderImpl::processExternalized(uint64 slotIndex, StellarValue const& value)
 }
 
 void
-HerderImpl::valueExternalized(uint64 slotIndex, StellarValue const& value)
+HerderImpl::valueExternalized(uint64 slotIndex, AiBlocksValue const& value)
 {
     ZoneScoped;
     const int DUMP_SCP_TIMEOUT_SECONDS = 20;
@@ -310,7 +310,7 @@ HerderImpl::broadcast(SCPEnvelope const& e)
     ZoneScoped;
     if (!mApp.getConfig().MANUAL_CLOSE)
     {
-        StellarMessage m;
+        AiBlocksMessage m;
         m.type(SCP_MESSAGE);
         m.envelope() = e;
 
@@ -413,12 +413,12 @@ HerderImpl::checkCloseTime(SCPEnvelope const& envelope, bool enforceRecent)
     adjustLastCloseTime(mHerderSCPDriver.trackingSCP());
     adjustLastCloseTime(mHerderSCPDriver.lastTrackingSCP());
 
-    StellarValue sv;
+    AiBlocksValue sv;
     // performs the most conservative check:
     // returns true if one of the values is valid
     auto checkCTHelper = [&](std::vector<Value> const& values) {
         return std::any_of(values.begin(), values.end(), [&](Value const& e) {
-            auto r = scpD.toStellarValue(e, sv);
+            auto r = scpD.toAiBlocksValue(e, sv);
             // sv must be after cutoff
             r = r && sv.closeTime >= ctCutoff;
             if (r)
@@ -636,7 +636,7 @@ HerderImpl::sendSCPStateToPeer(uint32 ledgerSeq, Peer::pointer peer)
     getSCP().processSlotsAscendingFrom(ledgerSeq, [&](uint64 seq) {
         getSCP().processCurrentState(seq,
                                      [&](SCPEnvelope const& e) {
-                                         StellarMessage m;
+                                         AiBlocksMessage m;
                                          m.type(SCP_MESSAGE);
                                          m.envelope() = e;
                                          peer->sendMessage(m, log);
@@ -1005,7 +1005,7 @@ HerderImpl::triggerNextLedger(uint32_t ledgerSeqToTrigger,
     }
 
     // Protocols including the "closetime change" (CAP-0034) externalize
-    // the exact closeTime contained in the StellarValue with the best
+    // the exact closeTime contained in the AiBlocksValue with the best
     // transaction set, so we know the exact closeTime against which to
     // validate here -- 'nextCloseTime'.  (The _offset_, therefore, is
     // the difference between 'nextCloseTime' and the last ledger close time.)
@@ -1055,8 +1055,8 @@ HerderImpl::triggerNextLedger(uint32_t ledgerSeqToTrigger,
         return;
     }
 
-    StellarValue newProposedValue(txSetHash, nextCloseTime, emptyUpgradeSteps,
-                                  STELLAR_VALUE_BASIC);
+    AiBlocksValue newProposedValue(txSetHash, nextCloseTime, emptyUpgradeSteps,
+                                  AIBLOCKS_VALUE_BASIC);
 
     // see if we need to include some upgrades
     auto upgrades = mUpgrades.createUpgradesFor(lcl.header);
@@ -1087,7 +1087,7 @@ HerderImpl::triggerNextLedger(uint32_t ledgerSeqToTrigger,
         return;
     }
 
-    signStellarValue(mApp.getConfig().NODE_SEED, newProposedValue);
+    signAiBlocksValue(mApp.getConfig().NODE_SEED, newProposedValue);
     mHerderSCPDriver.nominate(slotIndex, newProposedValue, proposedSet,
                               lcl.header.scpValue);
 }
@@ -1705,8 +1705,8 @@ HerderImpl::updateTransactionQueue(
     for (auto const& replacedTx : replacedTxs)
     {
         mApp.getOverlayManager().updateFloodRecord(
-            replacedTx.mOld->toStellarMessage(),
-            replacedTx.mNew->toStellarMessage());
+            replacedTx.mOld->toAiBlocksMessage(),
+            replacedTx.mNew->toAiBlocksMessage());
     }
 
     // Generate a transaction set from a random hash and drop invalid
@@ -1733,7 +1733,7 @@ HerderImpl::updateTransactionQueue(
         }
         opsToFlood -= tx->getNumOperations();
 
-        auto msg = tx->toStellarMessage();
+        auto msg = tx->toAiBlocksMessage();
         mApp.getOverlayManager().broadcastMessage(msg);
     }
 }
@@ -1805,7 +1805,7 @@ HerderImpl::signEnvelope(SecretKey const& s, SCPEnvelope& envelope)
         mApp.getNetworkID(), ENVELOPE_TYPE_SCP, envelope.statement));
 }
 bool
-HerderImpl::verifyStellarValueSignature(StellarValue const& sv)
+HerderImpl::verifyAiBlocksValueSignature(AiBlocksValue const& sv)
 {
     ZoneScoped;
     auto b = PubKeyUtils::verifySig(
@@ -1816,10 +1816,10 @@ HerderImpl::verifyStellarValueSignature(StellarValue const& sv)
 }
 
 void
-HerderImpl::signStellarValue(SecretKey const& s, StellarValue& sv)
+HerderImpl::signAiBlocksValue(SecretKey const& s, AiBlocksValue& sv)
 {
     ZoneScoped;
-    sv.ext.v(STELLAR_VALUE_SIGNED);
+    sv.ext.v(AIBLOCKS_VALUE_SIGNED);
     sv.ext.lcValueSignature().nodeID = s.getPublicKey();
     sv.ext.lcValueSignature().signature =
         s.sign(xdr::xdr_to_opaque(mApp.getNetworkID(), ENVELOPE_TYPE_SCPVALUE,

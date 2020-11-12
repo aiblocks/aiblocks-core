@@ -1,18 +1,18 @@
 #pragma once
 
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "crypto/SecretKey.h"
 #include "herder/QuorumTracker.h"
 #include "main/Config.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/HashOfHash.h"
 #include <string>
 #include <unordered_map>
 
-namespace stellar
+namespace aiblocks
 {
 
 struct InferredQuorum

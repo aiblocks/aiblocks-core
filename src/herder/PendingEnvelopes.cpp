@@ -20,7 +20,7 @@ using namespace std;
 #define QSET_CACHE_SIZE 10000
 #define TXSET_CACHE_SIZE 10000
 
-namespace stellar
+namespace aiblocks
 {
 
 PendingEnvelopes::PendingEnvelopes(Application& app, HerderImpl& herder)
@@ -461,7 +461,7 @@ PendingEnvelopes::recordReceivedCost(SCPEnvelope const& env)
     size_t totalReceivedBytes = 0;
     totalReceivedBytes += xdr::xdr_argpack_size(env);
 
-    for (auto const& v : getStellarValues(env.statement))
+    for (auto const& v : getAiBlocksValues(env.statement))
     {
         size_t txSetSize = 0;
         if (mValueSizeCache.exists(v.txSetHash))
@@ -532,7 +532,7 @@ PendingEnvelopes::envelopeReady(SCPEnvelope const& envelope)
     // envelope.
     recordReceivedCost(envelope);
 
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(SCP_MESSAGE);
     msg.envelope() = envelope;
     mApp.getOverlayManager().broadcastMessage(msg);

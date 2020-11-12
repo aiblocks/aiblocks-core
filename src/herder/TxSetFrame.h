@@ -1,18 +1,18 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "ledger/LedgerHashUtils.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "transactions/TransactionFrame.h"
 #include "util/optional.h"
 #include <deque>
 #include <functional>
 #include <unordered_map>
 
-namespace stellar
+namespace aiblocks
 {
 class Application;
 
@@ -119,4 +119,4 @@ class TxSetFrame : public AbstractTxSetFrameForApply
     int64_t getTotalFees(LedgerHeader const& lh) const;
     void toXDR(TransactionSet& set) override;
 };
-} // namespace stellar
+} // namespace aiblocks

@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -344,7 +344,7 @@
 // go as fast as possible. For this, we use graph and set representations that
 // minimize allocation, hashing, indirection and so forth: vectors of dense
 // bitsets and bitwise operations. These are not the same representations used
-// elsewhere in stellar-core so there's a little work up front converting
+// elsewhere in aiblocks-core so there's a little work up front converting
 // representations.
 //
 // Remaining details of the implementation are noted as we go, but the above
@@ -353,8 +353,8 @@
 #include "QuorumIntersectionChecker.h"
 #include "main/Config.h"
 #include "util/BitSet.h"
-#include "xdr/Stellar-SCP.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-SCP.h"
+#include "xdr/AiBlocks-types.h"
 
 namespace
 {
@@ -462,10 +462,10 @@ class MinQuorumEnumerator
 // QuorumIntersectionChecker on a given QuorumMap. The QuorumIntersectionChecker
 // builds a QGraph of the nodes, uses TarjanSCCCalculator to calculate its SCCs,
 // and then runs a MinQuorumEnumerator to recursively scan the powerset.
-class QuorumIntersectionCheckerImpl : public stellar::QuorumIntersectionChecker
+class QuorumIntersectionCheckerImpl : public aiblocks::QuorumIntersectionChecker
 {
 
-    stellar::Config const& mCfg;
+    aiblocks::Config const& mCfg;
 
     struct Stats
     {
@@ -498,14 +498,14 @@ class QuorumIntersectionCheckerImpl : public stellar::QuorumIntersectionChecker
 
     // State to capture a counterexample found during search, for later
     // reporting.
-    mutable std::pair<std::vector<stellar::PublicKey>,
-                      std::vector<stellar::PublicKey>>
+    mutable std::pair<std::vector<aiblocks::PublicKey>,
+                      std::vector<aiblocks::PublicKey>>
         mPotentialSplit;
 
     // These are the key state of the checker: the mapping from node public keys
     // to graph node numbers, and the graph of QBitSets itself.
-    std::vector<stellar::PublicKey> mBitNumPubKeys;
-    std::unordered_map<stellar::PublicKey, size_t> mPubKeyBitNums;
+    std::vector<aiblocks::PublicKey> mBitNumPubKeys;
+    std::unordered_map<aiblocks::PublicKey, size_t> mPubKeyBitNums;
     QGraph mGraph;
 
     // This is a temporary structure that's reused very often within the
@@ -523,8 +523,8 @@ class QuorumIntersectionCheckerImpl : public stellar::QuorumIntersectionChecker
     // InterruptedException at the nearest convenient moment.
     std::atomic<bool>& mInterruptFlag;
 
-    QBitSet convertSCPQuorumSet(stellar::SCPQuorumSet const& sqs);
-    void buildGraph(stellar::QuorumTracker::QuorumMap const& qmap);
+    QBitSet convertSCPQuorumSet(aiblocks::SCPQuorumSet const& sqs);
+    void buildGraph(aiblocks::QuorumTracker::QuorumMap const& qmap);
     void buildSCCs();
 
     bool containsQuorumSlice(BitSet const& bs, QBitSet const& qbs) const;
@@ -539,13 +539,13 @@ class QuorumIntersectionCheckerImpl : public stellar::QuorumIntersectionChecker
     friend class MinQuorumEnumerator;
 
   public:
-    QuorumIntersectionCheckerImpl(stellar::QuorumTracker::QuorumMap const& qmap,
-                                  stellar::Config const& cfg,
+    QuorumIntersectionCheckerImpl(aiblocks::QuorumTracker::QuorumMap const& qmap,
+                                  aiblocks::Config const& cfg,
                                   std::atomic<bool>& interruptFlag,
                                   bool quiet = false);
     bool networkEnjoysQuorumIntersection() const override;
 
-    std::pair<std::vector<stellar::PublicKey>, std::vector<stellar::PublicKey>>
+    std::pair<std::vector<aiblocks::PublicKey>, std::vector<aiblocks::PublicKey>>
     getPotentialSplit() const override;
     size_t getMaxQuorumsFound() const override;
 };

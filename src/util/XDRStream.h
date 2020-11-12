@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,7 +19,7 @@
 #include <io.h>
 #endif
 
-namespace stellar
+namespace aiblocks
 {
 
 /**
@@ -131,14 +131,14 @@ class XDROutputFileStream
     const bool mFsyncOnClose;
 
     bool mUsingRandomAccessHandle{false};
-    asio::buffered_write_stream<stellar::fs::stream_t> mBufferedWriteStream;
-    stellar::fs::random_access_t mRandomAccessHandle;
+    asio::buffered_write_stream<aiblocks::fs::stream_t> mBufferedWriteStream;
+    aiblocks::fs::random_access_t mRandomAccessHandle;
     size_t mRandomAccessNextWriteOffset{0};
 
   public:
     XDROutputFileStream(asio::io_context& ctx, bool fsyncOnClose)
         : mFsyncOnClose(fsyncOnClose)
-        , mBufferedWriteStream(ctx, stellar::fs::bufsz())
+        , mBufferedWriteStream(ctx, aiblocks::fs::bufsz())
         , mRandomAccessHandle(ctx)
     {
     }

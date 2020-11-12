@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,7 +14,7 @@
 #include "crypto/SHA.h"
 #include "history/HistoryManager.h"
 #include "main/Application.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "process/ProcessManager.h"
 #include "util/Fs.h"
 #include "util/Logging.h"
@@ -33,7 +33,7 @@
 #include <set>
 #include <sstream>
 
-namespace stellar
+namespace aiblocks
 {
 
 unsigned const HistoryArchiveState::HISTORY_ARCHIVE_STATE_VERSION = 1;
@@ -162,7 +162,7 @@ HistoryArchiveState::fromString(std::string const& str)
 std::string
 HistoryArchiveState::baseName()
 {
-    return std::string("stellar-history.json");
+    return std::string("aiblocks-history.json");
 }
 
 std::string
@@ -359,7 +359,7 @@ HistoryArchiveState::prepareForPublish(Application& app)
     }
 }
 
-HistoryArchiveState::HistoryArchiveState() : server(STELLAR_CORE_VERSION)
+HistoryArchiveState::HistoryArchiveState() : server(AIBLOCKS_CORE_VERSION)
 {
     uint256 u;
     std::string s = binToHex(u);
@@ -375,7 +375,7 @@ HistoryArchiveState::HistoryArchiveState() : server(STELLAR_CORE_VERSION)
 HistoryArchiveState::HistoryArchiveState(uint32_t ledgerSeq,
                                          BucketList const& buckets,
                                          std::string const& passphrase)
-    : server(STELLAR_CORE_VERSION)
+    : server(AIBLOCKS_CORE_VERSION)
     , networkPassphrase(passphrase)
     , currentLedger(ledgerSeq)
 {

@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -25,7 +25,7 @@
 #include <list>
 #include <numeric>
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace std;
@@ -350,7 +350,7 @@ TxSetFrame::checkOrTrim(Application& app,
         while (iter != kv.second.end())
         {
             auto tx = *iter;
-            auto feeSource = stellar::loadAccount(ltx, tx->getFeeSourceID());
+            auto feeSource = aiblocks::loadAccount(ltx, tx->getFeeSourceID());
             auto totFee = accountFeeMap[tx->getFeeSourceID()];
             if (getAvailableBalance(header, feeSource) < totFee)
             {
@@ -560,4 +560,4 @@ TxSetFrame::toXDR(TransactionSet& txSet)
     }
     txSet.previousLedgerHash = mPreviousLedgerHash;
 }
-} // namespace stellar
+} // namespace aiblocks

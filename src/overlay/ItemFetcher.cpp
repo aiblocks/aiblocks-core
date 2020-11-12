@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,13 +10,13 @@
 #include "main/Application.h"
 #include "medida/metrics_registry.h"
 #include "overlay/OverlayManager.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "overlay/Tracker.h"
 #include "util/Logging.h"
 #include "xdrpp/marshal.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 ItemFetcher::ItemFetcher(Application& app, AskPeer askPeer)

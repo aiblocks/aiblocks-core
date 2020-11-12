@@ -1,5 +1,5 @@
 # What is a ledger?
-A ledger represents the state of the Stellar universe at a given point in time.
+A ledger represents the state of the AiBlocks universe at a given point in time.
 The first ledger in history is called the genesis ledger.
 
 Every SCP round, consensus decides on which transaction set to apply to the
@@ -23,7 +23,7 @@ behaves just like pointers in typical data structures but with added
 security guarantees.
 
 See the protocol file for the object definitions.
-[`src/xdr/Stellar-ledger.x`](../xdr/Stellar-ledger.x)
+[`src/xdr/AiBlocks-ledger.x`](../xdr/AiBlocks-ledger.x)
 
 One can think of the historical chain as a linked list of LedgerHeaders:
 
@@ -40,10 +40,10 @@ The way a ledger header refers to a previous ledger is actually done with
 alternate validation in mind.
 
 ### Fields decided by consensus (SCP)
-During consensus, nodes work together to decide on the value of StellarValue.
-StellarValue is then saved in the scpValue field of the ledger header.
+During consensus, nodes work together to decide on the value of AiBlocksValue.
+AiBlocksValue is then saved in the scpValue field of the ledger header.
 Any node on the network, given the previous ledger (their previous state) and
-'StellarValue' should be able to transition to the same new ledger.
+'AiBlocksValue' should be able to transition to the same new ledger.
 
 #### The hash of the transaction set
 This field is a hash which allows to lookup the related TransactionSet object.
@@ -83,10 +83,10 @@ the data contained in a ledger.
 
 ## Ledger state entries
 Ledger entries are specified in
-[`src/xdr/Stellar-ledger-entries.x`](../xdr/Stellar-ledger-entries.x)
+[`src/xdr/AiBlocks-ledger-entries.x`](../xdr/AiBlocks-ledger-entries.x)
 
 ### AccountEntry
-This entry represents an account. In Stellar, everything is centered around
+This entry represents an account. In AiBlocks, everything is centered around
 accounts: transactions are performed by an account.
 
 Accounts control the access rights to balances.
@@ -106,7 +106,7 @@ the issuer (authorized flag for example).
 
 ### OfferEntry
 Offers are entries in the Order Book that an account creates.
-Offers are a way to automate simple trading inside the Stellar network.
+Offers are a way to automate simple trading inside the AiBlocks network.
 
 # Source code organization
 

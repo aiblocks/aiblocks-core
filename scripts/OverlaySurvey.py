@@ -72,7 +72,7 @@ def send_requests(peer_list, params, request_url):
 
 def check_results(data, graph, merged_results):
     if "topology" not in data:
-        raise ValueError("stellar-core is missing survey nodes."
+        raise ValueError("aiblocks-core is missing survey nodes."
                          "Are the public keys surveyed valid?")
 
     topology = data["topology"]
@@ -112,7 +112,7 @@ def analyze(args):
 
 def augment(args):
     graph = nx.read_graphml(args.graphmlInput)
-    data = requests.get("https://api.stellarbeat.io/v1/nodes").json()
+    data = requests.get("https://api.aiblocksbeat.io/v1/nodes").json()
     for obj in data:
         if graph.has_node(obj["publicKey"]):
             desired_properties = ["quorumSet",
@@ -275,7 +275,7 @@ def main():
 
     parser_augment = subparsers.add_parser('augment',
                                            help="augment the master graph "
-                                                "with stellarbeat data")
+                                                "with aiblocksbeat data")
     parser_augment.add_argument("-gmli",
                                 "--graphmlInput",
                                 help="input master graph")

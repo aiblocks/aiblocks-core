@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #ifndef USE_EASYLOGGING
 
 #define INITIALIZE_EASYLOGGINGPP
-#define CLOG(LEVEL, ...) stellar::CoutLogger(el::Level::LEVEL)
+#define CLOG(LEVEL, ...) aiblocks::CoutLogger(el::Level::LEVEL)
 #define LOG(LEVEL) CLOG(LEVEL)
 
 namespace el
@@ -30,7 +30,7 @@ enum class Level
 };
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 class CoutLogger
@@ -93,7 +93,7 @@ class Logging
 // problems.
 #include "lib/util/easylogging++.h"
 
-namespace stellar
+namespace aiblocks
 {
 class Logging
 {

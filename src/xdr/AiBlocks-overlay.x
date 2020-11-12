@@ -1,10 +1,10 @@
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
-%#include "xdr/Stellar-ledger.h"
+%#include "xdr/AiBlocks-ledger.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 enum ErrorCode
@@ -176,7 +176,7 @@ case SURVEY_TOPOLOGY:
     TopologyResponseBody topologyResponseBody;
 };
 
-union StellarMessage switch (MessageType type)
+union AiBlocksMessage switch (MessageType type)
 {
 case ERROR_MSG:
     Error error;
@@ -222,7 +222,7 @@ case 0:
     struct
     {
         uint64 sequence;
-        StellarMessage message;
+        AiBlocksMessage message;
         HmacSha256Mac mac;
     } v0;
 };

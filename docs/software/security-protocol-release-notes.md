@@ -4,24 +4,24 @@ title: Security and Protocol release notes
 
 # Purpose of this document
 
-This document describes changes to the Stellar protocol as well as other changes made to address security issues.
+This document describes changes to the AiBlocks protocol as well as other changes made to address security issues.
 
 It is organized as a reverse chronological timeline of releases.
 
 ## Protocol updates
 
 * Changes to SCP.
-* Changes to the Stellar Protocol (anything that modifies how the distributed ledger functions, including historical data).
+* Changes to the AiBlocks Protocol (anything that modifies how the distributed ledger functions, including historical data).
 
 ## Security issues
 
 * DDoS.
 * Crashes (that could lead to remote code execution).
-* Other attacks that can be exploited (inside or outside of the Stellar protocol).
+* Other attacks that can be exploited (inside or outside of the AiBlocks protocol).
 
 ## Goals for this document
 
-* have a summary view of changes that affect the code base (stellar-core has to be able to replay all ledgers generated since genesis on the Stellar public network).
+* have a summary view of changes that affect the code base (aiblocks-core has to be able to replay all ledgers generated since genesis on the AiBlocks public network).
 * drive transparency on issues that affected the network in the past as well as their impact.
 
 ## Security issues disclosure policy
@@ -31,8 +31,8 @@ It is organized as a reverse chronological timeline of releases.
 The goal is work with the larger security community on a responsible disclosure model.
 
 It then follows that:
-* this document is not where security disclosures are made, instead follow the process outlined in [Stellar's bug bounty program](https://www.stellar.org/bug-bounty-program/) as a way to triage and respond to issues.
-* issues are reflected in this document 30 days after release of the version of Stellar core containing fixes for the issues.
+* this document is not where security disclosures are made, instead follow the process outlined in [AiBlocks's bug bounty program](https://www.aiblocks.io/bug-bounty-program/) as a way to triage and respond to issues.
+* issues are reflected in this document 30 days after release of the version of AiBlocks core containing fixes for the issues.
 
 # Format of each report
 

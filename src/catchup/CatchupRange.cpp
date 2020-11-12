@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,7 +11,7 @@
 
 namespace
 {
-using namespace stellar;
+using namespace aiblocks;
 void
 checkCatchupPreconditions(uint32_t lastClosedLedger,
                           CatchupConfiguration const& configuration)
@@ -90,7 +90,7 @@ calculateCatchupRange(uint32_t lcl, CatchupConfiguration const& cfg,
 }
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 CatchupRange::CatchupRange(uint32_t applyBucketsAtLedger)

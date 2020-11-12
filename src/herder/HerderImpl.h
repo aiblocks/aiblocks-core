@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -23,7 +23,7 @@ class Counter;
 class Timer;
 }
 
-namespace stellar
+namespace aiblocks
 {
 class Application;
 class LedgerManager;
@@ -56,8 +56,8 @@ class HerderImpl : public Herder
         return mHerderSCPDriver;
     }
 
-    void processExternalized(uint64 slotIndex, StellarValue const& value);
-    void valueExternalized(uint64 slotIndex, StellarValue const& value);
+    void processExternalized(uint64 slotIndex, AiBlocksValue const& value);
+    void valueExternalized(uint64 slotIndex, AiBlocksValue const& value);
     void emitEnvelope(SCPEnvelope const& envelope);
 
     TransactionQueue::AddResult
@@ -118,9 +118,9 @@ class HerderImpl : public Herder
     void signEnvelope(SecretKey const& s, SCPEnvelope& envelope);
 
     // helper function to verify SCPValues are signed
-    bool verifyStellarValueSignature(StellarValue const& sv);
+    bool verifyAiBlocksValueSignature(AiBlocksValue const& sv);
     // helper function to sign SCPValues
-    void signStellarValue(SecretKey const& s, StellarValue& sv);
+    void signAiBlocksValue(SecretKey const& s, AiBlocksValue& sv);
 
   private:
     // return true if values referenced by envelope have a valid close time:

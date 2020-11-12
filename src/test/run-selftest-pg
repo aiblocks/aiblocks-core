@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2018 Stellar Development Foundation and contributors. Licensed
+# Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 # under the Apache License, Version 2.0. See the COPYING file at the root
 # of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,12 +10,12 @@ if [[ -z "$TEMP_POSTGRES" ]]; then
     TEMP_POSTGRES=1
 fi
 
-STELLAR_CORE_DEFAULT_TEST_PARAMS="--ll fatal -w NoTests -a -r simple"
+AIBLOCKS_CORE_DEFAULT_TEST_PARAMS="--ll fatal -w NoTests -a -r simple"
 if [[ "$ALL_VERSIONS" != "" ]]; then
-    STELLAR_CORE_DEFAULT_TEST_PARAMS="$STELLAR_CORE_DEFAULT_TEST_PARAMS --all-versions"
+    AIBLOCKS_CORE_DEFAULT_TEST_PARAMS="$AIBLOCKS_CORE_DEFAULT_TEST_PARAMS --all-versions"
 fi
 
-: ${STELLAR_CORE_TEST_PARAMS=$STELLAR_CORE_DEFAULT_TEST_PARAMS}
+: ${AIBLOCKS_CORE_TEST_PARAMS=$AIBLOCKS_CORE_DEFAULT_TEST_PARAMS}
 
 PGDIRS=$(exec 2>/dev/null; cd /usr/lib/postgresql && ls -1d */bin | sort -rn | xargs realpath)
 
@@ -106,4 +106,4 @@ else
     echo "PostgreSQL enabled for tests using existing database cluster"
 fi
 
-./stellar-core test $STELLAR_CORE_TEST_PARAMS --base-instance $BASE_INSTANCE "$TESTS" 2> /dev/null
+./aiblocks-core test $AIBLOCKS_CORE_TEST_PARAMS --base-instance $BASE_INSTANCE "$TESTS" 2> /dev/null

@@ -1,4 +1,4 @@
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,10 +15,10 @@
  * It has two modes:
  *
  *   - In genfuzz mode it spits out a small file containing a handful of
- *     random FuzzTransactionInputs or StellarMessages. This is the mode you use
+ *     random FuzzTransactionInputs or AiBlocksMessages. This is the mode you use
  *     to generate seed data for the external fuzzer's corpus.
  *
- *   - In fuzz mode it reads back a file and appplies it to a stellar-core
+ *   - In fuzz mode it reads back a file and appplies it to a aiblocks-core
  *     instance, applying but not committing transactions one by one to simulate
  *     certain transaction/overlay scenarios. It exits when it's applied the
  *     input. This is the mode the external fuzzer will run its mutant inputs
@@ -26,7 +26,7 @@
  *
  */
 
-namespace stellar
+namespace aiblocks
 {
 
 namespace FuzzUtils

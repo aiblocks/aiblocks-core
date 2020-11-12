@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -9,7 +9,7 @@
 #include "util/XDROperators.h"
 #include "util/types.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 // Declarations of TrustLineWrapper implementations ---------------------------
@@ -243,61 +243,61 @@ bool
 TrustLineWrapper::NonIssuerImpl::addBalance(LedgerTxnHeader const& header,
                                             int64_t delta)
 {
-    return stellar::addBalance(header, mEntry, delta);
+    return aiblocks::addBalance(header, mEntry, delta);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::getBuyingLiabilities(
     LedgerTxnHeader const& header)
 {
-    return stellar::getBuyingLiabilities(header, mEntry);
+    return aiblocks::getBuyingLiabilities(header, mEntry);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::getSellingLiabilities(
     LedgerTxnHeader const& header)
 {
-    return stellar::getSellingLiabilities(header, mEntry);
+    return aiblocks::getSellingLiabilities(header, mEntry);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::addBuyingLiabilities(
     LedgerTxnHeader const& header, int64_t delta)
 {
-    return stellar::addBuyingLiabilities(header, mEntry, delta);
+    return aiblocks::addBuyingLiabilities(header, mEntry, delta);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::addSellingLiabilities(
     LedgerTxnHeader const& header, int64_t delta)
 {
-    return stellar::addSellingLiabilities(header, mEntry, delta);
+    return aiblocks::addSellingLiabilities(header, mEntry, delta);
 }
 
 bool
 TrustLineWrapper::NonIssuerImpl::isAuthorized() const
 {
-    return stellar::isAuthorized(mEntry);
+    return aiblocks::isAuthorized(mEntry);
 }
 
 bool
 TrustLineWrapper::NonIssuerImpl::isAuthorizedToMaintainLiabilities() const
 {
-    return stellar::isAuthorizedToMaintainLiabilities(mEntry);
+    return aiblocks::isAuthorizedToMaintainLiabilities(mEntry);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::getAvailableBalance(
     LedgerTxnHeader const& header) const
 {
-    return stellar::getAvailableBalance(header, mEntry);
+    return aiblocks::getAvailableBalance(header, mEntry);
 }
 
 int64_t
 TrustLineWrapper::NonIssuerImpl::getMaxAmountReceive(
     LedgerTxnHeader const& header) const
 {
-    return stellar::getMaxAmountReceive(header, mEntry);
+    return aiblocks::getMaxAmountReceive(header, mEntry);
 }
 
 // Implementation of TrustLineWrapper::IssuerImpl -----------------------------
@@ -527,27 +527,27 @@ ConstTrustLineWrapper::NonIssuerImpl::getBalance() const
 bool
 ConstTrustLineWrapper::NonIssuerImpl::isAuthorized() const
 {
-    return stellar::isAuthorized(mEntry);
+    return aiblocks::isAuthorized(mEntry);
 }
 
 bool
 ConstTrustLineWrapper::NonIssuerImpl::isAuthorizedToMaintainLiabilities() const
 {
-    return stellar::isAuthorizedToMaintainLiabilities(mEntry);
+    return aiblocks::isAuthorizedToMaintainLiabilities(mEntry);
 }
 
 int64_t
 ConstTrustLineWrapper::NonIssuerImpl::getAvailableBalance(
     LedgerTxnHeader const& header) const
 {
-    return stellar::getAvailableBalance(header, mEntry);
+    return aiblocks::getAvailableBalance(header, mEntry);
 }
 
 int64_t
 ConstTrustLineWrapper::NonIssuerImpl::getMaxAmountReceive(
     LedgerTxnHeader const& header) const
 {
-    return stellar::getMaxAmountReceive(header, mEntry);
+    return aiblocks::getMaxAmountReceive(header, mEntry);
 }
 
 // Implementation of ConstTrustLineWrapper::IssuerImpl ------------------------

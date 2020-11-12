@@ -39,7 +39,7 @@ compile_commands.json
 
 /INSTALL
 
-/src/main/StellarCoreVersion.cpp
+/src/main/AiBlocksCoreVersion.cpp
 /src/testdata
 /src/xdr/*.h
 /Makefile
@@ -47,7 +47,7 @@ compile_commands.json
 /aclocal.m4
 /autom4te.cache
 /build
-/src/stellar-core
+/src/aiblocks-core
 /buckets
 /compile
 /config.h
@@ -78,7 +78,7 @@ compile_commands.json
 /scripts/*.json
 
 # test output
-stellar-core-test-*
+aiblocks-core-test-*
 test-partitions.*
 /fuzz-findings/
 /my-history/

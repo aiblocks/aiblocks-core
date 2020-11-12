@@ -5,7 +5,7 @@
 #include "medida/metrics_registry.h"
 #include "medida/timer.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 OverlayMetrics::OverlayMetrics(Application& app)

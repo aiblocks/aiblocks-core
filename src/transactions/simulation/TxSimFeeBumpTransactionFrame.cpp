@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -7,7 +7,7 @@
 #include "transactions/TransactionUtils.h"
 #include "transactions/simulation/TxSimTransactionFrame.h"
 
-namespace stellar
+namespace aiblocks
 {
 namespace txsimulation
 {
@@ -25,7 +25,7 @@ TxSimFeeBumpTransactionFrame::TxSimFeeBumpTransactionFrame(
 }
 
 int64_t
-TxSimFeeBumpTransactionFrame::getFee(const stellar::LedgerHeader& header,
+TxSimFeeBumpTransactionFrame::getFee(const aiblocks::LedgerHeader& header,
                                      int64_t baseFee, bool applying) const
 {
     return mSimulationResult.feeCharged;
@@ -37,7 +37,7 @@ TxSimFeeBumpTransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx,
 {
     resetResults(ltx.loadHeader().current(), baseFee, true);
 
-    auto feeSource = stellar::loadAccount(ltx, getFeeSourceID());
+    auto feeSource = aiblocks::loadAccount(ltx, getFeeSourceID());
     if (!feeSource)
     {
         return;
@@ -52,7 +52,7 @@ TxSimFeeBumpTransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx,
         // Note: TransactionUtil addBalance checks that reserve plus liabilities
         // are respected. In this case, we allow it to fall below that since it
         // will be caught later in commonValid.
-        stellar::addBalance(acc.balance, -fee);
+        aiblocks::addBalance(acc.balance, -fee);
         header.current().feePool += fee;
     }
 }

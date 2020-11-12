@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,8 +14,8 @@
 #include "test/test.h"
 #include "transactions/TransactionUtils.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 static OperationResult
 getOperationResult(TransactionFrameBasePtr& tx, size_t i)
@@ -23,7 +23,7 @@ getOperationResult(TransactionFrameBasePtr& tx, size_t i)
     return tx->getResult().result.results()[i];
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 void
@@ -310,7 +310,7 @@ tooManySponsoring(Application& app, TestAccount& successfulOpAcc,
         for_versions_from(14, app, [&] {
             {
                 LedgerTxn ltx(app.getLedgerTxnRoot());
-                auto acc = stellar::loadAccount(ltx, root.getPublicKey());
+                auto acc = aiblocks::loadAccount(ltx, root.getPublicKey());
                 auto& le = acc.current();
                 auto& ae = le.data.account();
                 ae.ext.v(1);

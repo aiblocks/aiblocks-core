@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -30,7 +30,7 @@ void
 cereal_override(cereal::JSONOutputArchive& ar, const xdr::opaque_array<N>& s,
                 const char* field)
 {
-    xdr::archive(ar, stellar::binToHex(stellar::ByteSlice(s.data(), s.size())),
+    xdr::archive(ar, aiblocks::binToHex(aiblocks::ByteSlice(s.data(), s.size())),
                  field);
 }
 
@@ -40,13 +40,13 @@ cereal_override(cereal::JSONOutputArchive& ar, const xdr::opaque_array<N>& s,
 template <uint32_t N>
 void
 cereal_override(cereal::JSONOutputArchive& ar,
-                const xdr::xarray<stellar::Hash, N>& s, const char* field)
+                const xdr::xarray<aiblocks::Hash, N>& s, const char* field)
 {
     std::vector<std::string> tmp;
     for (auto const& h : s)
     {
         tmp.emplace_back(
-            stellar::binToHex(stellar::ByteSlice(h.data(), h.size())));
+            aiblocks::binToHex(aiblocks::ByteSlice(h.data(), h.size())));
     }
     xdr::archive(ar, tmp, field);
 }
@@ -56,18 +56,18 @@ void
 cereal_override(cereal::JSONOutputArchive& ar, const xdr::opaque_vec<N>& s,
                 const char* field)
 {
-    xdr::archive(ar, stellar::binToHex(stellar::ByteSlice(s.data(), s.size())),
+    xdr::archive(ar, aiblocks::binToHex(aiblocks::ByteSlice(s.data(), s.size())),
                  field);
 }
 
-void cereal_override(cereal::JSONOutputArchive& ar, const stellar::PublicKey& s,
+void cereal_override(cereal::JSONOutputArchive& ar, const aiblocks::PublicKey& s,
                      const char* field);
 
 void cereal_override(cereal::JSONOutputArchive& ar,
-                     const stellar::MuxedAccount& muxedAccount,
+                     const aiblocks::MuxedAccount& muxedAccount,
                      const char* field);
 
-void cereal_override(cereal::JSONOutputArchive& ar, const stellar::Asset& s,
+void cereal_override(cereal::JSONOutputArchive& ar, const aiblocks::Asset& s,
                      const char* field);
 
 template <typename T>

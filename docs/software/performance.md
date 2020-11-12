@@ -4,11 +4,11 @@ title: Performance
 
 ## Purpose of this document
 
-This document describes performance considerations for administrators and developers of `stellar-core`. It may also be interesting for a broader audience interested in understanding system performance and scaling limits and avenues for future work.
+This document describes performance considerations for administrators and developers of `aiblocks-core`. It may also be interesting for a broader audience interested in understanding system performance and scaling limits and avenues for future work.
 
 ## Overview
 
-The performance of a `stellar-core` node varies in two main dimensions:
+The performance of a `aiblocks-core` node varies in two main dimensions:
 
   1. _What it is configured to do_:
 
@@ -20,11 +20,11 @@ The performance of a `stellar-core` node varies in two main dimensions:
      * The physical hardware -- disks, CPUs, memory and networking equipment -- supporting the node can substantially affect performance.
      * Choices of software, server proximity and latency, networking topology and so forth can also substantially affect performance.
 
-This document will begin with a brief structural review of subsystems of `stellar-core` and their performance considerations. Then for each of the two dimensions above, discuss it from technical-design perspective, then contain empirical advice from operators of existing `stellar-core` nodes, and finally note some areas where the current developers anticipate doing future performance work.
+This document will begin with a brief structural review of subsystems of `aiblocks-core` and their performance considerations. Then for each of the two dimensions above, discuss it from technical-design perspective, then contain empirical advice from operators of existing `aiblocks-core` nodes, and finally note some areas where the current developers anticipate doing future performance work.
 
 ## Review of subsystems
 
-For purposes of understanding performance, the following subsystems of `stellar-core` are worth keeping in mind:
+For purposes of understanding performance, the following subsystems of `aiblocks-core` are worth keeping in mind:
 
   1. **Overlay**: This subsystem sends, receives, and repeats broadcast messages -- transactions in progress and consensus rounds -- from other nodes. It maintains many simultaneous connections and attempts to strike a balance between sending "too many" messages (at risk of overloading resources), and "too few" (at risk of delaying or even blocking consensus).
   2. **SCP**: This subsystem orchestrates the federated votes for nomination and commitment to a given transaction set that occurs at each ledger-close. It is responsible for generating (and receiving) much of the traffic seen in the overlay subsystem.
@@ -59,15 +59,15 @@ The performance of each such process will vary depending on how it is configured
 
 History archiving (or lack thereof) will typically _not_ alter the load caused on _any other_ subsystems. Since history archiving is essential to having adequate backups of the state of the network, it is strongly recommended that nodes archive history if they can afford to.
 
-### Horizon support dimension
+### Millennium support dimension
 
-Nodes configured to support a Horizon server are typically under significant load at the database level _caused by_ Horizon. This means that the resulting database performance available to `stellar-core`'s database, ledger and transaction subsystems is greatly reduced. Configuring dedicated non-consensus nodes to support Horizon, or running Horizon on a read replica of a `stellar-core` database, may be a reasonable option to alleviate this contention.
+Nodes configured to support a Millennium server are typically under significant load at the database level _caused by_ Millennium. This means that the resulting database performance available to `aiblocks-core`'s database, ledger and transaction subsystems is greatly reduced. Configuring dedicated non-consensus nodes to support Millennium, or running Millennium on a read replica of a `aiblocks-core` database, may be a reasonable option to alleviate this contention.
 
 ## Variation in node configuration
 
 ### Physical hardware configuration
 
-Several key steps in the `stellar-core` operating loop latency-sensitive: it will fail to keep up / fall out of sync if it cannot complete various actions in a timely enough fashion. It is therefore important to the wellbeing of the server that several physical dimensions be selected for low-latency:
+Several key steps in the `aiblocks-core` operating loop latency-sensitive: it will fail to keep up / fall out of sync if it cannot complete various actions in a timely enough fashion. It is therefore important to the wellbeing of the server that several physical dimensions be selected for low-latency:
 
   1. Disks storing the database and buckets -- on any node -- should be SSD or NVMe if possible. Neither of these are particularly large data stores -- they only store the _active_ state of the system, not its entire history -- but they are consulted in relatively latency-critical ways during ledger-close.
   2. For nodes participating in consensus, network links between a node and its _quorum-slice peers_ should be as low-latency as possible, including situating them within the same region or datacenter. This will of course be in some conflict with fault-tolerance, so don't overdo it; but lower latency will generally result in faster and more stable consensus voting.
@@ -77,13 +77,13 @@ Several key steps in the `stellar-core` operating loop latency-sensitive: it wil
 
 Some key configuration choices concerning storage access will greatly affect performance:
 
-  1. The `BUCKET_DIR_PATH` config option sets the location that `stellar-core` places its buckets while (re)writing the bucket list. This should be located on a relatively fast, low-latency local disk. Ideally SSD or NVMe or similar. The faster the better. It does not need to be _very_ large and should not grow in usage _very_ fast, though `stellar-core` will fail if it fills up, so keep an eye on its utilization and make sure there's plenty of room.
-  2. The `DATABASE` config value controls not only which _kind_ of database the node is performing transactions against, but also _where_ the database is located. Unlike with many database-backed programs, the _content_ of the database in a `stellar-core` installation is somewhat ephemeral: every node has a complete copy of it, as does every history archive, and the database can always be restored / rebuilt from history archives (it is in fact being continuously backed up every 5 minutes). So the main thing to optimize for here is latency, especially on nodes doing consensus. We recommend either:
+  1. The `BUCKET_DIR_PATH` config option sets the location that `aiblocks-core` places its buckets while (re)writing the bucket list. This should be located on a relatively fast, low-latency local disk. Ideally SSD or NVMe or similar. The faster the better. It does not need to be _very_ large and should not grow in usage _very_ fast, though `aiblocks-core` will fail if it fills up, so keep an eye on its utilization and make sure there's plenty of room.
+  2. The `DATABASE` config value controls not only which _kind_ of database the node is performing transactions against, but also _where_ the database is located. Unlike with many database-backed programs, the _content_ of the database in a `aiblocks-core` installation is somewhat ephemeral: every node has a complete copy of it, as does every history archive, and the database can always be restored / rebuilt from history archives (it is in fact being continuously backed up every 5 minutes). So the main thing to optimize for here is latency, especially on nodes doing consensus. We recommend either:
 
-     * SQLite on a fast, local disk. This is probably the fastest option and is perfectly adequate for many types of node. Note: if you are running Horizon, it will need to access stellar-core's database to ingest data. It is not compatible with SQLite. 
+     * SQLite on a fast, local disk. This is probably the fastest option and is perfectly adequate for many types of node. Note: if you are running Millennium, it will need to access aiblocks-core's database to ingest data. It is not compatible with SQLite. 
      * The newest version of PostgreSQL supported (a minimum version is listed in installation instructions but we usually test with newer versions as well).
 
-         * Ideally running on the same physical machine as `stellar-core`
+         * Ideally running on the same physical machine as `aiblocks-core`
          * Ideally on instance storage, though RDS on modern instances is often reasonably low-latency.
          * Ideally communicating through a unix-domain socket. That is, with a connection string like `postgresql://dbname=core host=/var/run/postgresql`. This may require adjustments to PostgreSQL's `pg_hba.conf` file and/or `postgresql.conf`.
 

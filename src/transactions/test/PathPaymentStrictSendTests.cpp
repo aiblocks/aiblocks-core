@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -13,8 +13,8 @@
 #include "transactions/TransactionUtils.h"
 #include "util/Timer.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 namespace
 {
@@ -2038,7 +2038,7 @@ TEST_CASE("pathpayment strict send", "[tx][pathpayment]")
                                      int64_t offerId, int64_t difference) {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto offer =
-                    stellar::loadOffer(ltx, account.getPublicKey(), offerId);
+                    aiblocks::loadOffer(ltx, account.getPublicKey(), offerId);
                 auto const& oe = offer.current().data.offer();
                 REQUIRE(oe.amount == offerAmount + difference);
             };

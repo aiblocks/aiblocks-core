@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -192,7 +192,7 @@ class SlidingWindowTester
         : mSlidingWindowSample(kDefaultSampleSize, kDefaultWindowTime)
         , mTimestamp(medida::Clock::now())
     {
-        mSlidingWindowSample.Seed(stellar::gRandomEngine());
+        mSlidingWindowSample.Seed(aiblocks::gRandomEngine());
     }
     template <typename Dist, typename... Args>
     void
@@ -205,7 +205,7 @@ class SlidingWindowTester
         while (mTimestamp < endTime)
         {
             uint64_t sample =
-                static_cast<uint64_t>(dist(stellar::gRandomEngine));
+                static_cast<uint64_t>(dist(aiblocks::gRandomEngine));
             mSlidingWindowSample.Update(sample, mTimestamp);
             mSamples.emplace_back(sample, mTimestamp);
             mTimestamp += timeStep;
@@ -324,7 +324,7 @@ sampleFrom(Args... args)
     std::vector<double> sample;
     for (size_t i = 0; i < 10000; ++i)
     {
-        sample.emplace_back(dist(stellar::gRandomEngine));
+        sample.emplace_back(dist(aiblocks::gRandomEngine));
     }
     return medida::stats::Snapshot(sample);
 }

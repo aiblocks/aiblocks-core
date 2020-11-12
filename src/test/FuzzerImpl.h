@@ -1,19 +1,19 @@
 #pragma once
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "test/Fuzzer.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-types.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 class XDRInputFileStream;
 class Simulation;
 class Application;
-struct StellarMessage;
+struct AiBlocksMessage;
 struct Operation;
 
 class TransactionFuzzer : public Fuzzer

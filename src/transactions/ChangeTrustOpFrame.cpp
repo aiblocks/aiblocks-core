@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,7 +14,7 @@
 #include "transactions/TransactionUtils.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 ChangeTrustOpFrame::ChangeTrustOpFrame(Operation const& op,
@@ -52,7 +52,7 @@ ChangeTrustOpFrame::doApply(AbstractLedgerTxn& ltx)
             innerResult().code(CHANGE_TRUST_INVALID_LIMIT);
             return false;
         }
-        else if (!stellar::loadAccountWithoutRecord(ltx, issuerID))
+        else if (!aiblocks::loadAccountWithoutRecord(ltx, issuerID))
         {
             innerResult().code(CHANGE_TRUST_NO_ISSUER);
             return false;
@@ -84,7 +84,7 @@ ChangeTrustOpFrame::doApply(AbstractLedgerTxn& ltx)
         }
         else
         {
-            auto issuer = stellar::loadAccountWithoutRecord(ltx, issuerID);
+            auto issuer = aiblocks::loadAccountWithoutRecord(ltx, issuerID);
             if (!issuer)
             {
                 innerResult().code(CHANGE_TRUST_NO_ISSUER);
@@ -112,7 +112,7 @@ ChangeTrustOpFrame::doApply(AbstractLedgerTxn& ltx)
         tl.balance = 0;
 
         {
-            auto issuer = stellar::loadAccountWithoutRecord(ltx, issuerID);
+            auto issuer = aiblocks::loadAccountWithoutRecord(ltx, issuerID);
             if (!issuer)
             {
                 innerResult().code(CHANGE_TRUST_NO_ISSUER);

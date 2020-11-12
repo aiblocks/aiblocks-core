@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -9,11 +9,11 @@
 
 namespace
 {
-std::unordered_set<stellar::Hash>
-getMergeKeyHashes(stellar::MergeKey const& key)
+std::unordered_set<aiblocks::Hash>
+getMergeKeyHashes(aiblocks::MergeKey const& key)
 {
     ZoneScoped;
-    std::unordered_set<stellar::Hash> hashes;
+    std::unordered_set<aiblocks::Hash> hashes;
     hashes.emplace(key.mInputCurrBucket);
     hashes.emplace(key.mInputSnapBucket);
     for (auto const& in : key.mInputShadowBuckets)
@@ -24,7 +24,7 @@ getMergeKeyHashes(stellar::MergeKey const& key)
 }
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 void

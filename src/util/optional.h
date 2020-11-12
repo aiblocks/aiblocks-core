@@ -1,13 +1,13 @@
 #pragma once
 
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "cereal/cereal.hpp"
 #include <memory>
 
-namespace stellar
+namespace aiblocks
 {
 template <typename T> using optional = std::shared_ptr<T>;
 
@@ -30,7 +30,7 @@ namespace cereal
 {
 template <class Archive, class T>
 void
-save(Archive& ar, stellar::optional<T> const& opt)
+save(Archive& ar, aiblocks::optional<T> const& opt)
 {
     ar(make_nvp("has", !!opt));
     if (opt)
@@ -41,7 +41,7 @@ save(Archive& ar, stellar::optional<T> const& opt)
 
 template <class Archive, class T>
 void
-load(Archive& ar, stellar::optional<T>& o)
+load(Archive& ar, aiblocks::optional<T>& o)
 {
     bool isSet;
     o.reset();
@@ -50,7 +50,7 @@ load(Archive& ar, stellar::optional<T>& o)
     {
         T v;
         ar(make_nvp("val", v));
-        o = stellar::make_optional<T>(v);
+        o = aiblocks::make_optional<T>(v);
     }
 }
 } // namespace cereal

@@ -8,7 +8,7 @@ Review the [admin guide](./admin.md) for more detailed information.
 
 Make sure you have copied the example config to your current working directory.
 From the TLD of the repo, run
-`cp docs/stellar-core_standalone.cfg ./bin/stellar-core.cfg`
+`cp docs/aiblocks-core_standalone.cfg ./bin/aiblocks-core.cfg`
 
 ## Adding multiple nodes
 
@@ -23,11 +23,11 @@ Optionally: Create databases for each to use--e.g., by using PostgreSQL's `creat
 
 Run:
 
-1. `$ stellar-core new-hist <historyarchive>`
+1. `$ aiblocks-core new-hist <historyarchive>`
   - to initialize every history archive you are putting to (be sure to not push to the same archive from different nodes).
-2. `$ stellar-core new-db`
+2. `$ aiblocks-core new-db`
   - to initialize the database on each node. 
-3. `$ stellar-core run`
+3. `$ aiblocks-core run`
   - on each node to start it.
 
 ## Bringing a test network back up
@@ -36,12 +36,12 @@ If you need to restart the network after bringing it down.
 Stop all nodes, and do the following on nodes that all have the same last ledger (NB: this set must form a quorum in order to reach consensus):
 
 ```sh
-$ stellar-core run
+$ aiblocks-core run
 ```
 
 This will start from the last saved state of each server. After these servers sync you can start the other nodes in the cluster and they will catch up to the network.
 To allow the new nodes to listen for consensus and trigger catchup, use `--wait-for-consensus` option:
 
 ```sh
-$ stellar-core run --wait-for-consensus
+$ aiblocks-core run --wait-for-consensus
 ```

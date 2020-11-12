@@ -1,13 +1,13 @@
 #pragma once
 
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "crypto/Curve25519.h"
 #include "overlay/Peer.h"
 
-namespace stellar
+namespace aiblocks
 {
 struct PeerSharedKeyId
 {
@@ -21,8 +21,8 @@ struct PeerSharedKeyId
 
 namespace std
 {
-template <> struct hash<stellar::PeerSharedKeyId>
+template <> struct hash<aiblocks::PeerSharedKeyId>
 {
-    size_t operator()(stellar::PeerSharedKeyId const& x) const noexcept;
+    size_t operator()(aiblocks::PeerSharedKeyId const& x) const noexcept;
 };
 }

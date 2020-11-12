@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,7 +14,7 @@
 #include "overlay/ItemFetcher.h"
 #include "overlay/OverlayManager.h"
 #include "overlay/OverlayMetrics.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "overlay/SurveyManager.h"
 #include "util/Logging.h"
 #include "util/Timer.h"
@@ -34,7 +34,7 @@ class Counter;
 /*
 Maintain the set of peers we are connected to
 */
-namespace stellar
+namespace aiblocks
 {
 
 class OverlayManagerImpl : public OverlayManager
@@ -101,10 +101,10 @@ class OverlayManagerImpl : public OverlayManager
     ~OverlayManagerImpl();
 
     void ledgerClosed(uint32_t lastClosedledgerSeq) override;
-    bool recvFloodedMsgID(StellarMessage const& msg, Peer::pointer peer,
+    bool recvFloodedMsgID(AiBlocksMessage const& msg, Peer::pointer peer,
                           Hash& msgID) override;
     void forgetFloodedMsg(Hash const& msgID) override;
-    void broadcastMessage(StellarMessage const& msg,
+    void broadcastMessage(AiBlocksMessage const& msg,
                           bool force = false) override;
     void connectTo(PeerBareAddress const& address) override;
 
@@ -149,11 +149,11 @@ class OverlayManagerImpl : public OverlayManager
 
     bool isShuttingDown() const override;
 
-    void recordMessageMetric(StellarMessage const& stellarMsg,
+    void recordMessageMetric(AiBlocksMessage const& aiblocksMsg,
                              Peer::pointer peer) override;
 
-    void updateFloodRecord(StellarMessage const& oldMsg,
-                           StellarMessage const& newMsg) override;
+    void updateFloodRecord(AiBlocksMessage const& oldMsg,
+                           AiBlocksMessage const& newMsg) override;
 
   private:
     struct ResolvedPeers

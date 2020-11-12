@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -16,7 +16,7 @@
 
 using namespace soci;
 
-namespace stellar
+namespace aiblocks
 {
 
 MergeOpFrame::MergeOpFrame(Operation const& op, OperationResult& res,
@@ -53,7 +53,7 @@ MergeOpFrame::doApply(AbstractLedgerTxn& ltx)
     auto header = ltx.loadHeader();
 
     auto otherAccount =
-        stellar::loadAccount(ltx, toAccountID(mOperation.body.destination()));
+        aiblocks::loadAccount(ltx, toAccountID(mOperation.body.destination()));
     if (!otherAccount)
     {
         innerResult().code(ACCOUNT_MERGE_NO_ACCOUNT);

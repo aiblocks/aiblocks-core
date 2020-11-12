@@ -1,11 +1,11 @@
 #pragma once
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "crypto/SecretKey.h"
 #include "lib/util/cpptoml.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/SecretValue.h"
 #include "util/Timer.h"
 #include "util/optional.h"
@@ -17,7 +17,7 @@
 
 #define DEFAULT_PEER_PORT 11625
 
-namespace stellar
+namespace aiblocks
 {
 struct HistoryArchiveConfiguration
 {
@@ -118,7 +118,7 @@ class Config : public std::enable_shared_from_this<Config>
 
     // application config
 
-    // The default way stellar-core starts is to load the state from disk and
+    // The default way aiblocks-core starts is to load the state from disk and
     // start a consensus round (if node is validating), then maybe trigger
     // catchup. If you need different behavior you need to use new-db or
     // --wait-for-consensus option which sets the following flag to false:
@@ -229,7 +229,7 @@ class Config : public std::enable_shared_from_this<Config>
     // This is the number of failures you want to be able to tolerate.
     // You will need at least 3f+1 nodes in your quorum set.
     // If you don't have enough in your quorum set to tolerate the level you
-    //  set here stellar-core won't run.
+    //  set here aiblocks-core won't run.
     int32_t FAILURE_SAFETY;
 
     // If set to true allows you to specify an unsafe quorum set.
@@ -346,7 +346,7 @@ class Config : public std::enable_shared_from_this<Config>
     // SCP config
     SecretKey NODE_SEED;
     bool NODE_IS_VALIDATOR;
-    stellar::SCPQuorumSet QUORUM_SET;
+    aiblocks::SCPQuorumSet QUORUM_SET;
     // this node's home domain
     std::string NODE_HOME_DOMAIN;
 

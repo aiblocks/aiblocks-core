@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -23,7 +23,7 @@
 #include <sanitizer/msan_interface.h>
 #endif
 
-namespace stellar
+namespace aiblocks
 {
 
 // Process-wide global Ed25519 signature-verification cache.
@@ -426,10 +426,10 @@ HashUtils::random()
 namespace std
 {
 size_t
-hash<stellar::PublicKey>::operator()(stellar::PublicKey const& k) const noexcept
+hash<aiblocks::PublicKey>::operator()(aiblocks::PublicKey const& k) const noexcept
 {
-    assert(k.type() == stellar::PUBLIC_KEY_TYPE_ED25519);
+    assert(k.type() == aiblocks::PUBLIC_KEY_TYPE_ED25519);
 
-    return std::hash<stellar::uint256>()(k.ed25519());
+    return std::hash<aiblocks::uint256>()(k.ed25519());
 }
 }

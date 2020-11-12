@@ -1,41 +1,41 @@
 #pragma once
 
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "crypto/ShortHash.h"
 #include "ledger/GeneralizedLedgerEntry.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 #include <functional>
 
 // implements a default hasher for "LedgerKey"
 namespace std
 {
-template <> class hash<stellar::Asset>
+template <> class hash<aiblocks::Asset>
 {
   public:
     size_t
-    operator()(stellar::Asset const& asset) const
+    operator()(aiblocks::Asset const& asset) const
     {
         size_t res = asset.type();
         switch (asset.type())
         {
-        case stellar::ASSET_TYPE_NATIVE:
+        case aiblocks::ASSET_TYPE_NATIVE:
             break;
-        case stellar::ASSET_TYPE_CREDIT_ALPHANUM4:
+        case aiblocks::ASSET_TYPE_CREDIT_ALPHANUM4:
         {
             auto& a4 = asset.alphaNum4();
-            res ^= stellar::shortHash::computeHash(
-                stellar::ByteSlice(a4.issuer.ed25519().data(), 8));
+            res ^= aiblocks::shortHash::computeHash(
+                aiblocks::ByteSlice(a4.issuer.ed25519().data(), 8));
             res ^= a4.assetCode[0];
             break;
         }
-        case stellar::ASSET_TYPE_CREDIT_ALPHANUM12:
+        case aiblocks::ASSET_TYPE_CREDIT_ALPHANUM12:
         {
             auto& a12 = asset.alphaNum12();
-            res ^= stellar::shortHash::computeHash(
-                stellar::ByteSlice(a12.issuer.ed25519().data(), 8));
+            res ^= aiblocks::shortHash::computeHash(
+                aiblocks::ByteSlice(a12.issuer.ed25519().data(), 8));
             res ^= a12.assetCode[0];
             break;
         }
@@ -44,39 +44,39 @@ template <> class hash<stellar::Asset>
     }
 };
 
-template <> class hash<stellar::LedgerKey>
+template <> class hash<aiblocks::LedgerKey>
 {
   public:
     size_t
-    operator()(stellar::LedgerKey const& lk) const
+    operator()(aiblocks::LedgerKey const& lk) const
     {
         size_t res;
         switch (lk.type())
         {
-        case stellar::ACCOUNT:
-            res = stellar::shortHash::computeHash(
-                stellar::ByteSlice(lk.account().accountID.ed25519().data(), 8));
+        case aiblocks::ACCOUNT:
+            res = aiblocks::shortHash::computeHash(
+                aiblocks::ByteSlice(lk.account().accountID.ed25519().data(), 8));
             break;
-        case stellar::TRUSTLINE:
+        case aiblocks::TRUSTLINE:
         {
             auto& tl = lk.trustLine();
-            res = stellar::shortHash::computeHash(
-                stellar::ByteSlice(tl.accountID.ed25519().data(), 8));
-            res ^= hash<stellar::Asset>()(tl.asset);
+            res = aiblocks::shortHash::computeHash(
+                aiblocks::ByteSlice(tl.accountID.ed25519().data(), 8));
+            res ^= hash<aiblocks::Asset>()(tl.asset);
             break;
         }
-        case stellar::DATA:
-            res = stellar::shortHash::computeHash(
-                stellar::ByteSlice(lk.data().accountID.ed25519().data(), 8));
-            res ^= stellar::shortHash::computeHash(stellar::ByteSlice(
+        case aiblocks::DATA:
+            res = aiblocks::shortHash::computeHash(
+                aiblocks::ByteSlice(lk.data().accountID.ed25519().data(), 8));
+            res ^= aiblocks::shortHash::computeHash(aiblocks::ByteSlice(
                 lk.data().dataName.data(), lk.data().dataName.size()));
             break;
-        case stellar::OFFER:
-            res = stellar::shortHash::computeHash(stellar::ByteSlice(
+        case aiblocks::OFFER:
+            res = aiblocks::shortHash::computeHash(aiblocks::ByteSlice(
                 &lk.offer().offerID, sizeof(lk.offer().offerID)));
             break;
-        case stellar::CLAIMABLE_BALANCE:
-            res = stellar::shortHash::computeHash(stellar::ByteSlice(
+        case aiblocks::CLAIMABLE_BALANCE:
+            res = aiblocks::shortHash::computeHash(aiblocks::ByteSlice(
                 lk.claimableBalance().balanceID.v0().data(), 8));
             break;
         default:
@@ -86,21 +86,21 @@ template <> class hash<stellar::LedgerKey>
     }
 };
 
-template <> class hash<stellar::GeneralizedLedgerKey>
+template <> class hash<aiblocks::GeneralizedLedgerKey>
 {
   public:
     size_t
-    operator()(stellar::GeneralizedLedgerKey const& glk) const
+    operator()(aiblocks::GeneralizedLedgerKey const& glk) const
     {
         switch (glk.type())
         {
-        case stellar::GeneralizedLedgerEntryType::LEDGER_ENTRY:
-            return hash<stellar::LedgerKey>()(glk.ledgerKey());
-        case stellar::GeneralizedLedgerEntryType::SPONSORSHIP:
-            return stellar::shortHash::computeHash(stellar::ByteSlice(
+        case aiblocks::GeneralizedLedgerEntryType::LEDGER_ENTRY:
+            return hash<aiblocks::LedgerKey>()(glk.ledgerKey());
+        case aiblocks::GeneralizedLedgerEntryType::SPONSORSHIP:
+            return aiblocks::shortHash::computeHash(aiblocks::ByteSlice(
                 glk.sponsorshipKey().sponsoredID.ed25519().data(), 8));
-        case stellar::GeneralizedLedgerEntryType::SPONSORSHIP_COUNTER:
-            return stellar::shortHash::computeHash(stellar::ByteSlice(
+        case aiblocks::GeneralizedLedgerEntryType::SPONSORSHIP_COUNTER:
+            return aiblocks::shortHash::computeHash(aiblocks::ByteSlice(
                 glk.sponsorshipCounterKey().sponsoringID.ed25519().data(), 8));
         default:
             abort();

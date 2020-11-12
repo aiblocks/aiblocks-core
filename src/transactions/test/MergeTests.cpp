@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -22,8 +22,8 @@
 #include "util/Logging.h"
 #include "util/Timer.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 // Merging when you are holding credit
 // Merging when others are holding your credit
@@ -487,7 +487,7 @@ TEST_CASE("merge", "[tx][merge]")
 
                 {
                     LedgerTxn ltx(app->getLedgerTxnRoot());
-                    REQUIRE(!stellar::loadAccount(ltx, a1.getPublicKey()));
+                    REQUIRE(!aiblocks::loadAccount(ltx, a1.getPublicKey()));
                 }
             });
         }
@@ -504,7 +504,7 @@ TEST_CASE("merge", "[tx][merge]")
 
                 {
                     LedgerTxn ltx(app->getLedgerTxnRoot());
-                    REQUIRE(!stellar::loadAccount(ltx, a1.getPublicKey()));
+                    REQUIRE(!aiblocks::loadAccount(ltx, a1.getPublicKey()));
                 }
 
                 int64 expectedB1Balance =
@@ -659,7 +659,7 @@ TEST_CASE("merge", "[tx][merge]")
             {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto header = ltx.loadHeader();
-                auto account = stellar::loadAccount(ltx, acc1.getPublicKey());
+                auto account = aiblocks::loadAccount(ltx, acc1.getPublicKey());
                 auto const& ae = account.current().data.account();
                 REQUIRE(ae.balance == 2 * minBal);
                 REQUIRE(ae.balance + getBuyingLiabilities(header, account) ==

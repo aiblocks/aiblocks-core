@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,9 +15,9 @@
 #include "xdrpp/marshal.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
-Floodgate::FloodRecord::FloodRecord(StellarMessage const& msg, uint32_t ledger,
+Floodgate::FloodRecord::FloodRecord(AiBlocksMessage const& msg, uint32_t ledger,
                                     Peer::pointer peer)
     : mLedgerSeq(ledger), mMessage(msg)
 {
@@ -56,7 +56,7 @@ Floodgate::clearBelow(uint32_t currentLedger)
 }
 
 bool
-Floodgate::addRecord(StellarMessage const& msg, Peer::pointer peer, Hash& index)
+Floodgate::addRecord(AiBlocksMessage const& msg, Peer::pointer peer, Hash& index)
 {
     ZoneScoped;
     index = sha256(xdr::xdr_to_opaque(msg));
@@ -83,7 +83,7 @@ Floodgate::addRecord(StellarMessage const& msg, Peer::pointer peer, Hash& index)
 
 // send message to anyone you haven't gotten it from
 void
-Floodgate::broadcast(StellarMessage const& msg, bool force)
+Floodgate::broadcast(AiBlocksMessage const& msg, bool force)
 {
     ZoneScoped;
     if (mShuttingDown)
@@ -161,8 +161,8 @@ Floodgate::forgetRecord(Hash const& h)
 }
 
 void
-Floodgate::updateRecord(StellarMessage const& oldMsg,
-                        StellarMessage const& newMsg)
+Floodgate::updateRecord(AiBlocksMessage const& oldMsg,
+                        AiBlocksMessage const& newMsg)
 {
     ZoneScoped;
     Hash oldHash = sha256(xdr::xdr_to_opaque(oldMsg));

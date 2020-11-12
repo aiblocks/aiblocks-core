@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,11 +11,11 @@
 #include "test/TestUtils.h"
 #include "test/TxTests.h"
 #include "test/test.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 #include "xdrpp/marshal.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 TEST_CASE("PendingEnvelopes recvSCPEnvelope", "[herder]")
 {
@@ -38,12 +38,12 @@ TEST_CASE("PendingEnvelopes recvSCPEnvelope", "[herder]")
     using TxPair = std::pair<Value, TxSetFramePtr>;
     auto makeTxPair = [&](TxSetFramePtr txSet, uint64_t closeTime) {
         txSet->sortForHash();
-        auto sv = StellarValue{txSet->getContentsHash(), closeTime,
-                               emptyUpgradeSteps, STELLAR_VALUE_BASIC};
+        auto sv = AiBlocksValue{txSet->getContentsHash(), closeTime,
+                               emptyUpgradeSteps, AIBLOCKS_VALUE_BASIC};
         if (herder.getHerderSCPDriver().compositeValueType() ==
-            STELLAR_VALUE_SIGNED)
+            AIBLOCKS_VALUE_SIGNED)
         {
-            herder.signStellarValue(s, sv);
+            herder.signAiBlocksValue(s, sv);
         }
         auto v = xdr::xdr_to_opaque(sv);
 

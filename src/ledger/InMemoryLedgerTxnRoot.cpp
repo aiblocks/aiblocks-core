@@ -3,11 +3,11 @@
 #include "ledger/LedgerTxn.h"
 #include "util/XDROperators.h"
 #include "util/types.h"
-#include "xdr/Stellar-ledger-entries.h"
+#include "xdr/AiBlocks-ledger-entries.h"
 #include "xdrpp/marshal.h"
 #include <algorithm>
 
-namespace stellar
+namespace aiblocks
 {
 
 InMemoryLedgerTxnRoot::InMemoryLedgerTxnRoot()

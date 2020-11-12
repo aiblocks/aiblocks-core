@@ -1,17 +1,17 @@
 #pragma once
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "crypto/Curve25519.h"
 #include "overlay/Peer.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "overlay/SurveyMessageLimiter.h"
 #include "util/Timer.h"
 #include <lib/json/json.h>
 
-namespace stellar
+namespace aiblocks
 {
 class Application;
 
@@ -31,12 +31,12 @@ class SurveyManager : public std::enable_shared_from_this<SurveyManager>,
                                        std::chrono::seconds surveyDuration,
                                        NodeID const& nodeToSurvey);
 
-    void relayOrProcessResponse(StellarMessage const& msg, Peer::pointer peer);
-    void relayOrProcessRequest(StellarMessage const& msg, Peer::pointer peer);
+    void relayOrProcessResponse(AiBlocksMessage const& msg, Peer::pointer peer);
+    void relayOrProcessRequest(AiBlocksMessage const& msg, Peer::pointer peer);
     void clearOldLedgers(uint32_t lastClosedledgerSeq);
     Json::Value const& getJsonResults();
 
-    static std::string getMsgSummary(StellarMessage const& msg);
+    static std::string getMsgSummary(AiBlocksMessage const& msg);
 
   private:
     // topology specific methods
@@ -45,7 +45,7 @@ class SurveyManager : public std::enable_shared_from_this<SurveyManager>,
                                  SurveyResponseBody const& body);
     void processTopologyRequest(SurveyRequestMessage const& request) const;
 
-    void broadcast(StellarMessage const& msg) const;
+    void broadcast(AiBlocksMessage const& msg) const;
     void populatePeerStats(std::vector<Peer::pointer> const& peers,
                            PeerStatList& results,
                            VirtualClock::time_point now) const;

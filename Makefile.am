@@ -4,9 +4,9 @@ SUBDIRS = lib src
 AM_EXTRA_RECURSIVE_TARGETS = check-valgrind
 ACLOCAL_AMFLAGS = -I m4
 
-dist_doc_DATA = docs/stellar-core_example.cfg			\
-	docs/stellar-core_standalone.cfg			\
-	docs/stellar-core_testnet.cfg docs/software/admin.md	\
+dist_doc_DATA = docs/aiblocks-core_example.cfg			\
+	docs/aiblocks-core_standalone.cfg			\
+	docs/aiblocks-core_testnet.cfg docs/software/admin.md	\
 	docs/software/commands.md
 
 include $(top_srcdir)/common.mk
@@ -49,13 +49,13 @@ tracy-capture: $(TRACY_CAPTURE_BUILD)/capture-release
 	cp -v $< $@
 endif # USE_TRACY_CAPTURE
 
-EXTRA_DIST = stellar-core.supp test/testnet/multitail.conf	\
+EXTRA_DIST = aiblocks-core.supp test/testnet/multitail.conf	\
 	test/testnet/run-test.sh README.md make-mks
 
 @VALGRIND_CHECK_RULES@
 VALGRIND_FLAGS = --num-callers=30 --trace-children=yes \
           --trace-children-skip=hostname,aws,gcutil,gcloud,azure,node,python
-VALGRIND_SUPPRESSIONS_FILES = stellar-core.supp
+VALGRIND_SUPPRESSIONS_FILES = aiblocks-core.supp
 
 maintainer-clean-local:
 	cd $(srcdir) && rm -rf `sed -ne 's!^/!!p' .gitignore` *~ .gitignore~

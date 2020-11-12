@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <random>
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace soci;
@@ -887,7 +887,7 @@ OverlayManagerImpl::shufflePeerList(std::vector<Peer::pointer>& peerList)
 }
 
 bool
-OverlayManagerImpl::recvFloodedMsgID(StellarMessage const& msg,
+OverlayManagerImpl::recvFloodedMsgID(AiBlocksMessage const& msg,
                                      Peer::pointer peer, Hash& msgID)
 {
     ZoneScoped;
@@ -902,7 +902,7 @@ OverlayManagerImpl::forgetFloodedMsg(Hash const& msgID)
 }
 
 void
-OverlayManagerImpl::broadcastMessage(StellarMessage const& msg, bool force)
+OverlayManagerImpl::broadcastMessage(AiBlocksMessage const& msg, bool force)
 {
     ZoneScoped;
     mOverlayMetrics.mMessagesBroadcast.Mark();
@@ -976,7 +976,7 @@ OverlayManagerImpl::isShuttingDown() const
 }
 
 void
-OverlayManagerImpl::recordMessageMetric(StellarMessage const& stellarMsg,
+OverlayManagerImpl::recordMessageMetric(AiBlocksMessage const& aiblocksMsg,
                                         Peer::pointer peer)
 {
     ZoneScoped;
@@ -985,8 +985,8 @@ OverlayManagerImpl::recordMessageMetric(StellarMessage const& stellarMsg,
         {
             CLOG(TRACE, "Overlay")
                 << "recv: " << (unique ? "unique" : "duplicate") << " "
-                << peer->msgSummary(stellarMsg) << " (" << msgType << ")"
-                << " of size: " << xdr::xdr_argpack_size(stellarMsg)
+                << peer->msgSummary(aiblocksMsg) << " (" << msgType << ")"
+                << " of size: " << xdr::xdr_argpack_size(aiblocksMsg)
                 << " from: "
                 << mApp.getConfig().toShortString(peer->getPeerID()) << " @"
                 << mApp.getConfig().PEER_PORT;
@@ -994,21 +994,21 @@ OverlayManagerImpl::recordMessageMetric(StellarMessage const& stellarMsg,
     };
 
     bool flood = false;
-    if (stellarMsg.type() == TRANSACTION || stellarMsg.type() == SCP_MESSAGE ||
-        stellarMsg.type() == SURVEY_REQUEST ||
-        stellarMsg.type() == SURVEY_RESPONSE)
+    if (aiblocksMsg.type() == TRANSACTION || aiblocksMsg.type() == SCP_MESSAGE ||
+        aiblocksMsg.type() == SURVEY_REQUEST ||
+        aiblocksMsg.type() == SURVEY_RESPONSE)
     {
         flood = true;
     }
-    else if (stellarMsg.type() != TX_SET && stellarMsg.type() != SCP_QUORUMSET)
+    else if (aiblocksMsg.type() != TX_SET && aiblocksMsg.type() != SCP_QUORUMSET)
     {
         return;
     }
 
     auto& peerMetrics = peer->getPeerMetrics();
 
-    size_t size = xdr::xdr_argpack_size(stellarMsg);
-    auto hash = shortHash::xdrComputeHash(stellarMsg);
+    size_t size = xdr::xdr_argpack_size(aiblocksMsg);
+    auto hash = shortHash::xdrComputeHash(aiblocksMsg);
     if (mMessageCache.exists(hash))
     {
         if (flood)
@@ -1057,8 +1057,8 @@ OverlayManagerImpl::recordMessageMetric(StellarMessage const& stellarMsg,
 }
 
 void
-OverlayManagerImpl::updateFloodRecord(StellarMessage const& oldMsg,
-                                      StellarMessage const& newMsg)
+OverlayManagerImpl::updateFloodRecord(AiBlocksMessage const& oldMsg,
+                                      AiBlocksMessage const& newMsg)
 {
     ZoneScoped;
     mFloodGate.updateRecord(oldMsg, newMsg);

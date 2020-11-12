@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -30,14 +30,14 @@
 #include "transactions/TransactionFrame.h"
 #include "transactions/TransactionUtils.h"
 
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 #include "xdrpp/marshal.h"
 #include <algorithm>
 #include <fmt/format.h>
 
-using namespace stellar;
-using namespace stellar::txbridge;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txbridge;
+using namespace aiblocks::txtest;
 
 TEST_CASE("standalone", "[herder][acceptance]")
 {
@@ -234,10 +234,10 @@ TEST_CASE("standalone", "[herder][acceptance]")
 }
 
 static TransactionFramePtr
-makeMultiPayment(stellar::TestAccount& destAccount, stellar::TestAccount& src,
+makeMultiPayment(aiblocks::TestAccount& destAccount, aiblocks::TestAccount& src,
                  int nbOps, int64 paymentBase, uint32 extraFee, uint32 feeMult)
 {
-    std::vector<stellar::Operation> ops;
+    std::vector<aiblocks::Operation> ops;
     for (int i = 0; i < nbOps; i++)
     {
         ops.emplace_back(payment(destAccount, i + paymentBase));
@@ -1074,7 +1074,7 @@ static void
 testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
               bool const expectTxSetCloseTimeAffinity)
 {
-    using SVUpgrades = decltype(StellarValue::upgrades);
+    using SVUpgrades = decltype(AiBlocksValue::upgrades);
 
     Config cfg(getTestConfig(0, Config::TESTDB_DEFAULT));
 
@@ -1100,11 +1100,11 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
                                  uint64_t closeTime, SVUpgrades const& upgrades,
                                  bool sig) {
         txSet->sortForHash();
-        auto sv = StellarValue(txSet->getContentsHash(), closeTime, upgrades,
-                               STELLAR_VALUE_BASIC);
+        auto sv = AiBlocksValue(txSet->getContentsHash(), closeTime, upgrades,
+                               AIBLOCKS_VALUE_BASIC);
         if (sig)
         {
-            herder.signStellarValue(root.getSecretKey(), sv);
+            herder.signAiBlocksValue(root.getSecretKey(), sv);
         }
         auto v = xdr::xdr_to_opaque(sv);
         return TxPair{v, txSet};
@@ -1188,7 +1188,7 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
         auto addCandidateThenTest = [&](CandidateSpec const& spec) {
             // Create a transaction set using the given parameters, combine
             // it with the given closeTime and optionally a given base fee
-            // increment, and make it into a StellarValue to add to the list
+            // increment, and make it into a AiBlocksValue to add to the list
             // of candidates so far.  Keep track of the hashes and sizes and
             // operation sizes of all the transaction sets, all of the close
             // times, and all of the base fee upgrades that we've seen, so that
@@ -1247,13 +1247,13 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
             }
 
             // Combine all the candidates seen so far, and extract the
-            // returned StellarValue.
+            // returned AiBlocksValue.
             ValueWrapperPtr v =
                 herder.getHerderSCPDriver().combineCandidates(1, candidates);
-            StellarValue sv;
+            AiBlocksValue sv;
             xdr::xdr_from_opaque(v->getValue(), sv);
 
-            // Compare the returned StellarValue's contents with the
+            // Compare the returned AiBlocksValue's contents with the
             // expected ones that we computed above.
             REQUIRE(sv.ext.v() ==
                     herder.getHerderSCPDriver().compositeValueType());
@@ -1283,7 +1283,7 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
         TxSetFramePtr txSetL2 = makeTransactions(lcl.hash, maxTxSize, 1, 1000);
         addToCandidates(makeTxPair(herder, txSetL2, 20, true));
         auto v = herder.getHerderSCPDriver().combineCandidates(1, candidates);
-        StellarValue sv;
+        AiBlocksValue sv;
         xdr::xdr_from_opaque(v->getValue(), sv);
         REQUIRE(sv.ext.v() == herder.getHerderSCPDriver().compositeValueType());
         REQUIRE(sv.txSetHash == txSetL2->getContentsHash());
@@ -1296,7 +1296,7 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
         auto seq = herder.getCurrentLedgerSeq() + 1;
         auto ct = app->timeNow() + 1;
         auto const signedBallots =
-            (scp.compositeValueType() == STELLAR_VALUE_SIGNED);
+            (scp.compositeValueType() == AIBLOCKS_VALUE_SIGNED);
 
         REQUIRE(signedBallots == expectTxSetCloseTimeAffinity);
         REQUIRE(scp.curProtocolPreservesTxSetCloseTimeAffinity() ==
@@ -1333,10 +1333,10 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
                     SCPDriver::kInvalidValue);
 
             auto p = makeTxPair(herder, txSet0, ct, true);
-            StellarValue sv;
+            AiBlocksValue sv;
             xdr::xdr_from_opaque(p.first, sv);
 
-            auto checkInvalid = [&](StellarValue const& sv) {
+            auto checkInvalid = [&](AiBlocksValue const& sv) {
                 auto v = xdr::xdr_to_opaque(sv);
                 REQUIRE(scp.validateValue(seq, v, true) ==
                         SCPDriver::kInvalidValue);
@@ -1386,7 +1386,7 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
                 app->getLedgerManager().getLastClosedLedgerHeader().hash);
             txSet->add(tx);
 
-            // Build a StellarValue containing the transaction set we just built
+            // Build a AiBlocksValue containing the transaction set we just built
             // and the given next closeTime.
             auto val = makeTxPair(herder, txSet, nextCloseTime, true);
             auto const seq = herder.getCurrentLedgerSeq() + 1;
@@ -1395,7 +1395,7 @@ testSCPDriver(uint32 protocolVersion, uint32_t maxTxSize, size_t expectedOps,
                     Herder::ENVELOPE_STATUS_FETCHING);
             REQUIRE(herder.recvTxSet(txSet->getContentsHash(), *txSet));
 
-            // Validate the StellarValue.
+            // Validate the AiBlocksValue.
             REQUIRE(scp.validateValue(seq, val.first, true) ==
                     (expectValid ? SCPDriver::kFullyValidatedValue
                                  : SCPDriver::kInvalidValue));
@@ -1862,9 +1862,9 @@ TEST_CASE("values externalized out of order", "[herder]")
         {
             if (env.statement.pledges.type() == SCP_ST_EXTERNALIZE)
             {
-                StellarValue sv;
+                AiBlocksValue sv;
                 auto& pe = herderA.getPendingEnvelopes();
-                herderA.getHerderSCPDriver().toStellarValue(
+                herderA.getHerderSCPDriver().toAiBlocksValue(
                     env.statement.pledges.externalize().commit.value, sv);
                 auto txset = pe.getTxSet(sv.txSetHash);
                 REQUIRE(txset);
@@ -1876,9 +1876,9 @@ TEST_CASE("values externalized out of order", "[herder]")
         {
             if (env.statement.pledges.type() == SCP_ST_EXTERNALIZE)
             {
-                StellarValue sv;
+                AiBlocksValue sv;
                 auto& pe = herderB.getPendingEnvelopes();
-                herderB.getHerderSCPDriver().toStellarValue(
+                herderB.getHerderSCPDriver().toAiBlocksValue(
                     env.statement.pledges.externalize().commit.value, sv);
                 auto txset = pe.getTxSet(sv.txSetHash);
                 REQUIRE(txset);
@@ -2290,12 +2290,12 @@ externalize(SecretKey const& sk, LedgerManager& lm, HerderImpl& herder,
     herder.getPendingEnvelopes().putTxSet(txSet->getContentsHash(), ledgerSeq,
                                           txSet);
 
-    StellarValue sv{txSet->getContentsHash(), 2, xdr::xvector<UpgradeType, 6>{},
-                    STELLAR_VALUE_BASIC};
+    AiBlocksValue sv{txSet->getContentsHash(), 2, xdr::xvector<UpgradeType, 6>{},
+                    AIBLOCKS_VALUE_BASIC};
     if (herder.getHerderSCPDriver().compositeValueType() ==
-        STELLAR_VALUE_SIGNED)
+        AIBLOCKS_VALUE_SIGNED)
     {
-        herder.signStellarValue(sk, sv);
+        herder.signAiBlocksValue(sk, sv);
     }
     herder.getHerderSCPDriver().valueExternalized(ledgerSeq,
                                                   xdr::xdr_to_opaque(sv));

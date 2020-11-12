@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -18,7 +18,7 @@
 
 #include <xdrpp/autocheck.h>
 
-namespace stellar
+namespace aiblocks
 {
 
 // creates a generic configuration with settings rigged to maximize
@@ -122,7 +122,7 @@ isBadTransactionFuzzerInput(Operation const& op)
 }
 
 bool
-isBadOverlayFuzzerInput(StellarMessage const& m)
+isBadOverlayFuzzerInput(AiBlocksMessage const& m)
 {
     // HELLO, AUTH and ERROR_MSG messages cause the connection between
     // the peers to drop. Since peer connections are only established
@@ -300,7 +300,7 @@ void
 OverlayFuzzer::inject(XDRInputFileStream& in)
 {
     // see note on TransactionFuzzer's tryRead above
-    auto tryRead = [&in](StellarMessage& m) {
+    auto tryRead = [&in](AiBlocksMessage& m) {
         try
         {
             return in.readOne(m);
@@ -312,7 +312,7 @@ OverlayFuzzer::inject(XDRInputFileStream& in)
         }
     };
 
-    StellarMessage msg;
+    AiBlocksMessage msg;
     while (tryRead(msg))
     {
         if (isBadOverlayFuzzerInput(msg))
@@ -358,8 +358,8 @@ OverlayFuzzer::genFuzz(std::string const& filename)
     XDROutputFileStream out(clock.getIOContext(),
                             /*doFsync=*/false);
     out.open(filename);
-    autocheck::generator<StellarMessage> gen;
-    StellarMessage m(gen(FUZZER_INITIAL_CORPUS_MESSAGE_GEN_UPPERBOUND));
+    autocheck::generator<AiBlocksMessage> gen;
+    AiBlocksMessage m(gen(FUZZER_INITIAL_CORPUS_MESSAGE_GEN_UPPERBOUND));
     while (isBadOverlayFuzzerInput(m))
     {
         m = gen(FUZZER_INITIAL_CORPUS_MESSAGE_GEN_UPPERBOUND);
@@ -373,7 +373,7 @@ namespace xdr
 {
 template <>
 void
-generator_t::operator()(stellar::PublicKey& t) const
+generator_t::operator()(aiblocks::PublicKey& t) const
 {
     // generate public keys such that it is zero'd out except the last byte,
     // hence for ED25519 public keys, an uint256 defined as opaque[32] set the
@@ -386,7 +386,7 @@ generator_t::operator()(stellar::PublicKey& t) const
     // some transactions with a source account/destination account that does
     // not exist.
     t.ed25519().at(31) = autocheck::generator<unsigned int>()(
-        stellar::FuzzUtils::NUMBER_OF_PREGENERATED_ACCOUNTS);
+        aiblocks::FuzzUtils::NUMBER_OF_PREGENERATED_ACCOUNTS);
 }
 } // namespace xdr
 #endif // FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION

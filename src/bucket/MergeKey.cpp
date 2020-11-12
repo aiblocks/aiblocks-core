@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -6,7 +6,7 @@
 #include "crypto/Hex.h"
 #include <sstream>
 
-namespace stellar
+namespace aiblocks
 {
 
 MergeKey::MergeKey(bool keepDeadEntries,
@@ -56,15 +56,15 @@ operator<<(std::ostream& out, MergeKey const& b)
 namespace std
 {
 size_t
-hash<stellar::MergeKey>::operator()(stellar::MergeKey const& key) const noexcept
+hash<aiblocks::MergeKey>::operator()(aiblocks::MergeKey const& key) const noexcept
 {
     std::ostringstream oss;
     oss << key.mKeepDeadEntries << ','
-        << stellar::binToHex(key.mInputCurrBucket) << ','
-        << stellar::binToHex(key.mInputSnapBucket);
+        << aiblocks::binToHex(key.mInputCurrBucket) << ','
+        << aiblocks::binToHex(key.mInputSnapBucket);
     for (auto const& e : key.mInputShadowBuckets)
     {
-        oss << stellar::binToHex(e) << ',';
+        oss << aiblocks::binToHex(e) << ',';
     }
     std::hash<std::string> h;
     return h(oss.str());

@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #include "transactions/TransactionUtils.h"
 #include "util/XDROperators.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 PathPaymentOpFrameBase::PathPaymentOpFrameBase(Operation const& op,
@@ -50,7 +50,7 @@ PathPaymentOpFrameBase::checkIssuer(AbstractLedgerTxn& ltx, Asset const& asset)
     {
         uint32_t ledgerVersion = ltx.loadHeader().current().ledgerVersion;
         if (ledgerVersion < 13 &&
-            !stellar::loadAccountWithoutRecord(ltx, getIssuer(asset)))
+            !aiblocks::loadAccountWithoutRecord(ltx, getIssuer(asset)))
         {
             setResultNoIssuer(asset);
             return false;
@@ -140,7 +140,7 @@ PathPaymentOpFrameBase::updateSourceBalance(AbstractLedgerTxn& ltx,
         LedgerTxnEntry sourceAccount;
         if (header.current().ledgerVersion > 7)
         {
-            sourceAccount = stellar::loadAccount(ltx, getSourceID());
+            sourceAccount = aiblocks::loadAccount(ltx, getSourceID());
             if (!sourceAccount)
             {
                 setResultMalformed();
@@ -206,7 +206,7 @@ PathPaymentOpFrameBase::updateDestBalance(AbstractLedgerTxn& ltx,
 
     if (asset.type() == ASSET_TYPE_NATIVE)
     {
-        auto destination = stellar::loadAccount(ltx, destID);
+        auto destination = aiblocks::loadAccount(ltx, destID);
         if (!addBalance(ltx.loadHeader(), destination, amount))
         {
             if (ltx.loadHeader().current().ledgerVersion >= 11)
@@ -227,7 +227,7 @@ PathPaymentOpFrameBase::updateDestBalance(AbstractLedgerTxn& ltx,
             return false;
         }
 
-        auto destLine = stellar::loadTrustLine(ltx, destID, asset);
+        auto destLine = aiblocks::loadTrustLine(ltx, destID, asset);
         if (!destLine)
         {
             setResultDestNoTrust();

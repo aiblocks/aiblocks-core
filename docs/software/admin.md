@@ -4,14 +4,14 @@ title: Administration
 
 ## Introduction
 
-Stellar Core is the program nodes use to communicate with other nodes to create and maintain the Stellar peer-to-peer network.  It's an implementation of the Stellar Consensus Protocol configured to construct a chain of ledgers guaranteed to be in agreement across all participating nodes at all times.
+AiBlocks Core is the program nodes use to communicate with other nodes to create and maintain the AiBlocks peer-to-peer network.  It's an implementation of the AiBlocks Consensus Protocol configured to construct a chain of ledgers guaranteed to be in agreement across all participating nodes at all times.
 
-This document describes various aspects of installing, configuring, and maintaining a `stellar-core` node.  It will explain:
+This document describes various aspects of installing, configuring, and maintaining a `aiblocks-core` node.  It will explain:
 
 
   - [ ] [why you should run a node](#why-run-a-node)
   - [ ] [what you need to set up](#instance-setup)
-  - [ ] [how to install stellar core](#installing)
+  - [ ] [how to install aiblocks core](#installing)
   - [ ] [how to configure your node](#configuring)
   - [ ] [how quorum sets work](#choosing-your-quorum-set)
   - [ ] [how to prepare your environment before the first run](#environment-preparation)
@@ -25,16 +25,16 @@ This document describes various aspects of installing, configuring, and maintain
 
 ### Benefits of running a node
 
-You get to run your own Horizon instance:
+You get to run your own Millennium instance:
 
   * Allows for customizations (triggers, etc) of the business logic or APIs
   * Full control of which data to retain (historical or online)
   * A trusted entry point to the network
     * Trusted end to end (can implement additional counter measures to secure services)
-    * Open Horizon increases customer trust by allowing to query at the source (ie: larger token issuers have an official endpoint that can be queried)
+    * Open Millennium increases customer trust by allowing to query at the source (ie: larger token issuers have an official endpoint that can be queried)
   * Control of SLA
 
-note: in this document we use "Horizon" as the example implementation of a first tier service built on top of stellar-core, but any other system would get the same benefits.
+note: in this document we use "Millennium" as the example implementation of a first tier service built on top of aiblocks-core, but any other system would get the same benefits.
 
 ### Level of participation to the network
 
@@ -44,7 +44,7 @@ As a node operator you can participate to the network in multiple ways.
 | -------------------------------------------------- | ------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | description                                        | non-validator | all of watcher + publish to archive | all of watcher + active participation in consensus (submit proposals for the transaction set to include in the next ledger) | basic validator + publish to archive |
 | submits transactions                               | yes           | yes                                 | yes                                                                                                                         | yes                                  |
-| supports horizon                                   | yes           | yes                                 | yes                                                                                                                         | yes                                  |
+| supports millennium                                   | yes           | yes                                 | yes                                                                                                                         | yes                                  |
 | participates in consensus                          | no            | no                                  | yes                                                                                                                         | yes                                  |
 | helps other nodes to catch up and join the network | no            | yes                                 | no                                                                                                                          | yes                                  |
 | Increase the resiliency of the network             | No            | Medium                              | Low                                                                                                                         | High                                 |
@@ -63,7 +63,7 @@ Use cases:
   * Ephemeral instances, where having other nodes depend on those nodes is not desired
   * Potentially reduced administration cost (no or reduced SLA)
   * Real time network monitoring (which validators are present, etc)
-  * Generate network meta-data for other systems (Horizon)
+  * Generate network meta-data for other systems (Millennium)
 
 **Operational requirements**:
 
@@ -125,12 +125,12 @@ Use cases:
   * a [database](#database)
 
 ## Instance setup
-Regardless of how you install stellar-core (apt, source, docker, etc), you will need to configure the instance hosting it roughly the same way.
+Regardless of how you install aiblocks-core (apt, source, docker, etc), you will need to configure the instance hosting it roughly the same way.
 
 ### Compute requirements
 CPU, RAM, Disk and network depends on network activity. If you decide to collocate certain workloads, you will need to take this into account.
 
-As of early 2018, stellar-core with PostgreSQL running on the same machine has no problem running on a [m5.large](https://aws.amazon.com/ec2/instance-types/m5/) in AWS (dual core 2.5 GHz Intel Xeon, 8 GB RAM).
+As of early 2018, aiblocks-core with PostgreSQL running on the same machine has no problem running on a [m5.large](https://aws.amazon.com/ec2/instance-types/m5/) in AWS (dual core 2.5 GHz Intel Xeon, 8 GB RAM).
 
 Storage wise, 20 GB seems to be an excellent working set as it leaves plenty of room for growth.
 
@@ -138,16 +138,16 @@ Storage wise, 20 GB seems to be an excellent working set as it leaves plenty of 
 
 #### Interaction with the peer to peer network
 
-  * **inbound**: stellar-core needs to allow all ips to connect to its `PEER_PORT` (default 11625) over TCP.
-  * **outbound**: stellar-core needs access to connect to other peers on the internet on `PEER_PORT` (most use the default as well) over TCP.
+  * **inbound**: aiblocks-core needs to allow all ips to connect to its `PEER_PORT` (default 11625) over TCP.
+  * **outbound**: aiblocks-core needs access to connect to other peers on the internet on `PEER_PORT` (most use the default as well) over TCP.
 
 #### Interaction with other internal systems
 
   * **outbound**:
-    * stellar-core needs access to a database (postgresql for example), which may reside on a different machine on the network
+    * aiblocks-core needs access to a database (postgresql for example), which may reside on a different machine on the network
     * other connections can safely be blocked
-  * **inbound**: stellar-core exposes an *unauthenticated* HTTP endpoint on port `HTTP_PORT` (default 11626)
-    * it is used by other systems (such as Horizon) to submit transactions (so may have to be exposed to the rest of your internal ips)
+  * **inbound**: aiblocks-core exposes an *unauthenticated* HTTP endpoint on port `HTTP_PORT` (default 11626)
+    * it is used by other systems (such as Millennium) to submit transactions (so may have to be exposed to the rest of your internal ips)
     *  query information (info, metrics, ...) for humans and automation
     *  perform administrative commands (schedule upgrades, change log levels, ...)
 
@@ -158,7 +158,7 @@ if you need to expose this endpoint to other hosts in your local network, it is 
 
 ### Release version
 
-In general you should aim to run the latest [release](https://github.com/stellar/stellar-core/releases) as builds are backward compatible and are cumulative.
+In general you should aim to run the latest [release](https://github.com/aiblocks/aiblocks-core/releases) as builds are backward compatible and are cumulative.
 
 The version number scheme that we follow is `protocol_version.release_number.patch_number`, where
 
@@ -167,34 +167,34 @@ The version number scheme that we follow is `protocol_version.release_number.pat
   * `patch_number` is used when a critical fix has to be deployed
 
 ### Installing from source
-See the [INSTALL](https://github.com/stellar/stellar-core/blob/master/INSTALL.md) for build instructions.
+See the [INSTALL](https://github.com/aiblocks/aiblocks-core/blob/master/INSTALL.md) for build instructions.
 
 ### Package based Installation
-If you are using Ubuntu 16.04 LTS we provide the latest stable releases of [stellar-core](https://github.com/stellar/stellar-core) and [stellar-horizon](https://github.com/stellar/go/tree/master/services/horizon) in Debian binary package format.
+If you are using Ubuntu 16.04 LTS we provide the latest stable releases of [aiblocks-core](https://github.com/aiblocks/aiblocks-core) and [aiblocks-millennium](https://github.com/aiblocks/go/tree/master/services/millennium) in Debian binary package format.
 
-See [detailed installation instructions](https://github.com/stellar/packages#sdf---packages)
+See [detailed installation instructions](https://github.com/aiblocks/packages#sdf---packages)
 
 ### Container based installation
 Docker images are maintained in a few places, good starting points are:
 
-   * the [quickstart image](https://github.com/stellar/docker-stellar-core-horizon)
-   * the [standalone image](https://github.com/stellar/docker-stellar-core). **Warning**: this only tracks the latest master, so you have to find the image based on the [release](https://github.com/stellar/stellar-core/releases) that you want to use.
+   * the [quickstart image](https://github.com/aiblocks/docker-aiblocks-core-millennium)
+   * the [standalone image](https://github.com/aiblocks/docker-aiblocks-core). **Warning**: this only tracks the latest master, so you have to find the image based on the [release](https://github.com/aiblocks/aiblocks-core/releases) that you want to use.
 
 ## Configuring
 
-Before attempting to configure stellar-core, it is highly recommended to first try running a private network or joining the test network. 
+Before attempting to configure aiblocks-core, it is highly recommended to first try running a private network or joining the test network. 
 
 ### Configuration basics
-All configuration for stellar-core is done with a TOML file. By default 
-stellar-core loads `./stellar-core.cfg`, but you can specify a different file to load on the command line:
+All configuration for aiblocks-core is done with a TOML file. By default 
+aiblocks-core loads `./aiblocks-core.cfg`, but you can specify a different file to load on the command line:
 
-`$ stellar-core --conf betterfile.cfg <COMMAND>`
+`$ aiblocks-core --conf betterfile.cfg <COMMAND>`
 
-The [example config](https://github.com/stellar/stellar-core/blob/master/docs/stellar-core_example.cfg) is not a real configuration, but documents all possible configuration elements as well as their default values.
+The [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg) is not a real configuration, but documents all possible configuration elements as well as their default values.
 
-Here is an [example test network config](https://github.com/stellar/docker-stellar-core-horizon/blob/master/testnet/core/etc/stellar-core.cfg) for connecting to the test network.
+Here is an [example test network config](https://github.com/aiblocks/docker-aiblocks-core-millennium/blob/master/testnet/core/etc/aiblocks-core.cfg) for connecting to the test network.
 
-Here is an [example public network config](https://github.com/stellar/docs/blob/master/other/stellar-core-validator-example.cfg) for connecting to the public network.
+Here is an [example public network config](https://github.com/aiblocks/docs/blob/master/other/aiblocks-core-validator-example.cfg) for connecting to the public network.
 
 The examples in this file don't specify `--conf betterfile.cfg` for brevity.
 
@@ -211,7 +211,7 @@ messages will look like they came from you.
 
 Generate a key pair like this:
 
-`$ stellar-core gen-seed`
+`$ aiblocks-core gen-seed`
 the output will look something like
 ```
 Secret seed: SBAAOHEU4WSWX6GBZ3VOXEGQGWRBJ72ZN3B3MFAJZWXRYGDIWHQO37SY
@@ -232,7 +232,7 @@ watch SCP and see all the data in the network but will not send validation messa
 NB: if you run more than one node, set the `HOME_DOMAIN` common to those nodes using the `NODE_HOME_DOMAIN` property.
 Doing so will allow your nodes to be grouped correctly during [quorum set generation](#home-domains-array).
 
-If you want other validators to add your node to their quorum sets, you should also share your public key (GDMTUTQ... ) by publishing a stellar.toml file on your homedomain following specs laid out in [SEP-20](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0020.md). 
+If you want other validators to add your node to their quorum sets, you should also share your public key (GDMTUTQ... ) by publishing a aiblocks.toml file on your homedomain following specs laid out in [SEP-20](https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0020.md). 
 
 ### Choosing your quorum set
 A good quorum set:
@@ -240,9 +240,9 @@ A good quorum set:
 * has enough redundancy to handle arbitrary node failures
 * maintains good quorum intersection 
 
-Since crafting a good quorum set is a difficult thing to do, stellar core *automatically* generates a quorum set for you based on structured information you provide in your config file.  You choose the validators you want to trust; stellar core configures them into an optimal quorum set.
+Since crafting a good quorum set is a difficult thing to do, aiblocks core *automatically* generates a quorum set for you based on structured information you provide in your config file.  You choose the validators you want to trust; aiblocks core configures them into an optimal quorum set.
 
-To generate a quorum set, stellar core:
+To generate a quorum set, aiblocks core:
 * Groups validators run by the same organization into a subquorum
 * Sets the threshold for each of those subquorums
 * Gives weights to those subquorums based on quality
@@ -250,18 +250,18 @@ To generate a quorum set, stellar core:
 While this does not absolve you of all responsibility — you still need to pick trustworthy validators and keep an eye on them to ensure that they’re consistent and reliable — it does make your life easier, and reduces the chances for human error.
 
 #### Validator discovery
-When you add a validating node to your quorum set, it’s generally because you trust the *organization* running the node: you trust SDF, not some anonymous Stellar public key. 
+When you add a validating node to your quorum set, it’s generally because you trust the *organization* running the node: you trust SDF, not some anonymous AiBlocks public key. 
 
-In order to create a self-verified link between a node and the organization that runs it, a validator declares a home domain on-chain using a `set_options` operation, and publishes organizational information in a stellar.toml file hosted on that domain.  To find out how that works, take a look at [SEP-20](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0020.md).  
+In order to create a self-verified link between a node and the organization that runs it, a validator declares a home domain on-chain using a `set_options` operation, and publishes organizational information in a aiblocks.toml file hosted on that domain.  To find out how that works, take a look at [SEP-20](https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0020.md).  
 
-As a result of that link, you can look up a node by its Stellar public key and check the stellar.toml to find out who runs it.  It’s possible to do that manually, but you can also just consult the list of nodes on [Stellarbeat.io](https://stellarbeat.io/nodes).  If you decide to trust an organization, you can use that list to collect the information necessary to add their nodes to your configuration.  
+As a result of that link, you can look up a node by its AiBlocks public key and check the aiblocks.toml to find out who runs it.  It’s possible to do that manually, but you can also just consult the list of nodes on [AiBlocksbeat.io](https://aiblocksbeat.io/nodes).  If you decide to trust an organization, you can use that list to collect the information necessary to add their nodes to your configuration.  
 
 When you look at that list, you will discover that the most reliable organizations actually run more than one validator, and adding all of an organization’s nodes to your quorum set creates the redundancy necessary to sustain arbitrary node failure.  When an organization with a trio of nodes takes one down for maintenance, for instance, the remaining two vote on the organization’s behalf, and the organization’s network presence persists.
 
 One important thing to note: you need to either depend on exactly one entity OR have **at least 4 entities** for automatic quorum set configuration to work properly.  At least 4 is the better option.
 
 #### Home domains array
-To create your quorum set, stellar cores relies on two arrays of tables: `[[HOME_DOMAINS]]` and `[[VALIDATORS]]`.  Check out the [example config](https://github.com/stellar/stellar-core/blob/master/docs/stellar-core_example.cfg#L372) to see those arrays in action.
+To create your quorum set, aiblocks cores relies on two arrays of tables: `[[HOME_DOMAINS]]` and `[[VALIDATORS]]`.  Check out the [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg#L372) to see those arrays in action.
 
 `[[HOME_DOMAINS]]` defines a superset of validators: when you add nodes hosted by the same organization to your configuration, they share a home domain, and the information in the `[[HOME_DOMAINS]]` table, specifically the quality rating, will automatically apply to every one of those validators. 
 
@@ -275,7 +275,7 @@ QUALITY | string | Rating for organization's nodes: `HIGH`, `MEDIUM`, or `LOW`
 Here’s an example:
 ```
 [[HOME_DOMAINS]]
-HOME_DOMAIN="testnet.stellar.org"
+HOME_DOMAIN="testnet.aiblocks.io"
 QUALITY="HIGH"
 
 [[HOME_DOMAINS]]
@@ -291,7 +291,7 @@ Field | Requirements | Description
 NAME | string | A unique alias for the node
 QUALITY | string | Rating for node (required unless specified in `[[HOME_DOMAINS]]`): `HIGH`, `MEDIUM`, or `LOW`.
 HOME_DOMAIN | string | URL of home domain linked to validator
-PUBLIC_KEY | string | Stellar public key associated with validator
+PUBLIC_KEY | string | AiBlocks public key associated with validator
 ADDRESS | string | Peer:port associated with validator (optional)
 HISTORY | string | archive GET command associated with validator (optional)
 
@@ -301,17 +301,17 @@ Here’s an example:
 ```
 [[VALIDATORS]]
 NAME="sdftest1"
-HOME_DOMAIN="testnet.stellar.org"
+HOME_DOMAIN="testnet.aiblocks.io"
 PUBLIC_KEY="GDKXE2OZMJIPOSLNA6N6F2BVCI3O777I2OOC4BV7VOYUEHYX7RTRYA7Y"
-ADDRESS="core-testnet1.stellar.org"
-HISTORY="curl -sf http://history.stellar.org/prd/core-testnet/core_testnet_001/{0} -o {1}"
+ADDRESS="core-testnet1.aiblocks.io"
+HISTORY="curl -sf http://history.aiblocks.io/prd/core-testnet/core_testnet_001/{0} -o {1}"
 
 [[VALIDATORS]]
 NAME="sdftest2"
-HOME_DOMAIN="testnet.stellar.org"
+HOME_DOMAIN="testnet.aiblocks.io"
 PUBLIC_KEY="GCUCJTIYXSOXKBSNFGNFWW5MUQ54HKRPGJUTQFJ5RQXZXNOLNXYDHRAP"
-ADDRESS="core-testnet2.stellar.org"
-HISTORY="curl -sf http://history.stellar.org/prd/core-testnet/core_testnet_002/{0} -o {1}"
+ADDRESS="core-testnet2.aiblocks.io"
+HISTORY="curl -sf http://history.aiblocks.io/prd/core-testnet/core_testnet_002/{0} -o {1}"
 
 [[VALIDATORS]]
 NAME="rando-node"
@@ -337,7 +337,7 @@ Choosing redundant nodes is good practice.  The archive requirement is programma
 **LOW** quality validators are nested below medium quality validators, and their combined weight is equivalent to a *single medium quality entity*.    Should they prove reliable over time, you can upgrade their rating to medium to give them a bigger role in your quorum set configuration. 
  
 #### Automatic quorum set generation
-Once you add validators to your configuration, stellar core automatically generates a quorum set using the following rules:
+Once you add validators to your configuration, aiblocks core automatically generates a quorum set using the following rules:
 * Validators with the same home domain are automatically grouped together and given a threshold requiring a simple majority (2f+1)
 * Heterogeneous groups of validators are given a threshold assuming byzantine failure (3f+1)
 * Entities are grouped by QUALITY and nested from HIGH to LOW 
@@ -347,7 +347,7 @@ Once you add validators to your configuration, stellar core automatically genera
 
 Here's a diagram depicting the nested quality levels and how they interact:
 
-![Diagram Automatic Quorum Set Generation](https://raw.githubusercontent.com/stellar/docs/master/guides/walkthroughs/assets/validator_complete.png)
+![Diagram Automatic Quorum Set Generation](https://raw.githubusercontent.com/aiblocks/docs/master/guides/walkthroughs/assets/validator_complete.png)
 
 
 #### Quorum and overlay network
@@ -374,7 +374,7 @@ Recommended steps are for the entity that adds/removes nodes to do so first betw
 
 ## Environment preparation
 
-### stellar-core configuration
+### aiblocks-core configuration
 Cross reference your validator settings, in particular:
 
   * environment specific settings
@@ -382,63 +382,63 @@ Cross reference your validator settings, in particular:
     * known peers
   * home domains and validators arrays
   * seed defined if validating
-  * [Automatic maintenance](#cursors-and-automatic-maintenance) configured properly, especially when stellar-core is used in conjunction with a downstream system like Horizon.
+  * [Automatic maintenance](#cursors-and-automatic-maintenance) configured properly, especially when aiblocks-core is used in conjunction with a downstream system like Millennium.
 
 ### Database and local state
 
-After configuring your [database](#database) and [buckets](#buckets) settings, when running stellar-core for the first time, you must initialize the database:
+After configuring your [database](#database) and [buckets](#buckets) settings, when running aiblocks-core for the first time, you must initialize the database:
 
-`$ stellar-core new-db`
+`$ aiblocks-core new-db`
 
 This command will initialize the database as well as the bucket directory and then exit. 
 
 You can also use this command if your DB gets corrupted and you want to restart it from scratch. 
 
 #### Database
-Stellar-core stores the state of the ledger in a SQL database.
+AiBlocks-core stores the state of the ledger in a SQL database.
 
 This DB should either be a SQLite database or, for larger production instances, a separate PostgreSQL server.
 
-*Note: Horizon currently depends on using PostgreSQL.*
+*Note: Millennium currently depends on using PostgreSQL.*
 
 For how to specify the database, 
-see the [example config](https://github.com/stellar/stellar-core/blob/master/docs/stellar-core_example.cfg).
+see the [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg).
 
 ##### Cursors and automatic maintenance
 
-Some tables in the database act as a publishing queue for external systems such as Horizon and generate **meta data** for changes happening to the distributed ledger.
+Some tables in the database act as a publishing queue for external systems such as Millennium and generate **meta data** for changes happening to the distributed ledger.
 
 If not managed properly those tables will grow without bounds. To avoid this, a built-in scheduler will delete data from old ledgers that are not used anymore by other parts of the system (external systems included).
 
 The settings that control the automatic maintenance behavior are: `AUTOMATIC_MAINTENANCE_PERIOD`,  `AUTOMATIC_MAINTENANCE_COUNT` and `KNOWN_CURSORS`.
 
-By default, stellar-core will perform this automatic maintenance, so be sure to disable it until you have done the appropriate data ingestion in downstream systems (Horizon for example sometimes needs to reingest data).
+By default, aiblocks-core will perform this automatic maintenance, so be sure to disable it until you have done the appropriate data ingestion in downstream systems (Millennium for example sometimes needs to reingest data).
 
 If you need to regenerate the meta data, the simplest way is to replay ledgers for the range you're interested in after (optionally) clearing the database with `newdb`.
 
 ##### Meta data snapshots and restoration
 
-Some deployments of stellar-core and Horizon will want to retain meta data for the _entire history_ of the network. This meta data can be quite large and computationally expensive to regenerate anew by replaying ledgers in stellar-core from an empty initial database state, as described in the previous section.
+Some deployments of aiblocks-core and Millennium will want to retain meta data for the _entire history_ of the network. This meta data can be quite large and computationally expensive to regenerate anew by replaying ledgers in aiblocks-core from an empty initial database state, as described in the previous section.
 
-This can be especially costly if run more than once. For instance, when bringing a new node online. Or even if running a single node with Horizon, having already ingested the meta data _once_: a subsequent version of Horizon may have a schema change that entails re-ingesting it _again_.
+This can be especially costly if run more than once. For instance, when bringing a new node online. Or even if running a single node with Millennium, having already ingested the meta data _once_: a subsequent version of Millennium may have a schema change that entails re-ingesting it _again_.
 
-Some operators therefore prefer to shut down their stellar-core (and/or Horizon) processes and _take filesystem-level snapshots_ or _database-level dumps_ of the contents of stellar-core's database and bucket directory, and/or Horizon's database, after meta data generation has occurred the first time. Such snapshots can then be restored, putting stellar-core and/or Horizon in a state containing meta data without performing full replay.
+Some operators therefore prefer to shut down their aiblocks-core (and/or Millennium) processes and _take filesystem-level snapshots_ or _database-level dumps_ of the contents of aiblocks-core's database and bucket directory, and/or Millennium's database, after meta data generation has occurred the first time. Such snapshots can then be restored, putting aiblocks-core and/or Millennium in a state containing meta data without performing full replay.
 
-Any reasonably-recent state will do -- if such a snapshot is a little old, stellar-core will replay ledgers from whenever the snapshot was taken to the current network state anyways -- but this procedure can greatly accelerate restoring validator nodes, or cloning them to create new ones.
+Any reasonably-recent state will do -- if such a snapshot is a little old, aiblocks-core will replay ledgers from whenever the snapshot was taken to the current network state anyways -- but this procedure can greatly accelerate restoring validator nodes, or cloning them to create new ones.
 
 
 #### Buckets
-Stellar-core stores a duplicate copy of the ledger in the form of flat XDR files 
+AiBlocks-core stores a duplicate copy of the ledger in the form of flat XDR files 
 called "buckets." These files are placed in a directory specified in the config 
 file as `BUCKET_DIR_PATH`, which defaults to `buckets`. The bucket files are used
  for hashing and transmission of ledger differences to history archives. 
 
 Buckets should be stored on a fast local disk with sufficient space to store several times the size of the current ledger. 
  
- For the most part, the contents of both directories can be ignored as they are managed by stellar-core.
+ For the most part, the contents of both directories can be ignored as they are managed by aiblocks-core.
 
 ### History archives
-Stellar-core normally interacts with one or more "history archives," which are 
+AiBlocks-core normally interacts with one or more "history archives," which are 
 configurable facilities for storing and retrieving flat files containing history 
 checkpoints: bucket files and history logs. History archives are usually off-site 
 commodity storage services such as Amazon S3, Google Cloud Storage, 
@@ -446,10 +446,10 @@ Azure Blob Storage, or custom SCP/SFTP/HTTP servers.
 
 Use command templates in the config file to give the specifics of which 
 services you will use and how to access them. 
-The [example config](https://github.com/stellar/stellar-core/blob/master/docs/stellar-core_example.cfg) 
+The [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg) 
 shows how to configure a history archive through command templates. 
 
-While it is possible to run a stellar-core node with no configured history 
+While it is possible to run a aiblocks-core node with no configured history 
 archives, it will be _severely limited_, unable to participate fully in a 
 network, and likely unable to acquire synchronization at all. At the very 
 least, if you are joining an existing network in a read-only capacity, you 
@@ -458,7 +458,7 @@ archives.
 
 #### Configuring to get data from an archive
 
-You can configure any number of archives to download from: stellar-core will automatically round-robin between them.
+You can configure any number of archives to download from: aiblocks-core will automatically round-robin between them.
 
 At a minimum you should configure `get` archives for each full validator referenced from your quorum set (see the `HISTORY` field in [validators array](#validators-array) for more detail).
 
@@ -470,7 +470,7 @@ Archive sections can also be configured with `put` and `mkdir` commands to
  cause the instance to publish to that archive (for nodes configured as [archiver nodes](#archiver-nodes) or [full validators](#full-validators)).
 
 The very first time you want to use your archive *before starting your node* you need to initialize it with:
-`$ stellar-core new-hist <historyarchive>`
+`$ aiblocks-core new-hist <historyarchive>`
 
 **IMPORTANT:**
 
@@ -489,24 +489,24 @@ In no particular order:
 
 ## Starting your node
 
-After having configured your node and its environment, you're ready to start stellar-core.
+After having configured your node and its environment, you're ready to start aiblocks-core.
 
 This can be done with a command equivalent to
 
-`$ stellar-core run`
+`$ aiblocks-core run`
 
 At this point you're ready to observe core's activity as it joins the network.
 
-Review the [logging](#logging) section to get yourself familiar with the output of stellar-core.
+Review the [logging](#logging) section to get yourself familiar with the output of aiblocks-core.
 
 ### Interacting with your instance
-While running, interaction with stellar-core is done via an administrative 
+While running, interaction with aiblocks-core is done via an administrative 
 HTTP endpoint. Commands can be submitted using command-line HTTP tools such 
 as `curl`, or by running a command such as
 
-`$ stellar-core http-command <http-command>`
+`$ aiblocks-core http-command <http-command>`
 
-The endpoint is [not intended to be exposed to the public internet](#interaction-with-other-internal-systems). It's typically accessed by administrators, or by a mid-tier application to submit transactions to the Stellar network. 
+The endpoint is [not intended to be exposed to the public internet](#interaction-with-other-internal-systems). It's typically accessed by administrators, or by a mid-tier application to submit transactions to the AiBlocks network. 
 
 See [commands](./commands.md) for a description of the available commands.
 
@@ -581,7 +581,7 @@ When the node is done catching up, its state will change to
 ```
 
 ## Logging
-Stellar-core sends logs to standard output and `stellar-core.log` by default, 
+AiBlocks-core sends logs to standard output and `aiblocks-core.log` by default, 
 configurable as `LOG_FILE_PATH`.
 
  Log messages are classified by progressive _priority levels_:
@@ -591,14 +591,14 @@ configurable as `LOG_FILE_PATH`.
 The log level can be controlled by configuration, the `-ll` command-line flag 
 or adjusted dynamically by administrative (HTTP) commands. Run:
 
-`$ stellar-core http-command "ll?level=debug"`
+`$ aiblocks-core http-command "ll?level=debug"`
 
 against a running system.
 Log levels can also be adjusted on a partition-by-partition basis through the 
 administrative interface.
  For example the history system can be set to DEBUG-level logging by running:
 
-`$ stellar-core http-command "ll?level=debug&partition=history"` 
+`$ aiblocks-core http-command "ll?level=debug&partition=history"` 
 
 against a running system.
  The default log level is `INFO`, which is moderately verbose and should emit 
@@ -610,7 +610,7 @@ against a running system.
 Information provided here can be used for both human operators and programmatic access.
 
 ### General node information
-Run `$ stellar-core http-command 'info'`
+Run `$ aiblocks-core http-command 'info'`
 The output will look something like
 
 ```json
@@ -627,7 +627,7 @@ The output will look something like
          "num" : 24311579,
          "version" : 11
       },
-      "network" : "Public Global Stellar Network ; September 2015",
+      "network" : "Public Global AiBlocks Network ; September 2015",
       "peers" : {
          "authenticated_count" : 5,
          "pending_count" : 0
@@ -662,7 +662,7 @@ The output will look something like
 
 Some notable fields in `info` are:
 
-  * `build` is the build number for this stellar-core instance
+  * `build` is the build number for this aiblocks-core instance
   * `ledger` represents the local state of your node, it may be different from the network state if your node was disconnected from the network for example. Some important sub-fields:
     * `age` : time elapsed since this ledger closed (during normal operation less than 10 seconds)
     * `num` : ledger number
@@ -681,7 +681,7 @@ The `peers` command returns information on the peers the instance is connected t
 
 This list is the result of both inbound connections from other peers and outbound connections from this node to other peers.
 
-`$ stellar-core http-command 'peers'`
+`$ aiblocks-core http-command 'peers'`
 
 ```json
 {
@@ -729,9 +729,9 @@ By default, a node will relay or respond to a survey message if the message orig
 
 In this example, we have three nodes `GBBN`, `GDEX`, and `GBUI` (we'll refer to them by the first four letters of their public keys). We will execute the commands below from `GBUI`, and note that `GBBN` has `SURVEYOR_KEYS=["$self"]` in it's config file, so `GBBN` will not relay or respond to any survey messages.
 
-  1. `$ stellar-core http-command 'surveytopology?duration=1000&node=GBBNXPPGDFDUQYH6RT5VGPDSOWLZEXXFD3ACUPG5YXRHLTATTUKY42CL'`
-  2. `$ stellar-core http-command 'surveytopology?duration=1000&node=GDEXJV6XKKLDUWKTSXOOYVOYWZGVNIKKQ7GVNR5FOV7VV5K4MGJT5US4'`
-  3. `$ stellar-core http-command 'getsurveyresult'`
+  1. `$ aiblocks-core http-command 'surveytopology?duration=1000&node=GBBNXPPGDFDUQYH6RT5VGPDSOWLZEXXFD3ACUPG5YXRHLTATTUKY42CL'`
+  2. `$ aiblocks-core http-command 'surveytopology?duration=1000&node=GDEXJV6XKKLDUWKTSXOOYVOYWZGVNIKKQ7GVNR5FOV7VV5K4MGJT5US4'`
+  3. `$ aiblocks-core http-command 'getsurveyresult'`
 
 Once the responses are received, the `getsurveyresult` command will return a result like this:
 ```json
@@ -803,7 +803,7 @@ The `quorum` command allows to diagnose problems with the quorum set of the loca
 
 Run
 
-`$ stellar-core http-command 'quorum'`
+`$ aiblocks-core http-command 'quorum'`
 
 The output looks something like:
 
@@ -883,7 +883,7 @@ as a whole will not be able to reach consensus (and the opposite is true, the ne
 may fail because of a different set of validators failing).
 
 You can get a sense of the quorum set health of a different node by doing
-`$ stellar-core http-command 'quorum?node=$sdf1` or `$ stellar-core http-command 'quorum?node=@GABCDE` 
+`$ aiblocks-core http-command 'quorum?node=$sdf1` or `$ aiblocks-core http-command 'quorum?node=@GABCDE` 
 
 Overall network health can be evaluated by walking through all nodes and looking at their health. Note that this is only an approximation as remote nodes may not have received the same messages (in particular: `missing` for 
 other nodes is not reliable).
@@ -907,7 +907,7 @@ The quorum endpoint can also retrieve detailed information for the transitive qu
 
 This is an easier to process format than what `scp` returns as it doesn't contain all SCP messages.
 
-`$ stellar-core http-command 'quorum?transitive=true'`
+`$ aiblocks-core http-command 'quorum?transitive=true'`
 
 The output looks something like:
 
@@ -1052,8 +1052,8 @@ For more information look at [`docs/versioning.md`](../versioning.md).
 
 Example here is to upgrade the protocol version to version 9 on January-31-2018.
 
-  1. `$ stellar-core http-command 'upgrades?mode=set&upgradetime=2018-01-31T20:00:00Z&protocolversion=9'`
-  2. `$ stellar-core http-command info`
+  1. `$ aiblocks-core http-command 'upgrades?mode=set&upgradetime=2018-01-31T20:00:00Z&protocolversion=9'`
+  2. `$ aiblocks-core http-command info`
 
 At this point `info` will tell you that the node is setup to vote for this upgrade:
 ```json
@@ -1073,22 +1073,22 @@ This section contains information that is useful to know but that should not sto
 
 ### Runtime information: start and stop
 
-Stellar-core can be started directly from the command line, or through a supervision 
+AiBlocks-core can be started directly from the command line, or through a supervision 
 system such as `init`, `upstart`, or `systemd`.
 
-Stellar-core can be gracefully exited at any time by delivering `SIGINT` or
+AiBlocks-core can be gracefully exited at any time by delivering `SIGINT` or
  pressing `CTRL-C`. It can be safely, forcibly terminated with `SIGTERM` or
   `SIGKILL`. The latter may leave a stale lock file in the `BUCKET_DIR_PATH`,
    and you may need to remove the file before it will restart. 
    Otherwise, all components are designed to recover from abrupt termination.
 
-Stellar-core can also be packaged in a container system such as Docker, so long 
+AiBlocks-core can also be packaged in a container system such as Docker, so long 
 as `BUCKET_DIR_PATH` and the database are stored on persistent volumes. For an
-example, see [docker-stellar-core](https://github.com/stellar/docker-stellar-core-horizon).
+example, see [docker-aiblocks-core](https://github.com/aiblocks/docker-aiblocks-core-millennium).
 
 ### In depth architecture
 
-[architecture.md](https://github.com/stellar/stellar-core/blob/master/docs/architecture.md) 
-  describes how stellar-core is structured internally, how it is intended to be 
+[architecture.md](https://github.com/aiblocks/aiblocks-core/blob/master/docs/architecture.md) 
+  describes how aiblocks-core is structured internally, how it is intended to be 
   deployed, and the collection of servers and services needed to get the full 
   functionality and performance.

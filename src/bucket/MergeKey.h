@@ -1,15 +1,15 @@
 #pragma once
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 #include "bucket/Bucket.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-types.h"
 #include <cstdint>
 #include <iosfwd>
 #include <vector>
 
-namespace stellar
+namespace aiblocks
 {
 // Key type for cache of merges-in-progress. These only exist to enable
 // re-attaching a deserialized FutureBucket to a std::shared_future, or (if the
@@ -34,8 +34,8 @@ std::ostream& operator<<(std::ostream& out, MergeKey const& b);
 
 namespace std
 {
-template <> struct hash<stellar::MergeKey>
+template <> struct hash<aiblocks::MergeKey>
 {
-    size_t operator()(stellar::MergeKey const& k) const noexcept;
+    size_t operator()(aiblocks::MergeKey const& k) const noexcept;
 };
 }

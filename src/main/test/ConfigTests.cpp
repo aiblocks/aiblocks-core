@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #include "test/test.h"
 #include <fmt/format.h>
 
-using namespace stellar;
+using namespace aiblocks;
 
 namespace
 {
@@ -145,7 +145,7 @@ TEST_CASE("resolve node id", "[config]")
 TEST_CASE("load validators config", "[config]")
 {
     Config c;
-    c.load("testdata/stellar-core_example_validators.cfg");
+    c.load("testdata/aiblocks-core_example_validators.cfg");
     auto actualS = c.toString(c.QUORUM_SET);
     std::string expected = R"({
    "t" : 4,
@@ -387,8 +387,8 @@ TEST_CASE("load example configs", "[config]")
 {
     Config c;
     std::vector<std::string> testFiles = {
-        "stellar-core_example.cfg", "stellar-core_standalone.cfg",
-        "stellar-core_testnet_legacy.cfg", "stellar-core_testnet.cfg"};
+        "aiblocks-core_example.cfg", "aiblocks-core_standalone.cfg",
+        "aiblocks-core_testnet_legacy.cfg", "aiblocks-core_testnet.cfg"};
     for (auto const& fn : testFiles)
     {
         std::string fnPath = "testdata/";

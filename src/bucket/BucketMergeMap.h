@@ -2,16 +2,16 @@
 
 #include "bucket/MergeKey.h"
 #include "util/HashOfHash.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-types.h"
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
-namespace stellar
+namespace aiblocks
 {
 
 // Helper type for BucketManager. Stores a bi-directional (weak, multi)mapping

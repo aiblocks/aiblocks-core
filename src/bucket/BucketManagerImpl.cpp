@@ -1,4 +1,4 @@
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #include "ledger/LedgerManager.h"
 #include "main/Application.h"
 #include "main/Config.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/Fs.h"
 #include "util/GlobalChecks.h"
 #include "util/LogSlowExecution.h"
@@ -29,7 +29,7 @@
 #include "medida/timer.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 std::unique_ptr<BucketManager>
@@ -68,7 +68,7 @@ BucketManagerImpl::initialize()
     {
         throw std::runtime_error(
             fmt::format("{}. This can be caused by access rights issues or "
-                        "another stellar-core process already running",
+                        "another aiblocks-core process already running",
                         e.what()));
     }
 
@@ -111,7 +111,7 @@ BucketManagerImpl::BucketManagerImpl(Application& app)
 {
 }
 
-const std::string BucketManagerImpl::kLockFilename = "stellar-core.lock";
+const std::string BucketManagerImpl::kLockFilename = "aiblocks-core.lock";
 
 namespace
 {
@@ -214,7 +214,7 @@ BucketManagerImpl::deleteTmpDirAndUnlockBucketDir()
     // (which also contains files from other subsystems, like history)
     mTmpDirManager.reset();
 
-    // Then delete the lockfile $BUCKET_DIR_PATH/stellar-core.lock
+    // Then delete the lockfile $BUCKET_DIR_PATH/aiblocks-core.lock
     if (mLockedBucketDir)
     {
         std::string d = mApp.getConfig().BUCKET_DIR_PATH;

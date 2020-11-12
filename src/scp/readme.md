@@ -1,4 +1,4 @@
-# SCP (Stellar Consensus Protocol)
+# SCP (AiBlocks Consensus Protocol)
 
 The SCP subsystem is an abstract implementation of SCP, a protocol for federated
 byzantine agreement, intended to drive a distributed system built around the
@@ -16,12 +16,12 @@ implement consensus using the SCP protocol, implementing the necessary abstract
 methods for handling SCP-generated events, and calling methods from the central
 [SCP base-class](SCP.h) methods to receive incoming messages.
 The messages making up the protocol are defined in XDR,
-in the file [Stellar-SCP.x](../xdr/Stellar-SCP.x)
+in the file [AiBlocks-SCP.x](../xdr/AiBlocks-SCP.x)
 
-The `stellar-core` program has a single subclass of SCPDriver called
+The `aiblocks-core` program has a single subclass of SCPDriver called
 [Herder](../herder), which gives a specific interpretation to "slot" and
 "value", and connects SCP up with a specific broadcast communication medium
 ([Overlay](../overlay)) and specific replicated state machine
 ([LedgerManager](../ledger)).
 
-For details of the protocol itself, see the [paper on SCP](https://www.stellar.org/papers/stellar-consensus-protocol.pdf).
+For details of the protocol itself, see the [paper on SCP](https://www.aiblocks.io/papers/aiblocks-consensus-protocol.pdf).

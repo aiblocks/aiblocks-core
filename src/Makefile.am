@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AUTOMAKE_OPTIONS = serial-tests
-bin_PROGRAMS = stellar-core
+bin_PROGRAMS = aiblocks-core
 
 include $(top_srcdir)/common.mk
 include $(srcdir)/src.mk
@@ -9,22 +9,22 @@ include $(srcdir)/src.mk
 noinst_HEADERS = $(SRC_H_FILES)
 
 if BUILD_TESTS
-stellar_core_SOURCES = main/StellarCoreVersion.cpp $(SRC_CXX_FILES) $(SRC_TEST_CXX_FILES)
+aiblocks_core_SOURCES = main/AiBlocksCoreVersion.cpp $(SRC_CXX_FILES) $(SRC_TEST_CXX_FILES)
 else # !BUILD_TESTS
-stellar_core_SOURCES = main/StellarCoreVersion.cpp $(SRC_CXX_FILES)
+aiblocks_core_SOURCES = main/AiBlocksCoreVersion.cpp $(SRC_CXX_FILES)
 endif # !BUILD_TESTS
 
-stellar_core_LDADD = $(soci_LIBS) $(libmedida_LIBS)		\
+aiblocks_core_LDADD = $(soci_LIBS) $(libmedida_LIBS)		\
 	$(top_builddir)/lib/lib3rdparty.a $(sqlite3_LIBS)	\
 	$(libpq_LIBS) $(xdrpp_LIBS) $(libsodium_LIBS)
 
 TESTDATA_DIR = testdata
-TEST_FILES = $(TESTDATA_DIR)/stellar-core_example.cfg $(TESTDATA_DIR)/stellar-core_standalone.cfg \
-             $(TESTDATA_DIR)/stellar-core_testnet.cfg $(TESTDATA_DIR)/stellar-core_testnet_legacy.cfg \
-	     $(TESTDATA_DIR)/stellar-history.testnet.6714239.json $(TESTDATA_DIR)/stellar-history.livenet.15686975.json $(TESTDATA_DIR)/stellar-core_example_validators.cfg \
-	     $(TESTDATA_DIR)/stellar-history.testnet.6714239.networkPassphrase.json
+TEST_FILES = $(TESTDATA_DIR)/aiblocks-core_example.cfg $(TESTDATA_DIR)/aiblocks-core_standalone.cfg \
+             $(TESTDATA_DIR)/aiblocks-core_testnet.cfg $(TESTDATA_DIR)/aiblocks-core_testnet_legacy.cfg \
+	     $(TESTDATA_DIR)/aiblocks-history.testnet.6714239.json $(TESTDATA_DIR)/aiblocks-history.livenet.15686975.json $(TESTDATA_DIR)/aiblocks-core_example_validators.cfg \
+	     $(TESTDATA_DIR)/aiblocks-history.testnet.6714239.networkPassphrase.json
 
-BUILT_SOURCES = $(SRC_X_FILES:.x=.h) main/StellarCoreVersion.cpp $(TEST_FILES)
+BUILT_SOURCES = $(SRC_X_FILES:.x=.h) main/AiBlocksCoreVersion.cpp $(TEST_FILES)
 
 $(SRC_X_FILES:.x=.h): $(XDRC)
 SUFFIXES = .x .h
@@ -45,12 +45,12 @@ always:
 	@:
 
 # Always rebuild because .git/HEAD is a symbolic ref one can't depend on
-main/StellarCoreVersion.cpp: always
+main/AiBlocksCoreVersion.cpp: always
 	@vers=$$(cd "$(srcdir)" \
 		&& git describe --always --dirty --tags 2>/dev/null \
 		|| echo "$(PACKAGE) $(VERSION)"); \
 		sed -e "s/%%VERSION%%/$$vers/" \
-			< "$(srcdir)/main/StellarCoreVersion.cpp.in" > $@~
+			< "$(srcdir)/main/AiBlocksCoreVersion.cpp.in" > $@~
 	@if cmp -s $@~ $@; then rm -f $@~; else \
 	    mv -f $@~ $@ && printf "echo '%s' > $@\n" "$$(cat $@)"; fi
 
@@ -68,19 +68,19 @@ endif # USE_CLANG_FORMAT
 if USE_AFL_FUZZ
 FUZZER_MODE ?= overlay
 
-fuzz-testcases: stellar-core
+fuzz-testcases: aiblocks-core
 	mkdir -p fuzz-testcases
 	for i in `seq 1 10000`; do \
-	    ./stellar-core gen-fuzz fuzz-testcases/fuzz$$i.xdr --mode=${FUZZER_MODE}; \
+	    ./aiblocks-core gen-fuzz fuzz-testcases/fuzz$$i.xdr --mode=${FUZZER_MODE}; \
 	done
 	mkdir -p min-testcases
-	afl-cmin -i fuzz-testcases -o min-testcases -m 250 -t 250 ./stellar-core fuzz @@ --mode=${FUZZER_MODE}
+	afl-cmin -i fuzz-testcases -o min-testcases -m 250 -t 250 ./aiblocks-core fuzz @@ --mode=${FUZZER_MODE}
 	rm -Rf fuzz-testcases
 
-fuzz: fuzz-testcases stellar-core
+fuzz: fuzz-testcases aiblocks-core
 	mkdir -p fuzz-findings
 	afl-fuzz -m 250 -t 250 -i min-testcases -o fuzz-findings \
-	    ./stellar-core fuzz @@ --mode=${FUZZER_MODE}
+	    ./aiblocks-core fuzz @@ --mode=${FUZZER_MODE}
 
 fuzz-clean: always
 	rm -Rf fuzz-testcases fuzz-findings
@@ -88,7 +88,7 @@ fuzz-clean: always
 distclean-local: fuzz-clean
 endif # USE_AFL_FUZZ
 
-CLEANFILES = $(BUILT_SOURCES) *~ */*~ stellar*.log
+CLEANFILES = $(BUILT_SOURCES) *~ */*~ aiblocks*.log
 MAINTAINERCLEANFILES = $(srcdir)/Makefile.in $(srcdir)/*~ $(srcdir)/*/*~
 
 EXTRA_DIST = $(SRC_X_FILES) test/selftest-nopg test/selftest-pg

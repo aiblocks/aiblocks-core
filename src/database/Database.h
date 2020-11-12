@@ -1,12 +1,12 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "database/DatabaseTypeSpecificOperation.h"
 #include "medida/timer_context.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/Decoder.h"
 #include "util/NonCopyable.h"
 #include "util/Timer.h"
@@ -22,7 +22,7 @@ class Meter;
 class Counter;
 }
 
-namespace stellar
+namespace aiblocks
 {
 class Application;
 class SQLLogContext;
@@ -198,7 +198,7 @@ class Database : NonMovableOrCopyable
     bool canUsePool() const;
 
     // Drop and recreate all tables in the database target. This is called
-    // by the new-db command on stellar-core.
+    // by the new-db command on aiblocks-core.
     void initialize();
 
     // Save `vers` as schema version.
@@ -224,7 +224,7 @@ class Database : NonMovableOrCopyable
     // Give clients the opportunity to perform operations on databases while
     // they're still using old schemas (prior to the upgrade that occurs either
     // immediately after database creation or after loading a version of
-    // stellar-core that introduces a new schema).
+    // aiblocks-core that introduces a new schema).
     virtual void
     actBeforeDBSchemaUpgrade()
     {

@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -21,8 +21,8 @@
 #include "transactions/TransactionUtils.h"
 #include "xdrpp/autocheck.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 void
 for_current_and_previous_version_from(size_t minVersion, Application& app,
@@ -468,7 +468,7 @@ TEST_CASE("manage buy offer exactly crosses existing offers", "[tx][offers]")
                               MANAGE_OFFER_DELETED);
 
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            REQUIRE(!stellar::loadOffer(ltx, a1.getPublicKey(), offerID));
+            REQUIRE(!aiblocks::loadOffer(ltx, a1.getPublicKey(), offerID));
         }
     };
 
@@ -510,7 +510,7 @@ TEST_CASE("manage buy offer matches manage sell offer when not executing",
                           Asset const& selling, Asset const& buying,
                           Price const& price) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto offer = stellar::loadOffer(ltx, acc, offerID);
+        auto offer = aiblocks::loadOffer(ltx, acc, offerID);
         auto const& oe = offer.current().data.offer();
         REQUIRE(oe.selling == selling);
         REQUIRE(oe.buying == buying);
@@ -627,7 +627,7 @@ TEST_CASE("manage buy offer matches manage sell offer when executing partially",
                           Asset const& selling, Asset const& buying,
                           Price const& price) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto offer = stellar::loadOffer(ltx, acc, offerID);
+        auto offer = aiblocks::loadOffer(ltx, acc, offerID);
         auto const& oe = offer.current().data.offer();
         REQUIRE(oe.selling == selling);
         REQUIRE(oe.buying == buying);
@@ -637,7 +637,7 @@ TEST_CASE("manage buy offer matches manage sell offer when executing partially",
 
     auto checkTrustLine = [&](AccountID const& acc, Asset const& asset) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto trust = stellar::loadTrustLine(ltx, acc, asset);
+        auto trust = aiblocks::loadTrustLine(ltx, acc, asset);
         return trust.getBalance();
     };
 
@@ -767,7 +767,7 @@ TEST_CASE("manage buy offer matches manage sell offer when executing entirely",
                           Asset const& selling, Asset const& buying,
                           Price const& price) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto offer = stellar::loadOffer(ltx, acc, offerID);
+        auto offer = aiblocks::loadOffer(ltx, acc, offerID);
         auto const& oe = offer.current().data.offer();
         REQUIRE(oe.selling == selling);
         REQUIRE(oe.buying == buying);
@@ -777,7 +777,7 @@ TEST_CASE("manage buy offer matches manage sell offer when executing entirely",
 
     auto checkTrustLine = [&](AccountID const& acc, Asset const& asset) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto trust = stellar::loadTrustLine(ltx, acc, asset);
+        auto trust = aiblocks::loadTrustLine(ltx, acc, asset);
         return trust.getBalance();
     };
 
@@ -906,7 +906,7 @@ TEST_CASE("manage buy offer with zero liabilities", "[tx][offers]")
 
     auto checkTrustLine = [&](AccountID const& acc, Asset const& asset) {
         LedgerTxn ltx(app->getLedgerTxnRoot());
-        auto trust = stellar::loadTrustLine(ltx, acc, asset);
+        auto trust = aiblocks::loadTrustLine(ltx, acc, asset);
         return trust.getBalance();
     };
 

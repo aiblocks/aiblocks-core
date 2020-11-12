@@ -1,4 +1,4 @@
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -31,7 +31,7 @@
 #include <iomanip>
 #include <set>
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace std;
@@ -406,7 +406,7 @@ bool
 LoadGenerator::loadAccount(TestAccount& account, Application& app)
 {
     LedgerTxn ltx(app.getLedgerTxnRoot());
-    auto entry = stellar::loadAccount(ltx, account.getPublicKey());
+    auto entry = aiblocks::loadAccount(ltx, account.getPublicKey());
     if (!entry)
     {
         return false;
@@ -642,7 +642,7 @@ LoadGenerator::TxInfo::execute(Application& app, bool isCreate,
     }
     txm.mTxnAttempted.Mark();
 
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(TRANSACTION);
     msg.transaction() = txf->getEnvelope();
     txm.mTxnBytes.Mark(xdr::xdr_argpack_size(msg));

@@ -2,7 +2,7 @@
 
 ## Who's interested in this and why?
 * For those developers who'd like to validate their changes on Ubuntu 16.04, we provide a sandboxed development environment using the 'Remote Development Container' features of Microsoft's Visual Studio Code.
-* This feature pre-configures a dev environment with all the tools you'll need to build stellar-core
+* This feature pre-configures a dev environment with all the tools you'll need to build aiblocks-core
 
 
 ## Pre-requisites: What do I need to use it?
@@ -21,8 +21,8 @@
     * As a matter of general security hygiene, we recommend against providing docker with pre-existing credentials to other existing users, especially admins.
 
 ## How do I use it?
-- Enlist: `git clone https://github.com/stellar/stellar-core.git`
-- Go to the code: `cd stellar-core`
+- Enlist: `git clone https://github.com/aiblocks/aiblocks-core.git`
+- Go to the code: `cd aiblocks-core`
 - Open the directory in Visual Studio Code: `code .`
 - Install the extensions listed in the pre-requisites if you haven't already.
 - Invoke the container extension.
@@ -38,7 +38,7 @@ Only difference is that tests that rely on postgresql will not run under root, s
 So before building etc, just run `su vscode` if needed.
 
 ### Build straight from the shared workspace
-The shared folder is mounted in something like `/workspaces/stellar-core`.
+The shared folder is mounted in something like `/workspaces/aiblocks-core`.
 
 Advantage of building from the shared folder is that you get to use all vscode features directly:
 what you edit is what you build.
@@ -67,7 +67,7 @@ is to simply mirror your workspace into your home directory from within the cont
 rsync -a -HAX --exclude=*.o /workspaces/ ~/src/
 ```
 
-You can then use the new folder for building and testing (just `cd ~/src/stellar-core` and build like normal).
+You can then use the new folder for building and testing (just `cd ~/src/aiblocks-core` and build like normal).
 
 Note: `-C` cannot be used here as git files (the `.git` folder) are needed for `autogen.sh` to work properly.
 
@@ -81,7 +81,7 @@ rsync --progress -v -ru -C --exclude=*.o ~/src/ /workspaces/
 ## Known issues
 * Test failures on Windows when building on the shared workspace:
   * bucket/test/BucketManagerTests.cpp:1310 will fail 
-    * Failed to fsync directory stellar-core-test-52c416044e9cfd23/bucket :Invalid argument (FileSystemException.h:21)
+    * Failed to fsync directory aiblocks-core-test-52c416044e9cfd23/bucket :Invalid argument (FileSystemException.h:21)
     * Root cause - The host machine's git repository directory is shared with the docker container via CIFS, but CIFS does not implement directory fsync operations:
       * [CIFS operations without fsync](https://github.com/torvalds/linux/blob/69c902f597c4bec92013a526268620fb6255c24a/fs/cifs/cifsfs.c#L1168-L1176)
       * [NFS operations with fsync](https://github.com/torvalds/linux/blob/c971aa3693e1b68086e62645c54a087616217b6f/fs/nfs/dir.c#L63)

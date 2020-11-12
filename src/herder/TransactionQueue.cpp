@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -21,7 +21,7 @@
 #include <medida/timer.h>
 #include <numeric>
 
-namespace stellar
+namespace aiblocks
 {
 const int64_t TransactionQueue::FEE_MULTIPLIER = 10;
 
@@ -214,7 +214,7 @@ TransactionQueue::canAdd(TransactionFrameBasePtr tx,
 
     // Note: stateIter corresponds to getSourceID() which is not necessarily
     // the same as getFeeSourceID()
-    auto feeSource = stellar::loadAccount(ltx, tx->getFeeSourceID());
+    auto feeSource = aiblocks::loadAccount(ltx, tx->getFeeSourceID());
     auto feeStateIter = mAccountStates.find(tx->getFeeSourceID());
     int64_t totalFees = feeStateIter == mAccountStates.end()
                             ? 0

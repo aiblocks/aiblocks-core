@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -17,7 +17,7 @@
 #include "util/Logging.h"
 #include "xdrpp/printer.h"
 
-using namespace stellar;
+using namespace aiblocks;
 
 TEST_CASE("liabilities", "[ledger][liabilities]")
 {
@@ -64,7 +64,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto acc = ltx.create(le);
             bool res =
-                stellar::addSellingLiabilities(header, acc, deltaLiabilities);
+                aiblocks::addSellingLiabilities(header, acc, deltaLiabilities);
             REQUIRE(acc.current().data.account().balance == initBalance);
             REQUIRE(getBuyingLiabilities(header, acc) == initBuyingLiabilities);
             if (res)
@@ -134,7 +134,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto header = ltx.loadHeader();
                 auto acc = ltx.create(le);
-                bool res = stellar::addSellingLiabilities(header, acc,
+                bool res = aiblocks::addSellingLiabilities(header, acc,
                                                           deltaLiabilities);
                 REQUIRE(acc.current().data.account().balance == initBalance);
                 REQUIRE(getBuyingLiabilities(header, acc) == 0);
@@ -311,7 +311,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto acc = ltx.create(le);
             bool res =
-                stellar::addBuyingLiabilities(header, acc, deltaLiabilities);
+                aiblocks::addBuyingLiabilities(header, acc, deltaLiabilities);
             REQUIRE(acc.current().data.account().balance == initBalance);
             REQUIRE(getSellingLiabilities(header, acc) ==
                     initSellingLiabilities);
@@ -375,7 +375,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto acc = ltx.create(le);
             bool res =
-                stellar::addBuyingLiabilities(header, acc, deltaLiabilities);
+                aiblocks::addBuyingLiabilities(header, acc, deltaLiabilities);
             REQUIRE(acc.current().data.account().balance == initBalance);
             REQUIRE(getSellingLiabilities(header, acc) == 0);
             if (res)
@@ -561,7 +561,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto trust = ltx.create(le);
             bool res =
-                stellar::addSellingLiabilities(header, trust, deltaLiabilities);
+                aiblocks::addSellingLiabilities(header, trust, deltaLiabilities);
             REQUIRE(trust.current().data.trustLine().balance == initBalance);
             REQUIRE(getBuyingLiabilities(header, trust) ==
                     initBuyingLiabilities);
@@ -595,7 +595,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto header = ltx.loadHeader();
                 auto trust = ltx.create(le);
-                bool res = stellar::addSellingLiabilities(header, trust,
+                bool res = aiblocks::addSellingLiabilities(header, trust,
                                                           deltaLiabilities);
                 REQUIRE(trust.current().data.trustLine().balance ==
                         initBalance);
@@ -703,7 +703,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto trust = ltx.create(le);
             bool res =
-                stellar::addBuyingLiabilities(header, trust, deltaLiabilities);
+                aiblocks::addBuyingLiabilities(header, trust, deltaLiabilities);
             REQUIRE(trust.current().data.trustLine().balance == initBalance);
             REQUIRE(getSellingLiabilities(header, trust) ==
                     initSellingLiabilities);
@@ -737,7 +737,7 @@ TEST_CASE("liabilities", "[ledger][liabilities]")
             auto header = ltx.loadHeader();
             auto trust = ltx.create(le);
             bool res =
-                stellar::addBuyingLiabilities(header, trust, deltaLiabilities);
+                aiblocks::addBuyingLiabilities(header, trust, deltaLiabilities);
             REQUIRE(trust.current().data.trustLine().balance == initBalance);
             REQUIRE(getSellingLiabilities(header, trust) == 0);
             if (res)
@@ -859,7 +859,7 @@ TEST_CASE("balance with liabilities", "[ledger][liabilities]")
                 LedgerTxn ltx(app->getLedgerTxnRoot());
                 auto header = ltx.loadHeader();
                 auto acc = ltx.create(le);
-                bool res = stellar::addBalance(header, acc, deltaBalance);
+                bool res = aiblocks::addBalance(header, acc, deltaBalance);
                 REQUIRE(getSellingLiabilities(header, acc) ==
                         initLiabilities.selling);
                 REQUIRE(getBuyingLiabilities(header, acc) ==
@@ -1170,7 +1170,7 @@ TEST_CASE("balance with liabilities", "[ledger][liabilities]")
             LedgerTxn ltx(app->getLedgerTxnRoot());
             auto header = ltx.loadHeader();
             auto trust = ltx.create(le);
-            bool res = stellar::addBalance(header, trust, deltaBalance);
+            bool res = aiblocks::addBalance(header, trust, deltaBalance);
             REQUIRE(getSellingLiabilities(header, trust) ==
                     initLiabilities.selling);
             REQUIRE(getBuyingLiabilities(header, trust) ==
@@ -1266,8 +1266,8 @@ TEST_CASE("available balance and limit", "[ledger][liabilities]")
             auto acc = ltx.create(le);
             auto availableBalance =
                 std::max({int64_t(0), getAvailableBalance(header, acc)});
-            REQUIRE(!stellar::addBalance(header, acc, -availableBalance - 1));
-            REQUIRE(stellar::addBalance(header, acc, -availableBalance));
+            REQUIRE(!aiblocks::addBalance(header, acc, -availableBalance - 1));
+            REQUIRE(aiblocks::addBalance(header, acc, -availableBalance));
         };
 
         auto checkAvailableBalance = [&](uint32_t initNumSubEntries,
@@ -1368,9 +1368,9 @@ TEST_CASE("available balance and limit", "[ledger][liabilities]")
                 std::max({int64_t(0), getMaxAmountReceive(header, acc)});
             if (availableLimit < INT64_MAX)
             {
-                REQUIRE(!stellar::addBalance(header, acc, availableLimit + 1));
+                REQUIRE(!aiblocks::addBalance(header, acc, availableLimit + 1));
             }
-            REQUIRE(stellar::addBalance(header, acc, availableLimit));
+            REQUIRE(aiblocks::addBalance(header, acc, availableLimit));
         };
 
         auto checkAvailableLimit = [&](uint32_t initNumSubEntries,
@@ -1465,8 +1465,8 @@ TEST_CASE("available balance and limit", "[ledger][liabilities]")
             auto trust = ltx.create(le);
             auto availableBalance =
                 std::max({int64_t(0), getAvailableBalance(header, trust)});
-            REQUIRE(!stellar::addBalance(header, trust, -availableBalance - 1));
-            REQUIRE(stellar::addBalance(header, trust, -availableBalance));
+            REQUIRE(!aiblocks::addBalance(header, trust, -availableBalance - 1));
+            REQUIRE(aiblocks::addBalance(header, trust, -availableBalance));
         };
 
         for_versions_from(10, *app, [&] {
@@ -1513,9 +1513,9 @@ TEST_CASE("available balance and limit", "[ledger][liabilities]")
             if (availableLimit < INT64_MAX)
             {
                 REQUIRE(
-                    !stellar::addBalance(header, trust, availableLimit + 1));
+                    !aiblocks::addBalance(header, trust, availableLimit + 1));
             }
-            REQUIRE(stellar::addBalance(header, trust, availableLimit));
+            REQUIRE(aiblocks::addBalance(header, trust, availableLimit));
         };
 
         for_versions_from(10, *app, [&] {

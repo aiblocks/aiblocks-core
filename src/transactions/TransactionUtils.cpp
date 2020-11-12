@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,7 +14,7 @@
 #include "util/types.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 AccountEntryExtensionV1&
@@ -266,7 +266,7 @@ acquireOrReleaseLiabilities(AbstractLedgerTxn& ltx,
     auto const& sellerID = offer.sellerID;
 
     auto loadAccountAndValidate = [&ltx, &sellerID]() {
-        auto account = stellar::loadAccount(ltx, sellerID);
+        auto account = aiblocks::loadAccount(ltx, sellerID);
         if (!account)
         {
             throw std::runtime_error("account does not exist");
@@ -275,7 +275,7 @@ acquireOrReleaseLiabilities(AbstractLedgerTxn& ltx,
     };
 
     auto loadTrustAndValidate = [&ltx, &sellerID](Asset const& asset) {
-        auto trust = stellar::loadTrustLine(ltx, sellerID, asset);
+        auto trust = aiblocks::loadTrustLine(ltx, sellerID, asset);
         if (!trust)
         {
             throw std::runtime_error("trustline does not exist");
@@ -343,7 +343,7 @@ addBalance(LedgerTxnHeader const& header, LedgerTxnEntry& entry, int64_t delta)
 
         auto& acc = entry.current().data.account();
         auto newBalance = acc.balance;
-        if (!stellar::addBalance(newBalance, delta))
+        if (!aiblocks::addBalance(newBalance, delta))
         {
             return false;
         }
@@ -378,7 +378,7 @@ addBalance(LedgerTxnHeader const& header, LedgerTxnEntry& entry, int64_t delta)
 
         auto& tl = entry.current().data.trustLine();
         auto newBalance = tl.balance;
-        if (!stellar::addBalance(newBalance, delta, tl.limit))
+        if (!aiblocks::addBalance(newBalance, delta, tl.limit))
         {
             return false;
         }
@@ -420,7 +420,7 @@ addBuyingLiabilities(LedgerTxnHeader const& header, LedgerTxnEntry& entry,
         auto& acc = entry.current().data.account();
 
         int64_t maxLiabilities = INT64_MAX - acc.balance;
-        bool res = stellar::addBalance(buyingLiab, delta, maxLiabilities);
+        bool res = aiblocks::addBalance(buyingLiab, delta, maxLiabilities);
         if (res)
         {
             prepareAccountEntryExtensionV1(acc).liabilities.buying = buyingLiab;
@@ -436,7 +436,7 @@ addBuyingLiabilities(LedgerTxnHeader const& header, LedgerTxnEntry& entry,
 
         auto& tl = entry.current().data.trustLine();
         int64_t maxLiabilities = tl.limit - tl.balance;
-        bool res = stellar::addBalance(buyingLiab, delta, maxLiabilities);
+        bool res = aiblocks::addBalance(buyingLiab, delta, maxLiabilities);
         if (res)
         {
             prepareTrustLineEntryExtensionV1(tl).liabilities.buying =
@@ -472,7 +472,7 @@ addSellingLiabilities(LedgerTxnHeader const& header, LedgerTxnEntry& entry,
             return false;
         }
 
-        bool res = stellar::addBalance(sellingLiab, delta, maxLiabilities);
+        bool res = aiblocks::addBalance(sellingLiab, delta, maxLiabilities);
         if (res)
         {
             prepareAccountEntryExtensionV1(acc).liabilities.selling =
@@ -489,7 +489,7 @@ addSellingLiabilities(LedgerTxnHeader const& header, LedgerTxnEntry& entry,
 
         auto& tl = entry.current().data.trustLine();
         int64_t maxLiabilities = tl.balance;
-        bool res = stellar::addBalance(sellingLiab, delta, maxLiabilities);
+        bool res = aiblocks::addBalance(sellingLiab, delta, maxLiabilities);
         if (res)
         {
             prepareTrustLineEntryExtensionV1(tl).liabilities.selling =
@@ -928,7 +928,7 @@ struct MuxChecker
     bool mHasMuxedAccount{false};
 
     void
-    operator()(stellar::MuxedAccount const& t)
+    operator()(aiblocks::MuxedAccount const& t)
     {
         // checks if this is a multiplexed account,
         // such as KEY_TYPE_MUXED_ED25519
@@ -965,4 +965,4 @@ hasMuxedAccount(TransactionEnvelope const& e)
     c(e);
     return c.mHasMuxedAccount;
 }
-} // namespace stellar
+} // namespace aiblocks

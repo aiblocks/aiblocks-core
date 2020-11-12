@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -25,8 +25,8 @@
 
 #include <algorithm>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 // Try setting each option to make sure it works
 // try setting all at once
@@ -148,14 +148,14 @@ TEST_CASE("set options", "[tx][setoptions]")
         {
             auto countSubEntriesAndSigners = [&](uint32_t expected) {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                auto a1Account = stellar::loadAccount(ltx, a1);
+                auto a1Account = aiblocks::loadAccount(ltx, a1);
                 auto const& ae = a1Account.current().data.account();
                 REQUIRE(ae.numSubEntries == expected);
                 REQUIRE(ae.signers.size() == expected);
             };
             auto checkFirstSigner = [&](Signer const& sk) {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                auto a1Account = stellar::loadAccount(ltx, a1);
+                auto a1Account = aiblocks::loadAccount(ltx, a1);
                 auto const& ae = a1Account.current().data.account();
                 REQUIRE(ae.signers.size() >= 1);
                 REQUIRE(ae.signers[0].key == sk.key);
@@ -353,7 +353,7 @@ TEST_CASE("set options", "[tx][setoptions]")
 
                     checkSponsorship(ltx, acc1.getPublicKey(), 0, nullptr, 2, 2,
                                      0, 1);
-                    auto ltxe = stellar::loadAccount(ltx, acc1.getPublicKey());
+                    auto ltxe = aiblocks::loadAccount(ltx, acc1.getPublicKey());
                     auto const& ae = ltxe.current().data.account();
                     extV2 = ae.ext.v1().ext.v2();
 
@@ -392,7 +392,7 @@ TEST_CASE("set options", "[tx][setoptions]")
 
                     checkSponsorship(ltx, acc1.getPublicKey(), 0, nullptr, 2, 2,
                                      0, 1);
-                    auto ltxe = stellar::loadAccount(ltx, acc1.getPublicKey());
+                    auto ltxe = aiblocks::loadAccount(ltx, acc1.getPublicKey());
                     REQUIRE(extV2 ==
                             ltxe.current().data.account().ext.v1().ext.v2());
                     ltx.commit();
@@ -416,7 +416,7 @@ TEST_CASE("set options", "[tx][setoptions]")
                           });
 
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                auto rootAcc = stellar::loadAccount(ltx, root.getPublicKey());
+                auto rootAcc = aiblocks::loadAccount(ltx, root.getPublicKey());
                 auto const& ae = rootAcc.current().data.account();
 
                 REQUIRE(ae.signers.size() == sortedSigners.size());

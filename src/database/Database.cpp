@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -8,7 +8,7 @@
 #include "database/DatabaseTypeSpecificOperation.h"
 #include "main/Application.h"
 #include "main/Config.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "util/Decoder.h"
 #include "util/GlobalChecks.h"
 #include "util/Logging.h"
@@ -33,7 +33,7 @@
 #include "medida/counter.h"
 #include "medida/metrics_registry.h"
 #include "medida/timer.h"
-#include "xdr/Stellar-ledger-entries.h"
+#include "xdr/AiBlocks-ledger-entries.h"
 
 #include <lib/soci/src/backends/sqlite3/soci-sqlite3.h>
 #include <string>
@@ -52,7 +52,7 @@ sqlite3_carray_init(sqlite_api::sqlite3* db, char** pzErrMsg,
 // NOTE: soci will just crash and not throw
 //  if you misname a column in a query. yay!
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace soci;
@@ -479,7 +479,7 @@ Database::getDBSchemaVersion()
     if (vers == 0)
     {
         throw std::runtime_error(
-            "No DB schema version found, try stellar-core new-db");
+            "No DB schema version found, try aiblocks-core new-db");
     }
     return vers;
 }

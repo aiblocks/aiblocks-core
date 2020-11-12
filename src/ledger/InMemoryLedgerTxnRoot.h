@@ -1,7 +1,7 @@
 #include "ledger/GeneralizedLedgerEntry.h"
 #include "ledger/LedgerTxn.h"
 #include "ledger/LedgerTxnImpl.h"
-#include "xdr/Stellar-ledger-entries.h"
+#include "xdr/AiBlocks-ledger-entries.h"
 #include <map>
 #include <set>
 #include <unordered_map>
@@ -14,7 +14,7 @@
 // This is used to anchor a live-but-never-committed LedgerTxn when doing
 // strictly-in-memory fast history replay.
 
-namespace stellar
+namespace aiblocks
 {
 
 class InMemoryLedgerTxnRoot : public AbstractLedgerTxnParent

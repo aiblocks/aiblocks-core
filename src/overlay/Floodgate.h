@@ -1,11 +1,11 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "overlay/Peer.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include <map>
 
 /**
@@ -26,7 +26,7 @@ namespace medida
 class Counter;
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 class Floodgate
@@ -37,10 +37,10 @@ class Floodgate
         typedef std::shared_ptr<FloodRecord> pointer;
 
         uint32_t mLedgerSeq;
-        StellarMessage mMessage;
+        AiBlocksMessage mMessage;
         std::set<std::string> mPeersTold;
 
-        FloodRecord(StellarMessage const& msg, uint32_t ledger,
+        FloodRecord(AiBlocksMessage const& msg, uint32_t ledger,
                     Peer::pointer peer);
     };
 
@@ -56,22 +56,22 @@ class Floodgate
     void clearBelow(uint32_t currentLedger);
     // returns true if this is a new record
     // fills msgID with msg's hash
-    bool addRecord(StellarMessage const& msg, Peer::pointer fromPeer,
+    bool addRecord(AiBlocksMessage const& msg, Peer::pointer fromPeer,
                    Hash& msgID);
 
-    void broadcast(StellarMessage const& msg, bool force);
+    void broadcast(AiBlocksMessage const& msg, bool force);
 
     // returns the list of peers that sent us the item with hash `msgID`
-    // NB: `msgID` is the hash of a `StellarMessage`
+    // NB: `msgID` is the hash of a `AiBlocksMessage`
     std::set<Peer::pointer> getPeersKnows(Hash const& msgID);
 
     // removes the record corresponding to `msgID`
-    // `msgID` corresponds to a `StellarMessage`
+    // `msgID` corresponds to a `AiBlocksMessage`
     void forgetRecord(Hash const& msgID);
 
     void shutdown();
 
-    void updateRecord(StellarMessage const& oldMsg,
-                      StellarMessage const& newMsg);
+    void updateRecord(AiBlocksMessage const& oldMsg,
+                      AiBlocksMessage const& newMsg);
 };
 }

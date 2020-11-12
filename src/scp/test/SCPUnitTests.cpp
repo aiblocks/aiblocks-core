@@ -6,7 +6,7 @@
 #include "util/Logging.h"
 #include "xdrpp/marshal.h"
 
-namespace stellar
+namespace aiblocks
 {
 bool
 isNear(uint64 r, double target)

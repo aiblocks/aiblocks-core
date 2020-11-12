@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -13,7 +13,7 @@
 #include "main/ApplicationUtils.h"
 #include "main/Config.h"
 #include "main/ErrorMessages.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "main/dumpxdr.h"
 #include "overlay/OverlayManager.h"
 #include "scp/QuorumSetUtils.h"
@@ -37,7 +37,7 @@
 #include <iostream>
 #include <lib/clara.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 void
@@ -255,7 +255,7 @@ configurationParser(CommandLine::ConfigOption& configOption)
            metricsParser(configOption.mMetrics) |
            clara::Opt{configOption.mConfigFile, "FILE-NAME"}["--conf"](
                fmt::format("specify a config file ('{0}' for STDIN, default "
-                           "'stellar-core.cfg')",
+                           "'aiblocks-core.cfg')",
                            Config::STDIN_SPECIAL_NAME));
 }
 
@@ -452,7 +452,7 @@ CommandLine::ConfigOption::getConfig(bool logToFile) const
 {
     Config config;
     auto configFile =
-        mConfigFile.empty() ? std::string{"stellar-core.cfg"} : mConfigFile;
+        mConfigFile.empty() ? std::string{"aiblocks-core.cfg"} : mConfigFile;
 
     LOG(INFO) << "Config from " << configFile;
 
@@ -876,7 +876,7 @@ runForceSCP(CommandLineArgs const& args)
     auto reset = false;
 
     auto resetOption = clara::Opt{reset}["--reset"](
-        "reset force SCP flag, so next time stellar-core "
+        "reset force SCP flag, so next time aiblocks-core "
         "is run it will wait to hear from the network "
         "rather than starting with the local ledger");
 
@@ -1105,7 +1105,7 @@ runSignTransaction(CommandLineArgs const& args)
 int
 runVersion(CommandLineArgs const&)
 {
-    std::cout << STELLAR_CORE_VERSION << std::endl;
+    std::cout << AIBLOCKS_CORE_VERSION << std::endl;
     return 0;
 }
 
@@ -1450,7 +1450,7 @@ handleCommandLine(int argc, char* const* argv)
          {"force-scp", "deprecated, use --wait-for-consensus option instead",
           runForceSCP},
          {"gen-seed", "generate and print a random node seed", runGenSeed},
-         {"http-command", "send a command to local stellar-core",
+         {"http-command", "send a command to local aiblocks-core",
           runHttpCommand},
          {"infer-quorum", "print a quorum set inferred from history",
           runInferQuorum},
@@ -1469,7 +1469,7 @@ handleCommandLine(int argc, char* const* argv)
           "report information about last checkpoint available in "
           "history archives",
           runReportLastHistoryCheckpoint},
-         {"run", "run stellar-core node", run},
+         {"run", "run aiblocks-core node", run},
          {"sec-to-pub", "print the public key corresponding to a secret key",
           runSecToPub},
          {"sign-transaction",
@@ -1503,7 +1503,7 @@ handleCommandLine(int argc, char* const* argv)
     auto command = commandLine.selectCommand(adjustedCommandLine.first);
     bool didDefaultToHelp = command->name() != adjustedCommandLine.first;
 
-    auto exeName = "stellar-core";
+    auto exeName = "aiblocks-core";
     auto commandName = fmt::format("{0} {1}", exeName, command->name());
     auto args = CommandLineArgs{exeName, commandName, command->description(),
                                 adjustedCommandLine.second};

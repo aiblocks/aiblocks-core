@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -30,9 +30,9 @@
 #include "util/Logging.h"
 #include "util/Timer.h"
 
-using namespace stellar;
-using namespace stellar::txbridge;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txbridge;
+using namespace aiblocks::txtest;
 
 /*
   Tests that are testing the common envelope used in transactions.
@@ -715,7 +715,7 @@ TEST_CASE("txenvelope", "[tx][envelope]")
 
                             {
                                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                                REQUIRE(!stellar::loadAccount(ltx, b1));
+                                REQUIRE(!aiblocks::loadAccount(ltx, b1));
                             }
                         });
                     }
@@ -739,17 +739,17 @@ TEST_CASE("txenvelope", "[tx][envelope]")
                         for_versions(3, 9, *app, [&] {
                             setup();
                             applyCheck(tx, *app);
-                            REQUIRE(tx->getResultCode() == stellar::txFAILED);
+                            REQUIRE(tx->getResultCode() == aiblocks::txFAILED);
                             REQUIRE(PaymentOpFrame::getInnerCode(getFirstResult(
-                                        *tx)) == stellar::PAYMENT_MALFORMED);
+                                        *tx)) == aiblocks::PAYMENT_MALFORMED);
                             REQUIRE(getAccountSigners(a1, *app).size() == 1);
                         });
                         for_versions_from(10, *app, [&] {
                             setup();
                             applyCheck(tx, *app);
-                            REQUIRE(tx->getResultCode() == stellar::txFAILED);
+                            REQUIRE(tx->getResultCode() == aiblocks::txFAILED);
                             REQUIRE(PaymentOpFrame::getInnerCode(getFirstResult(
-                                        *tx)) == stellar::PAYMENT_MALFORMED);
+                                        *tx)) == aiblocks::PAYMENT_MALFORMED);
                             REQUIRE(getAccountSigners(a1, *app).size() ==
                                     (alternative.autoRemove ? 0 : 1));
                         });
@@ -1119,7 +1119,7 @@ TEST_CASE("txenvelope", "[tx][envelope]")
                                 checkSponsorship(ltx, a2.getPublicKey(), 0,
                                                  nullptr, 0, 2, 0, 0);
 
-                                auto ltxe = stellar::loadAccount(ltx, a1);
+                                auto ltxe = aiblocks::loadAccount(ltx, a1);
                                 auto const& a1Entry =
                                     ltxe.current().data.account();
                                 auto const& sponsoringIDs =
@@ -1493,8 +1493,8 @@ TEST_CASE("txenvelope", "[tx][envelope]")
             txSet->add(txFrame);
 
             // close this ledger
-            StellarValue sv(txSet->getContentsHash(), 1, emptyUpgradeSteps,
-                            STELLAR_VALUE_BASIC);
+            AiBlocksValue sv(txSet->getContentsHash(), 1, emptyUpgradeSteps,
+                            AIBLOCKS_VALUE_BASIC);
             LedgerCloseData ledgerData(1, txSet, sv);
             app->getLedgerManager().closeLedger(ledgerData);
 
@@ -2019,7 +2019,7 @@ TEST_CASE("txenvelope", "[tx][envelope]")
                     a.tx({setOptions(setSigner(makeSigner(b, 1)) |
                                      setMasterWeight(1) | setLowThreshold(2) |
                                      setMedThreshold(2) | setHighThreshold(2)),
-                          setOptions(setHomeDomain("stellar.org"))});
+                          setOptions(setHomeDomain("aiblocks.io"))});
                 tx->addSignature(b);
 
                 validateTxResults(tx, *app, {baseFee * 2, txBAD_AUTH_EXTRA});
@@ -2029,7 +2029,7 @@ TEST_CASE("txenvelope", "[tx][envelope]")
                     a.tx({setOptions(setSigner(makeSigner(b, 1)) |
                                      setMasterWeight(1) | setLowThreshold(2) |
                                      setMedThreshold(2) | setHighThreshold(2)),
-                          setOptions(setHomeDomain("stellar.org"))});
+                          setOptions(setHomeDomain("aiblocks.io"))});
                 tx->addSignature(b);
 
                 validateTxResults(

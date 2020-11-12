@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,7 +15,7 @@
 
 #include <lib/catch.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 using namespace txtest;
@@ -33,7 +33,7 @@ TestAccount::updateSequenceNumber()
     if (mSn == 0)
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto entry = stellar::loadAccount(ltx, getPublicKey());
+        auto entry = aiblocks::loadAccount(ltx, getPublicKey());
         if (entry)
         {
             mSn = entry.current().data.account().seqNum;
@@ -45,7 +45,7 @@ int64_t
 TestAccount::getBalance() const
 {
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    auto entry = stellar::loadAccount(ltx, getPublicKey());
+    auto entry = aiblocks::loadAccount(ltx, getPublicKey());
     return entry.current().data.account().balance;
 }
 
@@ -53,10 +53,10 @@ int64_t
 TestAccount::getAvailableBalance() const
 {
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    auto entry = stellar::loadAccount(ltx, getPublicKey());
+    auto entry = aiblocks::loadAccount(ltx, getPublicKey());
     auto header = ltx.loadHeader();
 
-    return stellar::getAvailableBalance(header, entry);
+    return aiblocks::getAvailableBalance(header, entry);
 }
 
 bool
@@ -98,7 +98,7 @@ TestAccount::create(SecretKey const& secretKey, uint64_t initialBalance)
     std::unique_ptr<LedgerEntry> destBefore;
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto entry = stellar::loadAccount(ltx, publicKey);
+        auto entry = aiblocks::loadAccount(ltx, publicKey);
         if (entry)
         {
             destBefore = std::make_unique<LedgerEntry>(entry.current());
@@ -112,7 +112,7 @@ TestAccount::create(SecretKey const& secretKey, uint64_t initialBalance)
     catch (...)
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto destAfter = stellar::loadAccount(ltx, publicKey);
+        auto destAfter = aiblocks::loadAccount(ltx, publicKey);
         // check that the target account didn't change
         REQUIRE(!!destBefore == !!destAfter);
         if (destBefore && destAfter)
@@ -124,7 +124,7 @@ TestAccount::create(SecretKey const& secretKey, uint64_t initialBalance)
 
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        REQUIRE(stellar::loadAccount(ltx, publicKey));
+        REQUIRE(aiblocks::loadAccount(ltx, publicKey));
     }
     return TestAccount{mApp, secretKey};
 }
@@ -141,8 +141,8 @@ TestAccount::merge(PublicKey const& into)
     applyTx(tx({accountMerge(into)}), mApp);
 
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    REQUIRE(stellar::loadAccount(ltx, into));
-    REQUIRE(!stellar::loadAccount(ltx, getPublicKey()));
+    REQUIRE(aiblocks::loadAccount(ltx, into));
+    REQUIRE(!aiblocks::loadAccount(ltx, getPublicKey()));
 }
 
 void
@@ -223,7 +223,7 @@ TestAccount::manageData(std::string const& name, DataValue* value)
     applyTx(tx({txtest::manageData(name, value)}), mApp);
 
     LedgerTxn ls(mApp.getLedgerTxnRoot());
-    auto data = stellar::loadData(ls, getPublicKey(), name);
+    auto data = aiblocks::loadData(ls, getPublicKey(), name);
     if (value)
     {
         REQUIRE(data);
@@ -259,7 +259,7 @@ TestAccount::createClaimableBalance(Asset const& asset, int64_t amount,
     REQUIRE(returnedBalanceID == getBalanceID(0));
 
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    auto entry = stellar::loadClaimableBalance(ltx, returnedBalanceID);
+    auto entry = aiblocks::loadClaimableBalance(ltx, returnedBalanceID);
     REQUIRE(entry);
 
     auto const& claimableBalance = entry.current().data.claimableBalance();
@@ -279,7 +279,7 @@ TestAccount::claimClaimableBalance(ClaimableBalanceID const& balanceID)
     applyTx(tx({txtest::claimClaimableBalance(balanceID)}), mApp);
 
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    REQUIRE(!stellar::loadClaimableBalance(ltx, balanceID));
+    REQUIRE(!aiblocks::loadClaimableBalance(ltx, balanceID));
 }
 
 ClaimableBalanceID
@@ -338,7 +338,7 @@ TestAccount::pay(PublicKey const& destination, int64_t amount)
     std::unique_ptr<LedgerEntry> toAccount;
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto toAccountEntry = stellar::loadAccount(ltx, destination);
+        auto toAccountEntry = aiblocks::loadAccount(ltx, destination);
         toAccount =
             toAccountEntry
                 ? std::make_unique<LedgerEntry>(toAccountEntry.current())
@@ -349,7 +349,7 @@ TestAccount::pay(PublicKey const& destination, int64_t amount)
         }
         else
         {
-            REQUIRE(stellar::loadAccount(ltx, getPublicKey()));
+            REQUIRE(aiblocks::loadAccount(ltx, getPublicKey()));
         }
     }
 
@@ -362,7 +362,7 @@ TestAccount::pay(PublicKey const& destination, int64_t amount)
     catch (...)
     {
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto toAccountAfter = stellar::loadAccount(ltx, destination);
+        auto toAccountAfter = aiblocks::loadAccount(ltx, destination);
         // check that the target account didn't change
         REQUIRE(!!toAccount == !!toAccountAfter);
         if (toAccount && toAccountAfter &&
@@ -375,7 +375,7 @@ TestAccount::pay(PublicKey const& destination, int64_t amount)
     }
 
     LedgerTxn ltx(mApp.getLedgerTxnRoot());
-    auto toAccountAfter = stellar::loadAccount(ltx, destination);
+    auto toAccountAfter = aiblocks::loadAccount(ltx, destination);
     REQUIRE(toAccount);
     REQUIRE(toAccountAfter);
 }

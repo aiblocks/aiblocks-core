@@ -1,0 +1,4 @@
+#include "main/AiBlocksCoreVersion.h"
+
+const std::string AIBLOCKS_CORE_VERSION = "%%VERSION%%";
+

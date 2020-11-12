@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #include "ledger/LedgerTxn.h"
 #include "ledger/LedgerTxnHeader.h"
 #include "main/Config.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "test.h"
 #include "test/TestUtils.h"
 #include "util/Logging.h"
@@ -42,7 +42,7 @@ SimpleTestReporter::~SimpleTestReporter()
 }
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 // We use a Catch event-listener to re-seed all the PRNGs we know about on every
@@ -77,7 +77,7 @@ static bool gTestAllVersions{false};
 static std::vector<uint32> gVersionsToTest;
 static int gBaseInstance{0};
 
-bool force_sqlite = (std::getenv("STELLAR_FORCE_SQLITE") != nullptr);
+bool force_sqlite = (std::getenv("AIBLOCKS_FORCE_SQLITE") != nullptr);
 
 Config const&
 getTestConfig(int instanceNumber, Config::TestDbMode mode)
@@ -102,7 +102,7 @@ getTestConfig(int instanceNumber, Config::TestDbMode mode)
         if (gTestRoots.empty())
         {
             gTestRoots.emplace_back(
-                fmt::format("stellar-core-test-{}", gBaseInstance));
+                fmt::format("aiblocks-core-test-{}", gBaseInstance));
         }
         auto const& testBase = gTestRoots[0].getName();
         gTestRoots.emplace_back(
@@ -220,7 +220,7 @@ runTest(CommandLineArgs const& args)
         "test specific version(s)");
     parser |= Catch::clara::Opt(gBaseInstance, "offset")["--base-instance"](
         "instance number offset so multiple instances of "
-        "stellar-core can run tests concurrently");
+        "aiblocks-core can run tests concurrently");
     session.cli(parser);
 
     auto result = session.cli().parse(
@@ -251,17 +251,17 @@ runTest(CommandLineArgs const& args)
     ReseedPRNGListener::reseed();
 
     // Note: Have to setLogLevel twice here to ensure --list-test-names-only is
-    // not mixed with stellar-core logging.
+    // not mixed with aiblocks-core logging.
     Logging::setFmt("<test>");
     Logging::setLogLevel(logLevel, nullptr);
     // use base instance for logging as we're guaranteed to not have conflicting
-    // instances of stellar-core running at the same time with the same base
+    // instances of aiblocks-core running at the same time with the same base
     // instance
-    auto logFile = fmt::format("stellar{}.log", gBaseInstance);
+    auto logFile = fmt::format("aiblocks{}.log", gBaseInstance);
     Logging::setLoggingToFile(logFile);
     Logging::setLogLevel(logLevel, nullptr);
 
-    LOG(INFO) << "Testing stellar-core " << STELLAR_CORE_VERSION;
+    LOG(INFO) << "Testing aiblocks-core " << AIBLOCKS_CORE_VERSION;
     LOG(INFO) << "Logging to " << logFile;
 
     if (gVersionsToTest.empty())

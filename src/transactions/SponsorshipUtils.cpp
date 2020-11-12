@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -6,12 +6,12 @@
 #include "ledger/LedgerTxn.h"
 #include "ledger/LedgerTxnEntry.h"
 #include "ledger/LedgerTxnHeader.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "transactions/TransactionUtils.h"
 #include "util/XDROperators.h"
 #include "util/types.h"
 
-using namespace stellar;
+using namespace aiblocks;
 
 static SponsorshipResult
 canEstablishSponsorshipHelper(LedgerHeader const& lh,
@@ -85,7 +85,7 @@ accountIsSponsor(SponsorshipDescriptor const& sponsoringID,
     }
 }
 
-namespace stellar
+namespace aiblocks
 {
 
 ////////////////////////////////////////////////////////////////////////////////

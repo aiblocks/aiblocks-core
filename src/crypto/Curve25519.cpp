@@ -1,4 +1,4 @@
-// Copyright 2015 Stellar Development Foundation and contributors. Licensed
+// Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -12,7 +12,7 @@
 #include <sanitizer/msan_interface.h>
 #endif
 
-namespace stellar
+namespace aiblocks
 {
 
 Curve25519Secret
@@ -102,9 +102,9 @@ curve25519Decrypt(Curve25519Secret const& localSecret,
 namespace std
 {
 size_t
-hash<stellar::Curve25519Public>::
-operator()(stellar::Curve25519Public const& k) const noexcept
+hash<aiblocks::Curve25519Public>::
+operator()(aiblocks::Curve25519Public const& k) const noexcept
 {
-    return std::hash<stellar::uint256>()(k.key);
+    return std::hash<aiblocks::uint256>()(k.key);
 }
 }

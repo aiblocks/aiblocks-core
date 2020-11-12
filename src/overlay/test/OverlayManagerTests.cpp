@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,12 +19,12 @@
 
 #include <soci.h>
 
-using namespace stellar;
+using namespace aiblocks;
 using namespace std;
 using namespace soci;
 using namespace txtest;
 
-namespace stellar
+namespace aiblocks
 {
 
 class PeerStub : public Peer
@@ -245,7 +245,7 @@ class OverlayManagerTests
         auto c = TestAccount{*app, getAccount("c")};
         auto d = TestAccount{*app, getAccount("d")};
 
-        StellarMessage AtoB = a.tx({payment(b, 10)})->toStellarMessage();
+        AiBlocksMessage AtoB = a.tx({payment(b, 10)})->toAiBlocksMessage();
         auto i = 0;
         for (auto p : pm.mOutboundPeers.mAuthenticated)
         {
@@ -259,13 +259,13 @@ class OverlayManagerTests
         REQUIRE(sentCounts(pm) == expected);
         pm.broadcastMessage(AtoB);
         REQUIRE(sentCounts(pm) == expected);
-        StellarMessage CtoD = c.tx({payment(d, 10)})->toStellarMessage();
+        AiBlocksMessage CtoD = c.tx({payment(d, 10)})->toAiBlocksMessage();
         pm.broadcastMessage(CtoD);
         std::vector<int> expectedFinal{2, 2, 1, 2, 2};
         REQUIRE(sentCounts(pm) == expectedFinal);
 
         // Test that we updating a flood record actually prevents re-broadcast
-        StellarMessage AtoC = a.tx({payment(c, 10)})->toStellarMessage();
+        AiBlocksMessage AtoC = a.tx({payment(c, 10)})->toAiBlocksMessage();
         pm.updateFloodRecord(AtoB, AtoC);
         pm.broadcastMessage(AtoC);
         REQUIRE(sentCounts(pm) == expectedFinal);

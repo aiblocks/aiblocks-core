@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -9,7 +9,7 @@
 #include "util/Logging.h"
 #include "xdrpp/marshal.h"
 
-namespace stellar
+namespace aiblocks
 {
 
 uint32_t const SurveyManager::SURVEY_THROTTLE_TIMEOUT_MULT(3);
@@ -91,7 +91,7 @@ SurveyManager::addNodeToRunningSurveyBacklog(
 }
 
 void
-SurveyManager::relayOrProcessResponse(StellarMessage const& msg,
+SurveyManager::relayOrProcessResponse(AiBlocksMessage const& msg,
                                       Peer::pointer peer)
 {
     assert(msg.type() == SURVEY_RESPONSE);
@@ -153,7 +153,7 @@ SurveyManager::relayOrProcessResponse(StellarMessage const& msg,
 }
 
 void
-SurveyManager::relayOrProcessRequest(StellarMessage const& msg,
+SurveyManager::relayOrProcessRequest(AiBlocksMessage const& msg,
                                      Peer::pointer peer)
 {
     assert(msg.type() == SURVEY_REQUEST);
@@ -207,7 +207,7 @@ SurveyManager::relayOrProcessRequest(StellarMessage const& msg,
 void
 SurveyManager::sendTopologyRequest(NodeID const& nodeToSurvey) const
 {
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(SURVEY_REQUEST);
 
     auto& signedRequest = newMsg.signedSurveyRequestMessage();
@@ -253,7 +253,7 @@ SurveyManager::processTopologyRequest(SurveyRequestMessage const& request) const
                            << mApp.getConfig().toShortString(
                                   request.surveyorPeerID);
 
-    StellarMessage newMsg;
+    AiBlocksMessage newMsg;
     newMsg.type(SURVEY_RESPONSE);
 
     auto& signedResponse = newMsg.signedSurveyResponseMessage();
@@ -303,7 +303,7 @@ SurveyManager::processTopologyRequest(SurveyRequestMessage const& request) const
 }
 
 void
-SurveyManager::broadcast(StellarMessage const& msg) const
+SurveyManager::broadcast(AiBlocksMessage const& msg) const
 {
     mApp.getOverlayManager().broadcastMessage(msg, false);
 }
@@ -420,7 +420,7 @@ SurveyManager::getJsonResults()
 }
 
 std::string
-SurveyManager::getMsgSummary(StellarMessage const& msg)
+SurveyManager::getMsgSummary(AiBlocksMessage const& msg)
 {
     std::string summary;
     SurveyMessageCommandType commandType;

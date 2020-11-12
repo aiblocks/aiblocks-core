@@ -1,5 +1,5 @@
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,7 +10,7 @@
 #include "history/HistoryArchive.h"
 #include "ledger/LedgerManager.h"
 #include "main/ExternalQueue.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "scp/LocalNode.h"
 #include "scp/QuorumSetUtils.h"
 #include "util/Fs.h"
@@ -23,7 +23,7 @@
 #include <sstream>
 #include <unordered_set>
 
-namespace stellar
+namespace aiblocks
 {
 const uint32 Config::CURRENT_LEDGER_PROTOCOL_VERSION = 15;
 
@@ -103,7 +103,7 @@ Config::Config() : NODE_SEED(SecretKey::random())
     OVERLAY_PROTOCOL_MIN_VERSION = 13;
     OVERLAY_PROTOCOL_VERSION = 15;
 
-    VERSION_STR = STELLAR_CORE_VERSION;
+    VERSION_STR = AIBLOCKS_CORE_VERSION;
 
     // configurable
     RUN_STANDALONE = false;
@@ -127,7 +127,7 @@ Config::Config() : NODE_SEED(SecretKey::random())
     MAX_SLOTS_TO_REMEMBER = 12;
     METADATA_OUTPUT_STREAM = "";
 
-    LOG_FILE_PATH = "stellar-core.%datetime{%Y.%M.%d-%H:%m:%s}.log";
+    LOG_FILE_PATH = "aiblocks-core.%datetime{%Y.%M.%d-%H:%m:%s}.log";
     BUCKET_DIR_PATH = "buckets";
 
     TESTING_UPGRADE_DESIRED_FEE = LedgerManager::GENESIS_LEDGER_BASE_FEE;

@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -22,8 +22,8 @@
 #include "transactions/TransactionUtils.h"
 #include "transactions/test/SponsorshipTestUtils.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 // Offer that takes multiple other offers and remains
 // Offer selling DLO
@@ -434,7 +434,7 @@ TEST_CASE("create offer", "[tx][offers]")
                 int64_t usdBuyingLiabilities = 0;
                 {
                     LedgerTxn ltx(app->getLedgerTxnRoot());
-                    auto trustLine = stellar::loadTrustLine(ltx, a1, usd);
+                    auto trustLine = aiblocks::loadTrustLine(ltx, a1, usd);
                     usdBuyingLiabilities =
                         trustLine.getBuyingLiabilities(ltx.loadHeader());
                 }
@@ -595,7 +595,7 @@ TEST_CASE("create offer", "[tx][offers]")
                     bStartingBalance += offerAmount;
 
                     auto b1 = root.create("B", bStartingBalance);
-                    b1.changeTrust(idr, 1000000000000000000ll);
+                    b1.changeTrust(idr, 1000000000000000ll);
 
                     for_versions_to(8, *app, [&]() {
                         checkCrossed(b1, offerAmount, offerAmount);
@@ -630,7 +630,7 @@ TEST_CASE("create offer", "[tx][offers]")
                     bStartingBalance += a1IDrs - delta;
 
                     auto b1 = root.create("B", bStartingBalance);
-                    b1.changeTrust(idr, 1000000000000000000ll);
+                    b1.changeTrust(idr, 1000000000000000ll);
 
                     for_versions_to(8, *app, [&]() {
                         // in v1..8
@@ -2343,7 +2343,7 @@ TEST_CASE("create offer", "[tx][offers]")
     {
         auto getLiabilities = [&](TestAccount& acc) {
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            auto account = stellar::loadAccount(ltx, acc.getPublicKey());
+            auto account = aiblocks::loadAccount(ltx, acc.getPublicKey());
             Liabilities res;
             if (account)
             {
@@ -2354,7 +2354,7 @@ TEST_CASE("create offer", "[tx][offers]")
         };
         auto getAssetLiabilities = [&](TestAccount& acc, Asset const& asset) {
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            auto trust = stellar::loadTrustLine(ltx, acc.getPublicKey(), asset);
+            auto trust = aiblocks::loadTrustLine(ltx, acc.getPublicKey(), asset);
             Liabilities res;
             if (trust)
             {
@@ -3833,7 +3833,7 @@ TEST_CASE("liabilities match created offer", "[tx][offers]")
             LedgerTxn ltx(app->getLedgerTxnRoot());
             auto header = ltx.loadHeader();
             auto entry =
-                stellar::loadOffer(ltx, a1.getPublicKey(), offer.key.offerID);
+                aiblocks::loadOffer(ltx, a1.getPublicKey(), offer.key.offerID);
             liabilities =
                 Liabilities{getOfferBuyingLiabilities(header, entry),
                             getOfferSellingLiabilities(header, entry)};

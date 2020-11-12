@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -14,7 +14,7 @@
 #include "transactions/TransactionUtils.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 AllowTrustOpFrame::AllowTrustOpFrame(Operation const& op, OperationResult& res,
                                      TransactionFrame& parentTx)
@@ -136,7 +136,7 @@ AllowTrustOpFrame::doApply(AbstractLedgerTxn& ltx)
             }
 
             releaseLiabilities(ltx, header, offer);
-            auto trustAcc = stellar::loadAccount(ltx, mAllowTrust.trustor);
+            auto trustAcc = aiblocks::loadAccount(ltx, mAllowTrust.trustor);
             removeEntryWithPossibleSponsorship(ltx, header, offer.current(),
                                                trustAcc);
             offer.erase();

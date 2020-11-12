@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -30,7 +30,7 @@
 
 #include <cstdio>
 
-using namespace stellar;
+using namespace aiblocks;
 using namespace BucketTests;
 
 namespace BucketManagerTests
@@ -164,8 +164,8 @@ closeLedger(Application& app)
         << " with lcl=" << hexAbbrev(lcl.hash) << ", buckets="
         << hexAbbrev(app.getBucketManager().getBucketList().getHash());
     auto txSet = std::make_shared<TxSetFrame>(lcl.hash);
-    StellarValue sv(txSet->getContentsHash(), lcl.header.scpValue.closeTime,
-                    emptyUpgradeSteps, STELLAR_VALUE_BASIC);
+    AiBlocksValue sv(txSet->getContentsHash(), lcl.header.scpValue.closeTime,
+                    emptyUpgradeSteps, AIBLOCKS_VALUE_BASIC);
     LedgerCloseData lcd(ledgerNum, txSet, sv);
     lm.valueExternalized(lcd);
     return lm.getLastClosedLedgerHeader().hash;
@@ -593,7 +593,7 @@ TEST_CASE("bucketmanager reattach HAS from publish queue to finished merge",
     cfg.MAX_CONCURRENT_SUBPROCESSES = 1;
     cfg.ARTIFICIALLY_ACCELERATE_TIME_FOR_TESTING = true;
     cfg.ARTIFICIALLY_PESSIMIZE_MERGES_FOR_TESTING = true;
-    stellar::historytestutils::TmpDirHistoryConfigurator tcfg;
+    aiblocks::historytestutils::TmpDirHistoryConfigurator tcfg;
     cfg = tcfg.configure(cfg, true);
 
     for_versions_with_differing_bucket_logic(cfg, [&](Config const& cfg) {
@@ -1385,8 +1385,8 @@ TEST_CASE("bucket persistence over app restart with initentry - extended",
 TEST_CASE("bucket persistence over app restart",
           "[bucket][bucketmanager][bucketpersist]")
 {
-    std::vector<stellar::LedgerKey> emptySet;
-    std::vector<stellar::LedgerEntry> emptySetEntry;
+    std::vector<aiblocks::LedgerKey> emptySet;
+    std::vector<aiblocks::LedgerEntry> emptySetEntry;
 
     Config cfg0(getTestConfig(0, Config::TESTDB_ON_DISK_SQLITE));
     cfg0.MANUAL_CLOSE = false;

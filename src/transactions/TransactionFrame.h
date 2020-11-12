@@ -1,11 +1,11 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "ledger/GeneralizedLedgerEntry.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "transactions/TransactionFrameBase.h"
 #include "util/types.h"
 
@@ -21,7 +21,7 @@ class session;
 A transaction in its exploded form.
 We can get it in from the DB or from the wire
 */
-namespace stellar
+namespace aiblocks
 {
 class AbstractLedgerTxn;
 class Application;
@@ -199,7 +199,7 @@ class TransactionFrame : public TransactionFrameBase
     // version without meta
     bool apply(Application& app, AbstractLedgerTxn& ltx);
 
-    StellarMessage toStellarMessage() const override;
+    AiBlocksMessage toAiBlocksMessage() const override;
 
     LedgerTxnEntry loadAccount(AbstractLedgerTxn& ltx,
                                LedgerTxnHeader const& header,

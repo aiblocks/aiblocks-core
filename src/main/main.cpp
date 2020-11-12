@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -12,7 +12,7 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-namespace stellar
+namespace aiblocks
 {
 static void
 outOfMemory()
@@ -26,7 +26,7 @@ outOfMemory()
 int
 main(int argc, char* const* argv)
 {
-    using namespace stellar;
+    using namespace aiblocks;
 
     // Abort when out of memory
     std::set_new_handler(outOfMemory);

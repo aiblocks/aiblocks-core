@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -8,14 +8,14 @@
 #include <fstream>
 #include <string>
 
-using namespace stellar;
+using namespace aiblocks;
 
 TEST_CASE("Serialization round trip", "[history]")
 {
     std::vector<std::string> testFiles = {
-        "stellar-history.testnet.6714239.json",
-        "stellar-history.livenet.15686975.json",
-        "stellar-history.testnet.6714239.networkPassphrase.json"};
+        "aiblocks-history.testnet.6714239.json",
+        "aiblocks-history.livenet.15686975.json",
+        "aiblocks-history.testnet.6714239.networkPassphrase.json"};
     for (int i = 0; i < testFiles.size(); i++)
     {
         std::string fnPath = "testdata/";

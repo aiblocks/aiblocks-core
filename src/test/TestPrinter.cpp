@@ -1,4 +1,4 @@
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,17 +11,17 @@
 namespace Catch
 {
 std::string
-StringMaker<stellar::OfferState>::convert(stellar::OfferState const& os)
+StringMaker<aiblocks::OfferState>::convert(aiblocks::OfferState const& os)
 {
     return fmt::format(
         "selling: {}, buying: {}, price: {}, amount: {}, type: {}",
         xdr_to_string(os.selling), xdr_to_string(os.buying),
         xdr_to_string(os.price), os.amount,
-        os.type == stellar::OfferType::PASSIVE ? "passive" : "active");
+        os.type == aiblocks::OfferType::PASSIVE ? "passive" : "active");
 }
 
 std::string
-StringMaker<stellar::CatchupRange>::convert(stellar::CatchupRange const& cr)
+StringMaker<aiblocks::CatchupRange>::convert(aiblocks::CatchupRange const& cr)
 {
     return fmt::format("[{},{}), applyBuckets: {}", cr.getReplayFirst(),
                        cr.getReplayLimit(),
@@ -29,8 +29,8 @@ StringMaker<stellar::CatchupRange>::convert(stellar::CatchupRange const& cr)
 }
 
 std::string
-StringMaker<stellar::historytestutils::CatchupPerformedWork>::convert(
-    stellar::historytestutils::CatchupPerformedWork const& cm)
+StringMaker<aiblocks::historytestutils::CatchupPerformedWork>::convert(
+    aiblocks::historytestutils::CatchupPerformedWork const& cm)
 {
     return fmt::format("{}, {}, {}, {}, {}, {}, {}, {}",
                        cm.mHistoryArchiveStatesDownloaded,

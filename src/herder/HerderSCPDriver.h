@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -8,7 +8,7 @@
 #include "herder/TxSetFrame.h"
 #include "medida/timer.h"
 #include "scp/SCPDriver.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 
 namespace medida
 {
@@ -17,7 +17,7 @@ class Meter;
 class Histogram;
 }
 
-namespace stellar
+namespace aiblocks
 {
 class Application;
 class HerderImpl;
@@ -26,7 +26,7 @@ class PendingEnvelopes;
 class SCP;
 class Upgrades;
 class VirtualTimer;
-struct StellarValue;
+struct AiBlocksValue;
 struct SCPEnvelope;
 
 class HerderSCPDriver : public SCPDriver
@@ -35,8 +35,8 @@ class HerderSCPDriver : public SCPDriver
     struct ConsensusData
     {
         uint64_t mConsensusIndex;
-        StellarValue mConsensusValue;
-        ConsensusData(uint64_t index, StellarValue const& b)
+        AiBlocksValue mConsensusValue;
+        ConsensusData(uint64_t index, AiBlocksValue const& b)
             : mConsensusIndex(index), mConsensusValue(b)
         {
         }
@@ -63,7 +63,7 @@ class HerderSCPDriver : public SCPDriver
         return mLastTrackingSCP.get();
     }
 
-    void restoreSCPState(uint64_t index, StellarValue const& value);
+    void restoreSCPState(uint64_t index, AiBlocksValue const& value);
 
     // the ledger index that was last externalized
     uint32
@@ -123,8 +123,8 @@ class HerderSCPDriver : public SCPDriver
 
     // Submit a value to consider for slotIndex
     // previousValue is the value from slotIndex-1
-    void nominate(uint64_t slotIndex, StellarValue const& value,
-                  TxSetFramePtr proposedSet, StellarValue const& previousValue);
+    void nominate(uint64_t slotIndex, AiBlocksValue const& value,
+                  TxSetFramePtr proposedSet, AiBlocksValue const& previousValue);
 
     SCPQuorumSetPtr getQSet(Hash const& qSetHash) override;
 
@@ -143,16 +143,16 @@ class HerderSCPDriver : public SCPDriver
 
     optional<VirtualClock::time_point> getPrepareStart(uint64_t slotIndex);
 
-    // converts a Value into a StellarValue
+    // converts a Value into a AiBlocksValue
     // returns false on error
-    bool toStellarValue(Value const& v, StellarValue& sv);
+    bool toAiBlocksValue(Value const& v, AiBlocksValue& sv);
 
     // validate close time as much as possible
     bool checkCloseTime(uint64_t slotIndex, uint64_t lastCloseTime,
-                        StellarValue const& b) const;
+                        AiBlocksValue const& b) const;
 
-    // wraps a *valid* StellarValue (throws if it can't find txSet/qSet)
-    ValueWrapperPtr wrapStellarValue(StellarValue const& sv);
+    // wraps a *valid* AiBlocksValue (throws if it can't find txSet/qSet)
+    ValueWrapperPtr wrapAiBlocksValue(AiBlocksValue const& sv);
 
     ValueWrapperPtr wrapValue(Value const& sv) override;
 
@@ -160,8 +160,8 @@ class HerderSCPDriver : public SCPDriver
     void purgeSlots(uint64_t maxSlotIndex);
 
     // Does the nomination protocol output a BASIC or a SIGNED
-    // StellarValue?
-    virtual StellarValueType compositeValueType() const;
+    // AiBlocksValue?
+    virtual AiBlocksValueType compositeValueType() const;
 
     // Does the current protocol version contain the CAP-0034 closeTime
     // semantics change?
@@ -262,7 +262,7 @@ class HerderSCPDriver : public SCPDriver
     void stateChanged();
 
     SCPDriver::ValidationLevel validateValueHelper(uint64_t slotIndex,
-                                                   StellarValue const& sv,
+                                                   AiBlocksValue const& sv,
                                                    bool nomination) const;
 
     void logQuorumInformation(uint64_t index);

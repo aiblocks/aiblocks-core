@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -18,8 +18,8 @@
 #include "transactions/TransactionUtils.h"
 #include "transactions/test/SponsorshipTestUtils.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 TEST_CASE("change trust", "[tx][changetrust]")
 {
@@ -90,7 +90,7 @@ TEST_CASE("change trust", "[tx][changetrust]")
                                   ex_CHANGE_TRUST_NO_ISSUER);
                 {
                     LedgerTxn ltx(app->getLedgerTxnRoot());
-                    REQUIRE(!stellar::loadAccount(ltx, gateway));
+                    REQUIRE(!aiblocks::loadAccount(ltx, gateway));
                 }
             });
         }
@@ -100,14 +100,14 @@ TEST_CASE("change trust", "[tx][changetrust]")
         auto validateTrustLineIsConst = [&]() {
             LedgerTxn ltx(app->getLedgerTxnRoot());
             auto trustLine =
-                stellar::loadTrustLine(ltx, gateway.getPublicKey(), idr);
+                aiblocks::loadTrustLine(ltx, gateway.getPublicKey(), idr);
             REQUIRE(trustLine);
             REQUIRE(trustLine.getBalance() == INT64_MAX);
         };
 
         auto loadAccount = [&](PublicKey const& k) {
             LedgerTxn ltx(app->getLedgerTxnRoot());
-            auto le = stellar::loadAccount(ltx, k).current();
+            auto le = aiblocks::loadAccount(ltx, k).current();
             return le.data.account();
         };
 

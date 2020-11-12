@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,7 +11,7 @@
 #include <Tracy.hpp>
 #include <fmt/format.h>
 
-namespace stellar
+namespace aiblocks
 {
 ApplyBufferedLedgersWork::ApplyBufferedLedgersWork(Application& app)
     : BasicWork(app, "apply-buffered-ledgers", BasicWork::RETRY_NEVER)
@@ -64,7 +64,7 @@ ApplyBufferedLedgersWork::onRun()
                           << hexAbbrev(lcd.getTxSet()->previousLedgerHash())
                           << ", txs=" << lcd.getTxSet()->sizeTx()
                           << ", ops=" << lcd.getTxSet()->sizeOp() << ", sv: "
-                          << stellarValueToString(mApp.getConfig(),
+                          << aiblocksValueToString(mApp.getConfig(),
                                                   lcd.getValue())
                           << "]";
 

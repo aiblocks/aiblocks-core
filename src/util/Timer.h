@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,11 +19,11 @@
 #include <mutex>
 #include <queue>
 
-namespace stellar
+namespace aiblocks
 {
 
 /**
- * The purpose of this module is to provide "timing service" to stellar-core;
+ * The purpose of this module is to provide "timing service" to aiblocks-core;
  *but in
  * such a way that strongly favours the use of virtual time over real
  * time. Ideally there will only ever be one use of the "real" wall clock in the
@@ -254,7 +254,7 @@ class VirtualTimer : private NonMovableOrCopyable
 // This is almost certainly not the type you want to use. So much so
 // that we will not even show it to you unless you define an unwieldy
 // symbol:
-#ifdef STELLAR_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
+#ifdef AIBLOCKS_CORE_REAL_TIMER_FOR_CERTAIN_NOT_JUST_VIRTUAL_TIME
 class RealTimer : public asio::basic_waitable_timer<std::chrono::system_clock>
 {
   public:

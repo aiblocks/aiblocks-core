@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -41,7 +41,7 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-namespace stellar
+namespace aiblocks
 {
 CommandHandler::CommandHandler(Application& app) : mApp(app)
 {
@@ -155,10 +155,10 @@ CommandHandler::manualCmd(std::string const& cmd)
 void
 CommandHandler::fileNotFound(std::string const& params, std::string& retStr)
 {
-    retStr = "<b>Welcome to stellar-core!</b><p>";
+    retStr = "<b>Welcome to aiblocks-core!</b><p>";
     retStr +=
         "Supported HTTP commands are listed in the <a href=\""
-        "https://github.com/stellar/stellar-core/blob/master/docs/software/"
+        "https://github.com/aiblocks/aiblocks-core/blob/master/docs/software/"
         "commands.md#http-commands"
         "\">docs</a> as well as in the man pages.</p>"
         "<p>Have fun!</p>";
@@ -601,7 +601,7 @@ CommandHandler::tx(std::string const& params, std::string& retStr)
 
             if (status == TransactionQueue::AddResult::ADD_STATUS_PENDING)
             {
-                StellarMessage msg;
+                AiBlocksMessage msg;
                 msg.type(TRANSACTION);
                 msg.transaction() = envelope;
                 mApp.getOverlayManager().broadcastMessage(msg);
@@ -840,7 +840,7 @@ CommandHandler::generateLoad(std::string const& params, std::string& retStr)
     else
     {
         retStr = "Set ARTIFICIALLY_GENERATE_LOAD_FOR_TESTING=true in "
-                 "the stellar-core.cfg if you want this behavior";
+                 "the aiblocks-core.cfg if you want this behavior";
     }
 }
 
@@ -872,7 +872,7 @@ CommandHandler::testAcc(std::string const& params, std::string& retStr)
         }
 
         LedgerTxn ltx(mApp.getLedgerTxnRoot());
-        auto acc = stellar::loadAccount(ltx, key.getPublicKey());
+        auto acc = aiblocks::loadAccount(ltx, key.getPublicKey());
         if (acc)
         {
             auto const& ae = acc.current().data.account();

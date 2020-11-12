@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -7,10 +7,10 @@
 #include "crypto/SHA.h"
 #include "crypto/SecretKey.h"
 #include "crypto/SignerKey.h"
-#include "xdr/Stellar-transaction.h"
+#include "xdr/AiBlocks-transaction.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 namespace SignatureUtils

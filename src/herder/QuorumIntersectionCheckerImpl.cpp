@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,7 +15,7 @@ namespace
 // Implementation of QBitSet
 ////////////////////////////////////////////////////////////////////////////////
 
-using namespace stellar;
+using namespace aiblocks;
 struct QBitSet;
 using QGraph = std::vector<QBitSet>;
 
@@ -841,7 +841,7 @@ groupString(Config const& cfg, std::set<PublicKey> const& group)
 }
 }
 
-namespace stellar
+namespace aiblocks
 {
 std::shared_ptr<QuorumIntersectionChecker>
 QuorumIntersectionChecker::create(QuorumTracker::QuorumMap const& qmap,
@@ -854,7 +854,7 @@ QuorumIntersectionChecker::create(QuorumTracker::QuorumMap const& qmap,
 
 std::set<std::set<PublicKey>>
 QuorumIntersectionChecker::getIntersectionCriticalGroups(
-    stellar::QuorumTracker::QuorumMap const& qmap, stellar::Config const& cfg,
+    aiblocks::QuorumTracker::QuorumMap const& qmap, aiblocks::Config const& cfg,
     std::atomic<bool>& interruptFlag)
 {
     // We're going to search for "intersection-critical" groups, by considering

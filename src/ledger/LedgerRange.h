@@ -1,15 +1,15 @@
 #pragma once
 
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "util/optional.h"
-#include "xdr/Stellar-types.h"
+#include "xdr/AiBlocks-types.h"
 #include <cstdint>
 #include <stdexcept>
 
-namespace stellar
+namespace aiblocks
 {
 // Ledger seq num + hash pair, a lightweight substitute of ledger
 // history entry, useful for catchup and ledger verification purposes.

@@ -1,16 +1,16 @@
 Installation Instructions
 ==================
-These are instructions for building stellar-core from source.
+These are instructions for building aiblocks-core from source.
 
 For a potentially quicker set up, the following projects could be good alternatives:
 
-* stellar-core in a [docker container](https://github.com/stellar/docker-stellar-core)
-* stellar-core and [horizon](https://github.com/stellar/go/tree/master/services/horizon) in a [docker container](https://github.com/stellar/docker-stellar-core-horizon)
-* pre-compiled [packages](https://github.com/stellar/packages)
+* aiblocks-core in a [docker container](https://github.com/aiblocks/docker-aiblocks-core)
+* aiblocks-core and [millennium](https://github.com/aiblocks/go/tree/master/services/millennium) in a [docker container](https://github.com/aiblocks/docker-aiblocks-core-millennium)
+* pre-compiled [packages](https://github.com/aiblocks/packages)
 
 ## Picking a version to run
 
-Best is to use the latest *stable* release that can be downloaded from https://github.com/stellar/stellar-core/releases
+Best is to use the latest *stable* release that can be downloaded from https://github.com/aiblocks/aiblocks-core/releases
 
 
 Alternatively, branches are organized in the following way:
@@ -47,10 +47,10 @@ See the [dev container's README](.devcontainer/README.md) for more detail.
 ### Ubuntu
 
 #### Ubuntu 14.04
-You will have to install the [test toolchain](#adding-the-test-toolchain) in order to both build and run stellar-core.
+You will have to install the [test toolchain](#adding-the-test-toolchain) in order to both build and run aiblocks-core.
 
 #### Ubuntu 16.04
-Just like 14.04, you can install the test toolchain to build and run stellar-core.
+Just like 14.04, you can install the test toolchain to build and run aiblocks-core.
 
 Alternatively, if you want to just depend on stock 16.04, you will have to build with clang *and* have use `libc++` instead of `libstdc++` when compiling.
 
@@ -103,8 +103,8 @@ See [INSTALL-Windows.md](INSTALL-Windows.md)
 
 ## Basic Installation
 
-- `git clone https://github.com/stellar/stellar-core.git`
-- `cd stellar-core`
+- `git clone https://github.com/aiblocks/aiblocks-core.git`
+- `cd aiblocks-core`
 - `git submodule init`
 - `git submodule update`
 - Type `./autogen.sh`.
@@ -130,15 +130,15 @@ Here are sample steps to achieve this:
     export CXX=clang++-8
     export CFLAGS="-O3 -g1 -fno-omit-frame-pointer"
     export CXXFLAGS="$CFLAGS -stdlib=libc++"
-    git clone https://github.com/stellar/stellar-core.git
-    cd stellar-core/
+    git clone https://github.com/aiblocks/aiblocks-core.git
+    cd aiblocks-core/
     ./autogen.sh && ./configure && make -j6
 
 ## Building with Tracing
 
-Configuring with `--enable-tracy` will build and embed the client component of the [Tracy](https://github.com/wolfpld/tracy) high-resolution tracing system in the `stellar-core` binary.
+Configuring with `--enable-tracy` will build and embed the client component of the [Tracy](https://github.com/wolfpld/tracy) high-resolution tracing system in the `aiblocks-core` binary.
 
-The tracing client will activate automatically when stellar-core is running, and will listen for connections from Tracy servers (a command-line capture utility, or a cross-platform GUI).
+The tracing client will activate automatically when aiblocks-core is running, and will listen for connections from Tracy servers (a command-line capture utility, or a cross-platform GUI).
 
 The Tracy server components can also be compiled by configuring with `--enable-tracy-gui` or `--enable-tracy-capture`.
 

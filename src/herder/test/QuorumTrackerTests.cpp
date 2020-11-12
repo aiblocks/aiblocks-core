@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,9 +10,9 @@
 #include "scp/SCP.h"
 #include "test/TestUtils.h"
 #include "test/test.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 
-using namespace stellar;
+using namespace aiblocks;
 
 void
 testQuorumTracker(uint32 protocolVersion)
@@ -104,7 +104,7 @@ testQuorumTracker(uint32 protocolVersion)
         auto& ext = envelope.statement.pledges.externalize();
         ext.commit.counter = UINT32_MAX;
         ext.commit.value = (herder->getHerderSCPDriver().compositeValueType() ==
-                            STELLAR_VALUE_SIGNED)
+                            AIBLOCKS_VALUE_SIGNED)
                                ? v.mSignedV
                                : v.mBasicV;
         ext.nH = UINT32_MAX;
@@ -117,11 +117,11 @@ testQuorumTracker(uint32 protocolVersion)
     auto makeValue = [&](int i) {
         auto const& lcl = app->getLedgerManager().getLastClosedLedgerHeader();
         auto txSet = std::make_shared<TxSetFrame>(lcl.hash);
-        auto sv = StellarValue{txSet->getContentsHash(),
+        auto sv = AiBlocksValue{txSet->getContentsHash(),
                                lcl.header.scpValue.closeTime + i,
-                               emptyUpgradeSteps, STELLAR_VALUE_BASIC};
+                               emptyUpgradeSteps, AIBLOCKS_VALUE_BASIC};
         auto v = xdr::xdr_to_opaque(sv);
-        herder->signStellarValue(valSigner, sv);
+        herder->signAiBlocksValue(valSigner, sv);
         auto vSigned = xdr::xdr_to_opaque(sv);
 
         return ValuesTxSet{v, vSigned, txSet};

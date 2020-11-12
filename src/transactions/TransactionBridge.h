@@ -1,13 +1,13 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #pragma once
 
-#include "xdr/Stellar-transaction.h"
+#include "xdr/AiBlocks-transaction.h"
 #include <memory>
 
-namespace stellar
+namespace aiblocks
 {
 class TransactionFrame;
 typedef std::shared_ptr<TransactionFrame> TransactionFramePtr;

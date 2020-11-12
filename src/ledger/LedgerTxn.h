@@ -1,13 +1,13 @@
 #pragma once
 
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "ledger/GeneralizedLedgerEntry.h"
 #include "ledger/LedgerTxnEntry.h"
 #include "ledger/LedgerTxnHeader.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 #include <functional>
 #include <ledger/LedgerHashUtils.h>
 #include <map>
@@ -172,7 +172,7 @@
 //    accesses to a parent's entries when a child is open.
 //
 
-namespace stellar
+namespace aiblocks
 {
 
 // A heuristic number that is used to batch together groups of

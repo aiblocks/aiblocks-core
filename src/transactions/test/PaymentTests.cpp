@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -24,8 +24,8 @@
 #include "util/Logging.h"
 #include "util/Timer.h"
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
 // *DLO Payment
 // *Credit Payment
@@ -96,7 +96,7 @@ TEST_CASE("payment", "[tx][payment]")
         REQUIRE(a1Acc.thresholds[THRESHOLD_LOW] == 0);
         REQUIRE(a1Acc.thresholds[THRESHOLD_MED] == 0);
         // root did 2 transactions at this point
-        REQUIRE(rootAcc.balance == (1000000000000000000 - paymentAmount -
+        REQUIRE(rootAcc.balance == (1000000000000000 - paymentAmount -
                                     gatewayPayment * 2 - txfee * 3));
     }
 
@@ -198,9 +198,9 @@ TEST_CASE("payment", "[tx][payment]")
 
             {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                auto rootAccount2 = stellar::loadAccount(ltx, root);
+                auto rootAccount2 = aiblocks::loadAccount(ltx, root);
                 auto rootAcc2 = rootAccount2.current().data.account();
-                auto a1Account2 = stellar::loadAccount(ltx, a1);
+                auto a1Account2 = aiblocks::loadAccount(ltx, a1);
                 auto a1Acc2 = a1Account2.current().data.account();
                 REQUIRE(a1Acc2.balance == a1Acc.balance + morePayment);
 
@@ -221,7 +221,7 @@ TEST_CASE("payment", "[tx][payment]")
 
             {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                auto rootAccount2 = stellar::loadAccount(ltx, root);
+                auto rootAccount2 = aiblocks::loadAccount(ltx, root);
                 auto rootAcc2 = rootAccount2.current().data.account();
                 REQUIRE(rootAcc2.balance == (rootAcc.balance - txfee));
             }
@@ -233,7 +233,7 @@ TEST_CASE("payment", "[tx][payment]")
         for_all_versions(*app, [&] {
             auto getMinBalance = [&] {
                 LedgerTxn ltx(app->getLedgerTxnRoot());
-                return stellar::getMinBalance(ltx.loadHeader().current(), 0, 0,
+                return aiblocks::getMinBalance(ltx.loadHeader().current(), 0, 0,
                                               0);
             };
 
@@ -1648,7 +1648,7 @@ TEST_CASE("payment", "[tx][payment]")
                         auto account = txtest::loadAccount(ltx, sendToSelf);
                         auto const& ae = account.current().data.account();
                         REQUIRE(ae.balance == minBalance3 - txfee);
-                        REQUIRE(!stellar::loadTrustLine(ltx, sendToSelf,
+                        REQUIRE(!aiblocks::loadTrustLine(ltx, sendToSelf,
                                                         data.asset));
                     }
                 }
@@ -1688,7 +1688,7 @@ TEST_CASE("payment", "[tx][payment]")
                         auto const& ae = account.current().data.account();
                         REQUIRE(ae.balance == minBalance3 - 4 * txfee);
                         auto trust =
-                            stellar::loadTrustLine(ltx, sendToSelf, data.asset);
+                            aiblocks::loadTrustLine(ltx, sendToSelf, data.asset);
                         REQUIRE(trust);
                         REQUIRE(trust.getBalance() == 0);
                     }
@@ -1715,7 +1715,7 @@ TEST_CASE("payment", "[tx][payment]")
                         auto const& ae = account.current().data.account();
                         REQUIRE(ae.balance == minBalance3 - 4 * txfee);
                         auto trust =
-                            stellar::loadTrustLine(ltx, sendToSelf, data.asset);
+                            aiblocks::loadTrustLine(ltx, sendToSelf, data.asset);
                         REQUIRE(trust);
                         REQUIRE(trust.getBalance() == 500);
                     }
@@ -1742,7 +1742,7 @@ TEST_CASE("payment", "[tx][payment]")
                         auto const& ae = account.current().data.account();
                         REQUIRE(ae.balance == minBalance3 - 4 * txfee);
                         auto trust =
-                            stellar::loadTrustLine(ltx, sendToSelf, data.asset);
+                            aiblocks::loadTrustLine(ltx, sendToSelf, data.asset);
                         REQUIRE(trust);
                         REQUIRE(trust.getBalance() == 1000);
                     }

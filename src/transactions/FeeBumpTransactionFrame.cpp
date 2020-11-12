@@ -1,4 +1,4 @@
-// Copyright 2020 Stellar Development Foundation and contributors. Licensed
+// Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -20,7 +20,7 @@
 
 #include <numeric>
 
-namespace stellar
+namespace aiblocks
 {
 
 TransactionEnvelope
@@ -206,7 +206,7 @@ FeeBumpTransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx)
         return false;
     }
 
-    if (!stellar::loadAccount(ltx, getFeeSourceID()))
+    if (!aiblocks::loadAccount(ltx, getFeeSourceID()))
     {
         getResult().result.code(txNO_ACCOUNT);
         return false;
@@ -227,7 +227,7 @@ FeeBumpTransactionFrame::commonValid(SignatureChecker& signatureChecker,
         return res;
     }
 
-    auto feeSource = stellar::loadAccount(ltx, getFeeSourceID());
+    auto feeSource = aiblocks::loadAccount(ltx, getFeeSourceID());
     if (!checkSignature(
             signatureChecker, feeSource,
             feeSource.current().data.account().thresholds[THRESHOLD_LOW]))
@@ -371,7 +371,7 @@ FeeBumpTransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx,
 {
     resetResults(ltx.loadHeader().current(), baseFee, true);
 
-    auto feeSource = stellar::loadAccount(ltx, getFeeSourceID());
+    auto feeSource = aiblocks::loadAccount(ltx, getFeeSourceID());
     if (!feeSource)
     {
         throw std::runtime_error("Unexpected database state");
@@ -386,7 +386,7 @@ FeeBumpTransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx,
         // Note: TransactionUtil addBalance checks that reserve plus liabilities
         // are respected. In this case, we allow it to fall below that since it
         // will be caught later in commonValid.
-        stellar::addBalance(acc.balance, -fee);
+        aiblocks::addBalance(acc.balance, -fee);
         header.current().feePool += fee;
     }
 }
@@ -395,7 +395,7 @@ void
 FeeBumpTransactionFrame::removeOneTimeSignerKeyFromFeeSource(
     AbstractLedgerTxn& ltx) const
 {
-    auto account = stellar::loadAccount(ltx, getFeeSourceID());
+    auto account = aiblocks::loadAccount(ltx, getFeeSourceID());
     if (!account)
     {
         return; // probably account was removed due to merge operation
@@ -424,10 +424,10 @@ FeeBumpTransactionFrame::resetResults(LedgerHeader const& header,
     mResult.feeCharged = getFee(header, baseFee, applying);
 }
 
-StellarMessage
-FeeBumpTransactionFrame::toStellarMessage() const
+AiBlocksMessage
+FeeBumpTransactionFrame::toAiBlocksMessage() const
 {
-    StellarMessage msg;
+    AiBlocksMessage msg;
     msg.type(TRANSACTION);
     msg.transaction() = mEnvelope;
     return msg;

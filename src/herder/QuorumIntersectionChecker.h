@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -8,7 +8,7 @@
 #include <atomic>
 #include <memory>
 
-namespace stellar
+namespace aiblocks
 {
 
 class Config;
@@ -17,13 +17,13 @@ class QuorumIntersectionChecker
 {
   public:
     static std::shared_ptr<QuorumIntersectionChecker>
-    create(stellar::QuorumTracker::QuorumMap const& qmap,
-           stellar::Config const& cfg, std::atomic<bool>& interruptFlag,
+    create(aiblocks::QuorumTracker::QuorumMap const& qmap,
+           aiblocks::Config const& cfg, std::atomic<bool>& interruptFlag,
            bool quiet = false);
 
     static std::set<std::set<PublicKey>>
-    getIntersectionCriticalGroups(stellar::QuorumTracker::QuorumMap const& qmap,
-                                  stellar::Config const& cfg,
+    getIntersectionCriticalGroups(aiblocks::QuorumTracker::QuorumMap const& qmap,
+                                  aiblocks::Config const& cfg,
                                   std::atomic<bool>& interruptFlag);
 
     virtual ~QuorumIntersectionChecker(){};

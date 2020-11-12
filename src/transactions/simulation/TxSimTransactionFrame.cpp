@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -13,7 +13,7 @@
 #include "transactions/simulation/TxSimManageSellOfferOpFrame.h"
 #include "transactions/simulation/TxSimMergeOpFrame.h"
 
-namespace stellar
+namespace aiblocks
 {
 namespace txsimulation
 {
@@ -113,7 +113,7 @@ TxSimTransactionFrame::processFeeSeqNum(AbstractLedgerTxn& ltx, int64_t baseFee)
         // Note: TransactionUtil addBalance checks that reserve plus liabilities
         // are respected. In this case, we allow it to fall below that since it
         // will be caught later in commonValid.
-        stellar::addBalance(acc.balance, -fee);
+        aiblocks::addBalance(acc.balance, -fee);
         header.current().feePool += fee;
     }
     // in v10 we update sequence numbers during apply

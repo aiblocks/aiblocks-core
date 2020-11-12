@@ -1,4 +1,4 @@
-// Copyright 2018 Stellar Development Foundation and contributors. Licensed
+// Copyright 2018 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -16,7 +16,7 @@
 #include "main/ExternalQueue.h"
 #include "main/Maintainer.h"
 #include "main/PersistentState.h"
-#include "main/StellarCoreVersion.h"
+#include "main/AiBlocksCoreVersion.h"
 #include "overlay/OverlayManager.h"
 #include "util/Logging.h"
 #include "work/WorkScheduler.h"
@@ -24,7 +24,7 @@
 #include <lib/http/HttpClient.h>
 #include <locale>
 
-namespace stellar
+namespace aiblocks
 {
 
 int
@@ -36,7 +36,7 @@ runWithConfig(Config cfg, optional<CatchupConfiguration> cc)
     {
         if (!cfg.NODE_IS_VALIDATOR)
         {
-            LOG(ERROR) << "Starting stellar-core in MANUAL_CLOSE mode requires "
+            LOG(ERROR) << "Starting aiblocks-core in MANUAL_CLOSE mode requires "
                           "NODE_IS_VALIDATOR to be set";
             return 1;
         }
@@ -59,7 +59,7 @@ runWithConfig(Config cfg, optional<CatchupConfiguration> cc)
         }
     }
 
-    LOG(INFO) << "Starting stellar-core " << STELLAR_CORE_VERSION;
+    LOG(INFO) << "Starting aiblocks-core " << AIBLOCKS_CORE_VERSION;
     VirtualClock clock(clockMode);
     Application::pointer app;
     try
@@ -388,7 +388,7 @@ catchup(Application::pointer app, CatchupConfiguration cc,
                   << app->getLedgerManager().getLastClosedLedgerNum()
                   << " - nothing to do";
         LOG(INFO) << "* If you really want to catchup to " << cc.toLedger()
-                  << " run stellar-core new-db";
+                  << " run aiblocks-core new-db";
         LOG(INFO) << "*";
         return 2;
     }

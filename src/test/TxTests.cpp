@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -26,10 +26,10 @@
 
 #include <lib/catch.hpp>
 
-using namespace stellar;
-using namespace stellar::txtest;
+using namespace aiblocks;
+using namespace aiblocks::txtest;
 
-namespace stellar
+namespace aiblocks
 {
 namespace txtest
 {
@@ -420,8 +420,8 @@ closeLedgerOn(Application& app, uint32 ledgerSeq, time_t closeTime,
         REQUIRE(txSet->checkValid(app, 0, 0));
     }
 
-    StellarValue sv(txSet->getContentsHash(), closeTime, emptyUpgradeSteps,
-                    STELLAR_VALUE_BASIC);
+    AiBlocksValue sv(txSet->getContentsHash(), closeTime, emptyUpgradeSteps,
+                    AIBLOCKS_VALUE_BASIC);
     LedgerCloseData ledgerData(ledgerSeq, txSet, sv);
     app.getLedgerManager().closeLedger(ledgerData);
 
@@ -466,7 +466,7 @@ makeSigner(SecretKey key, int weight)
 ConstLedgerTxnEntry
 loadAccount(AbstractLedgerTxn& ltx, PublicKey const& k, bool mustExist)
 {
-    auto res = stellar::loadAccountWithoutRecord(ltx, k);
+    auto res = aiblocks::loadAccountWithoutRecord(ltx, k);
     if (mustExist)
     {
         REQUIRE(res);
@@ -478,14 +478,14 @@ bool
 doesAccountExist(Application& app, PublicKey const& k)
 {
     LedgerTxn ltx(app.getLedgerTxnRoot());
-    return (bool)stellar::loadAccountWithoutRecord(ltx, k);
+    return (bool)aiblocks::loadAccountWithoutRecord(ltx, k);
 }
 
 xdr::xvector<Signer, 20>
 getAccountSigners(PublicKey const& k, Application& app)
 {
     LedgerTxn ltx(app.getLedgerTxnRoot());
-    auto account = stellar::loadAccount(ltx, k);
+    auto account = aiblocks::loadAccount(ltx, k);
     return account.current().data.account().signers;
 }
 
@@ -774,7 +774,7 @@ applyCreateOfferHelper(Application& app, int64 offerId, SecretKey const& source,
     {
         LedgerTxn ltx(app.getLedgerTxnRoot());
         auto offer =
-            stellar::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
+            aiblocks::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
         REQUIRE(offer);
         auto& offerEntry = offer.current().data.offer();
         REQUIRE(offerEntry == offerResult.offer());
@@ -787,7 +787,7 @@ applyCreateOfferHelper(Application& app, int64 offerId, SecretKey const& source,
     {
         LedgerTxn ltx(app.getLedgerTxnRoot());
         REQUIRE(
-            !stellar::loadOffer(ltx, source.getPublicKey(), expectedOfferID));
+            !aiblocks::loadOffer(ltx, source.getPublicKey(), expectedOfferID));
     }
     break;
     default:
@@ -855,7 +855,7 @@ applyManageBuyOffer(Application& app, int64 offerId, SecretKey const& source,
     {
         LedgerTxn ltx(app.getLedgerTxnRoot());
         auto offer =
-            stellar::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
+            aiblocks::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
         REQUIRE(offer);
         auto& offerEntry = offer.current().data.offer();
         REQUIRE(offerEntry == success.offer());
@@ -868,7 +868,7 @@ applyManageBuyOffer(Application& app, int64 offerId, SecretKey const& source,
     {
         LedgerTxn ltx(app.getLedgerTxnRoot());
         REQUIRE(
-            !stellar::loadOffer(ltx, source.getPublicKey(), expectedOfferID));
+            !aiblocks::loadOffer(ltx, source.getPublicKey(), expectedOfferID));
     }
     break;
     default:
@@ -923,7 +923,7 @@ applyCreatePassiveOffer(Application& app, SecretKey const& source,
         {
             LedgerTxn ltx(app.getLedgerTxnRoot());
             auto offer =
-                stellar::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
+                aiblocks::loadOffer(ltx, source.getPublicKey(), expectedOfferID);
             REQUIRE(offer);
             auto& offerEntry = offer.current().data.offer();
             REQUIRE(offerEntry == offerResult.offer());
@@ -936,7 +936,7 @@ applyCreatePassiveOffer(Application& app, SecretKey const& source,
         case MANAGE_OFFER_DELETED:
         {
             LedgerTxn ltx(app.getLedgerTxnRoot());
-            REQUIRE(!stellar::loadOffer(ltx, source.getPublicKey(),
+            REQUIRE(!aiblocks::loadOffer(ltx, source.getPublicKey(),
                                         expectedOfferID));
         }
         break;

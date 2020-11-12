@@ -1,4 +1,4 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
+// Copyright 2014 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,7 +15,7 @@
 #include "lib/catch.hpp"
 #include "main/Application.h"
 #include "medida/stats/snapshot.h"
-#include "overlay/StellarXDR.h"
+#include "overlay/AiBlocksXDR.h"
 #include "simulation/Topologies.h"
 #include "test/test.h"
 #include "transactions/TransactionFrame.h"
@@ -26,7 +26,7 @@
 #include <fmt/format.h>
 #include <sstream>
 
-using namespace stellar;
+using namespace aiblocks;
 
 // Simulation tests. Some of the tests in this suite are long.
 // They are marked with [long][!hide]. Run the day-to-day tests with

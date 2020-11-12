@@ -1,4 +1,4 @@
-// Copyright 2017 Stellar Development Foundation and contributors. Licensed
+// Copyright 2017 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -26,10 +26,10 @@
 
 #include <medida/metrics_registry.h>
 
-using namespace stellar;
+using namespace aiblocks;
 using namespace txtest;
 
-namespace stellar
+namespace aiblocks
 {
 namespace historytestutils
 {
@@ -513,8 +513,8 @@ CatchupSimulation::generateRandomLedger(uint32_t version)
         upgrades.push_back(UpgradeType{v.begin(), v.end()});
     }
 
-    StellarValue sv(txSet->getContentsHash(), closeTime, upgrades,
-                    STELLAR_VALUE_BASIC);
+    AiBlocksValue sv(txSet->getContentsHash(), closeTime, upgrades,
+                    AIBLOCKS_VALUE_BASIC);
     mLedgerCloseDatas.emplace_back(ledgerSeq, txSet, sv);
     lm.closeLedger(mLedgerCloseDatas.back());
 

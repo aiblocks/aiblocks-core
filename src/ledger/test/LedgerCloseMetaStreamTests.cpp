@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -13,11 +13,11 @@
 #include "test/TestUtils.h"
 #include "test/test.h"
 #include "util/Logging.h"
-#include "xdr/Stellar-ledger.h"
+#include "xdr/AiBlocks-ledger.h"
 #include <fmt/format.h>
 #include <fstream>
 
-using namespace stellar;
+using namespace aiblocks;
 
 TEST_CASE("LedgerCloseMetaStream file descriptor - LIVE_NODE",
           "[ledgerclosemetastreamlive]")
@@ -105,7 +105,7 @@ TEST_CASE("LedgerCloseMetaStream file descriptor - REPLAY_IN_MEMORY",
           "[ledgerclosemetastreamreplay]")
 {
     // Step 1: generate some history for replay.
-    using namespace stellar::historytestutils;
+    using namespace aiblocks::historytestutils;
     TmpDirHistoryConfigurator tCfg;
     {
         Config genCfg = getTestConfig(0, Config::TESTDB_DEFAULT);

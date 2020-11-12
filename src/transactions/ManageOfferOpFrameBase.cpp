@@ -1,4 +1,4 @@
-// Copyright 2019 Stellar Development Foundation and contributors. Licensed
+// Copyright 2019 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -12,7 +12,7 @@
 #include "transactions/TransactionUtils.h"
 #include <Tracy.hpp>
 
-namespace stellar
+namespace aiblocks
 {
 
 ManageOfferOpFrameBase::ManageOfferOpFrameBase(
@@ -46,7 +46,7 @@ ManageOfferOpFrameBase::checkOfferValid(AbstractLedgerTxn& ltxOuter)
         auto sheepLineA = loadTrustLine(ltx, getSourceID(), mSheep);
         if (ledgerVersion < 13)
         {
-            auto issuer = stellar::loadAccount(ltx, getIssuer(mSheep));
+            auto issuer = aiblocks::loadAccount(ltx, getIssuer(mSheep));
             if (!issuer)
             {
                 setResultSellNoIssuer();
@@ -77,7 +77,7 @@ ManageOfferOpFrameBase::checkOfferValid(AbstractLedgerTxn& ltxOuter)
 
         if (ledgerVersion < 13)
         {
-            auto issuer = stellar::loadAccount(ltx, getIssuer(mWheat));
+            auto issuer = aiblocks::loadAccount(ltx, getIssuer(mWheat));
             if (!issuer)
             {
                 setResultBuyNoIssuer();
@@ -229,7 +229,7 @@ ManageOfferOpFrameBase::doApply(AbstractLedgerTxn& ltxOuter)
 
     if (mOfferID)
     { // modifying an old offer
-        auto sellSheepOffer = stellar::loadOffer(ltx, getSourceID(), mOfferID);
+        auto sellSheepOffer = aiblocks::loadOffer(ltx, getSourceID(), mOfferID);
         if (!sellSheepOffer)
         {
             setResultNotFound();
@@ -433,7 +433,7 @@ ManageOfferOpFrameBase::doApply(AbstractLedgerTxn& ltxOuter)
             if (sheepStays)
             {
                 auto sourceAccount =
-                    stellar::loadAccountWithoutRecord(ltx, getSourceID());
+                    aiblocks::loadAccountWithoutRecord(ltx, getSourceID());
                 auto sheepLineA = loadTrustLineWithoutRecordIfNotNative(
                     ltx, getSourceID(), mSheep);
                 auto wheatLineA = loadTrustLineWithoutRecordIfNotNative(
