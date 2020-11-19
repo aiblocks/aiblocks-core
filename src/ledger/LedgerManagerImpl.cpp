@@ -73,9 +73,9 @@ namespace aiblocks
 
 const uint32_t LedgerManager::GENESIS_LEDGER_SEQ = 1;
 const uint32_t LedgerManager::GENESIS_LEDGER_VERSION = 0;
-const uint32_t LedgerManager::GENESIS_LEDGER_BASE_FEE = 1000;
-const uint32_t LedgerManager::GENESIS_LEDGER_BASE_RESERVE = 10000;
-const uint32_t LedgerManager::GENESIS_LEDGER_MAX_TX_SIZE = 100;
+const uint32_t LedgerManager::GENESIS_LEDGER_BASE_FEE = 100;
+const uint32_t LedgerManager::GENESIS_LEDGER_BASE_RESERVE = 5000000;
+const uint32_t LedgerManager::GENESIS_LEDGER_MAX_TX_SIZE = 1000;
 const int64_t LedgerManager::GENESIS_LEDGER_TOTAL_COINS = 1000000000000000;
 
 std::unique_ptr<LedgerManager>
