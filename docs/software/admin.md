@@ -4,7 +4,7 @@ title: Administration
 
 ## Introduction
 
-AiBlocks Core is the program nodes use to communicate with other nodes to create and maintain the AiBlocks peer-to-peer network.  It's an implementation of the AiBlocks Consensus Protocol configured to construct a chain of ledgers guaranteed to be in agreement across all participating nodes at all times.
+AiBlocks Core is the program nodes use to communicate with other nodes to create and maintain the AiBlocks peer-to-peer network.  It's an implementation of the Stellar Consensus Protocol configured to construct a chain of ledgers guaranteed to be in agreement across all participating nodes at all times.
 
 This document describes various aspects of installing, configuring, and maintaining a `aiblocks-core` node.  It will explain:
 
@@ -100,7 +100,7 @@ Use cases:
   * Additional checks/invariants enabled
     * Validator can halt and/or signal that for example (in the case of an issuer) that it does not agree to something.
 
-**Operational requirements**: 
+**Operational requirements**:
 
   * secret key management (used for signing messages on the network)
   * a [database](#database)
@@ -182,10 +182,10 @@ Docker images are maintained in a few places, good starting points are:
 
 ## Configuring
 
-Before attempting to configure aiblocks-core, it is highly recommended to first try running a private network or joining the test network. 
+Before attempting to configure aiblocks-core, it is highly recommended to first try running a private network or joining the test network.
 
 ### Configuration basics
-All configuration for aiblocks-core is done with a TOML file. By default 
+All configuration for aiblocks-core is done with a TOML file. By default
 aiblocks-core loads `./aiblocks-core.cfg`, but you can specify a different file to load on the command line:
 
 `$ aiblocks-core --conf betterfile.cfg <COMMAND>`
@@ -201,12 +201,12 @@ The examples in this file don't specify `--conf betterfile.cfg` for brevity.
 Auditing of the P2P network is enabled by default, see the [overlay topology](#overlay-topology-survey) section for more detail if you'd like to disable it
 
 ### Validating node
-Nodes are considered **validating** if they take part in SCP and sign messages 
+Nodes are considered **validating** if they take part in SCP and sign messages
 pledging that the network agreed to a particular transaction set.
 
 If you want to validate, you must generate a public/private key for your node.
- Nodes shouldn't share keys. You should carefully *secure your private key*. 
-If it is compromised, someone can send false messages to the network and those 
+ Nodes shouldn't share keys. You should carefully *secure your private key*.
+If it is compromised, someone can send false messages to the network and those
 messages will look like they came from you.
 
 Generate a key pair like this:
@@ -232,13 +232,13 @@ watch SCP and see all the data in the network but will not send validation messa
 NB: if you run more than one node, set the `HOME_DOMAIN` common to those nodes using the `NODE_HOME_DOMAIN` property.
 Doing so will allow your nodes to be grouped correctly during [quorum set generation](#home-domains-array).
 
-If you want other validators to add your node to their quorum sets, you should also share your public key (GDMTUTQ... ) by publishing a aiblocks.toml file on your homedomain following specs laid out in [SEP-20](https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0020.md). 
+If you want other validators to add your node to their quorum sets, you should also share your public key (GDMTUTQ... ) by publishing a aiblocks.toml file on your homedomain following specs laid out in [SEP-20](https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0020.md).
 
 ### Choosing your quorum set
 A good quorum set:
-* aligns with your organization’s priorities 
+* aligns with your organization’s priorities
 * has enough redundancy to handle arbitrary node failures
-* maintains good quorum intersection 
+* maintains good quorum intersection
 
 Since crafting a good quorum set is a difficult thing to do, aiblocks core *automatically* generates a quorum set for you based on structured information you provide in your config file.  You choose the validators you want to trust; aiblocks core configures them into an optimal quorum set.
 
@@ -250,7 +250,7 @@ To generate a quorum set, aiblocks core:
 While this does not absolve you of all responsibility — you still need to pick trustworthy validators and keep an eye on them to ensure that they’re consistent and reliable — it does make your life easier, and reduces the chances for human error.
 
 #### Validator discovery
-When you add a validating node to your quorum set, it’s generally because you trust the *organization* running the node: you trust SDF, not some anonymous AiBlocks public key. 
+When you add a validating node to your quorum set, it’s generally because you trust the *organization* running the node: you trust SDF, not some anonymous AiBlocks public key.
 
 In order to create a self-verified link between a node and the organization that runs it, a validator declares a home domain on-chain using a `set_options` operation, and publishes organizational information in a aiblocks.toml file hosted on that domain.  To find out how that works, take a look at [SEP-20](https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0020.md).  
 
@@ -263,7 +263,7 @@ One important thing to note: you need to either depend on exactly one entity OR 
 #### Home domains array
 To create your quorum set, aiblocks cores relies on two arrays of tables: `[[HOME_DOMAINS]]` and `[[VALIDATORS]]`.  Check out the [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg#L372) to see those arrays in action.
 
-`[[HOME_DOMAINS]]` defines a superset of validators: when you add nodes hosted by the same organization to your configuration, they share a home domain, and the information in the `[[HOME_DOMAINS]]` table, specifically the quality rating, will automatically apply to every one of those validators. 
+`[[HOME_DOMAINS]]` defines a superset of validators: when you add nodes hosted by the same organization to your configuration, they share a home domain, and the information in the `[[HOME_DOMAINS]]` table, specifically the quality rating, will automatically apply to every one of those validators.
 
 For each organization you want to add, create a separate `[[HOME_DOMAINS]]` table, and complete the following required fields:
 
@@ -328,20 +328,20 @@ ADDRESS="core.rando.com"
 
 A high quality a validator:
 * publishes an archive
-* belongs to a suite of nodes that provide redundancy 
+* belongs to a suite of nodes that provide redundancy
 
 Choosing redundant nodes is good practice.  The archive requirement is programmatically enforced.
 
 **MEDIUM** quality validators are nested below high quality validators, and their combined weight is equivalent to a *single high quality entity*.  If a node doesn't publish an archive, but you deem it reliable, or have an organizational interest in including in your quorum set, give it a medium quality rating.  
 
-**LOW** quality validators are nested below medium quality validators, and their combined weight is equivalent to a *single medium quality entity*.    Should they prove reliable over time, you can upgrade their rating to medium to give them a bigger role in your quorum set configuration. 
- 
+**LOW** quality validators are nested below medium quality validators, and their combined weight is equivalent to a *single medium quality entity*.    Should they prove reliable over time, you can upgrade their rating to medium to give them a bigger role in your quorum set configuration.
+
 #### Automatic quorum set generation
 Once you add validators to your configuration, aiblocks core automatically generates a quorum set using the following rules:
 * Validators with the same home domain are automatically grouped together and given a threshold requiring a simple majority (2f+1)
 * Heterogeneous groups of validators are given a threshold assuming byzantine failure (3f+1)
-* Entities are grouped by QUALITY and nested from HIGH to LOW 
-* HIGH quality entities are at the top, and are given decision-making priority 
+* Entities are grouped by QUALITY and nested from HIGH to LOW
+* HIGH quality entities are at the top, and are given decision-making priority
 * The combined weight of MEDIUM quality entities equals a single HIGH quality entity  
 * The combined weight of LOW quality entities equals a single MEDIUM quality entity
 
@@ -390,9 +390,9 @@ After configuring your [database](#database) and [buckets](#buckets) settings, w
 
 `$ aiblocks-core new-db`
 
-This command will initialize the database as well as the bucket directory and then exit. 
+This command will initialize the database as well as the bucket directory and then exit.
 
-You can also use this command if your DB gets corrupted and you want to restart it from scratch. 
+You can also use this command if your DB gets corrupted and you want to restart it from scratch.
 
 #### Database
 AiBlocks-core stores the state of the ledger in a SQL database.
@@ -401,7 +401,7 @@ This DB should either be a SQLite database or, for larger production instances, 
 
 *Note: Millennium currently depends on using PostgreSQL.*
 
-For how to specify the database, 
+For how to specify the database,
 see the [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg).
 
 ##### Cursors and automatic maintenance
@@ -428,32 +428,32 @@ Any reasonably-recent state will do -- if such a snapshot is a little old, aiblo
 
 
 #### Buckets
-AiBlocks-core stores a duplicate copy of the ledger in the form of flat XDR files 
-called "buckets." These files are placed in a directory specified in the config 
+AiBlocks-core stores a duplicate copy of the ledger in the form of flat XDR files
+called "buckets." These files are placed in a directory specified in the config
 file as `BUCKET_DIR_PATH`, which defaults to `buckets`. The bucket files are used
- for hashing and transmission of ledger differences to history archives. 
+ for hashing and transmission of ledger differences to history archives.
 
-Buckets should be stored on a fast local disk with sufficient space to store several times the size of the current ledger. 
- 
+Buckets should be stored on a fast local disk with sufficient space to store several times the size of the current ledger.
+
  For the most part, the contents of both directories can be ignored as they are managed by aiblocks-core.
 
 ### History archives
-AiBlocks-core normally interacts with one or more "history archives," which are 
-configurable facilities for storing and retrieving flat files containing history 
-checkpoints: bucket files and history logs. History archives are usually off-site 
-commodity storage services such as Amazon S3, Google Cloud Storage, 
-Azure Blob Storage, or custom SCP/SFTP/HTTP servers. 
+AiBlocks-core normally interacts with one or more "history archives," which are
+configurable facilities for storing and retrieving flat files containing history
+checkpoints: bucket files and history logs. History archives are usually off-site
+commodity storage services such as Amazon S3, Google Cloud Storage,
+Azure Blob Storage, or custom SCP/SFTP/HTTP servers.
 
-Use command templates in the config file to give the specifics of which 
-services you will use and how to access them. 
-The [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg) 
-shows how to configure a history archive through command templates. 
+Use command templates in the config file to give the specifics of which
+services you will use and how to access them.
+The [example config](https://github.com/aiblocks/aiblocks-core/blob/master/docs/aiblocks-core_example.cfg)
+shows how to configure a history archive through command templates.
 
-While it is possible to run a aiblocks-core node with no configured history 
-archives, it will be _severely limited_, unable to participate fully in a 
-network, and likely unable to acquire synchronization at all. At the very 
-least, if you are joining an existing network in a read-only capacity, you 
-will still need to configure a `get` command to access that network's history 
+While it is possible to run a aiblocks-core node with no configured history
+archives, it will be _severely limited_, unable to participate fully in a
+network, and likely unable to acquire synchronization at all. At the very
+least, if you are joining an existing network in a read-only capacity, you
+will still need to configure a `get` command to access that network's history
 archives.
 
 #### Configuring to get data from an archive
@@ -500,13 +500,13 @@ At this point you're ready to observe core's activity as it joins the network.
 Review the [logging](#logging) section to get yourself familiar with the output of aiblocks-core.
 
 ### Interacting with your instance
-While running, interaction with aiblocks-core is done via an administrative 
-HTTP endpoint. Commands can be submitted using command-line HTTP tools such 
+While running, interaction with aiblocks-core is done via an administrative
+HTTP endpoint. Commands can be submitted using command-line HTTP tools such
 as `curl`, or by running a command such as
 
 `$ aiblocks-core http-command <http-command>`
 
-The endpoint is [not intended to be exposed to the public internet](#interaction-with-other-internal-systems). It's typically accessed by administrators, or by a mid-tier application to submit transactions to the AiBlocks network. 
+The endpoint is [not intended to be exposed to the public internet](#interaction-with-other-internal-systems). It's typically accessed by administrators, or by a mid-tier application to submit transactions to the AiBlocks network.
 
 See [commands](./commands.md) for a description of the available commands.
 
@@ -581,27 +581,27 @@ When the node is done catching up, its state will change to
 ```
 
 ## Logging
-AiBlocks-core sends logs to standard output and `aiblocks-core.log` by default, 
+AiBlocks-core sends logs to standard output and `aiblocks-core.log` by default,
 configurable as `LOG_FILE_PATH`.
 
  Log messages are classified by progressive _priority levels_:
   `TRACE`, `DEBUG`, `INFO`, `WARNING`, `ERROR` and `FATAL`.
-   The logging system only emits those messages at or above its configured logging level. 
+   The logging system only emits those messages at or above its configured logging level.
 
-The log level can be controlled by configuration, the `-ll` command-line flag 
+The log level can be controlled by configuration, the `-ll` command-line flag
 or adjusted dynamically by administrative (HTTP) commands. Run:
 
 `$ aiblocks-core http-command "ll?level=debug"`
 
 against a running system.
-Log levels can also be adjusted on a partition-by-partition basis through the 
+Log levels can also be adjusted on a partition-by-partition basis through the
 administrative interface.
  For example the history system can be set to DEBUG-level logging by running:
 
-`$ aiblocks-core http-command "ll?level=debug&partition=history"` 
+`$ aiblocks-core http-command "ll?level=debug&partition=history"`
 
 against a running system.
- The default log level is `INFO`, which is moderately verbose and should emit 
+ The default log level is `INFO`, which is moderately verbose and should emit
  progress messages every few seconds under normal operation.
 
 
@@ -883,9 +883,9 @@ as a whole will not be able to reach consensus (and the opposite is true, the ne
 may fail because of a different set of validators failing).
 
 You can get a sense of the quorum set health of a different node by doing
-`$ aiblocks-core http-command 'quorum?node=$sdf1` or `$ aiblocks-core http-command 'quorum?node=@GABCDE` 
+`$ aiblocks-core http-command 'quorum?node=$sdf1` or `$ aiblocks-core http-command 'quorum?node=@GABCDE`
 
-Overall network health can be evaluated by walking through all nodes and looking at their health. Note that this is only an approximation as remote nodes may not have received the same messages (in particular: `missing` for 
+Overall network health can be evaluated by walking through all nodes and looking at their health. Note that this is only an approximation as remote nodes may not have received the same messages (in particular: `missing` for
 other nodes is not reliable).
 
 ##### Transitive closure summary information
@@ -1025,7 +1025,7 @@ The network settings are:
 
 When the network time is later than the `upgradetime` specified in
 the upgrade settings, the validator will vote to update the network
-to the value specified in the upgrade setting. If the network time 
+to the value specified in the upgrade setting. If the network time
 is passed the `upgradetime` by more than 12 hours, the upgrade will be ignored
 
 When a validator is armed to change network values, the output of `info` will contain information about the vote.
@@ -1073,22 +1073,22 @@ This section contains information that is useful to know but that should not sto
 
 ### Runtime information: start and stop
 
-AiBlocks-core can be started directly from the command line, or through a supervision 
+AiBlocks-core can be started directly from the command line, or through a supervision
 system such as `init`, `upstart`, or `systemd`.
 
 AiBlocks-core can be gracefully exited at any time by delivering `SIGINT` or
  pressing `CTRL-C`. It can be safely, forcibly terminated with `SIGTERM` or
   `SIGKILL`. The latter may leave a stale lock file in the `BUCKET_DIR_PATH`,
-   and you may need to remove the file before it will restart. 
+   and you may need to remove the file before it will restart.
    Otherwise, all components are designed to recover from abrupt termination.
 
-AiBlocks-core can also be packaged in a container system such as Docker, so long 
+AiBlocks-core can also be packaged in a container system such as Docker, so long
 as `BUCKET_DIR_PATH` and the database are stored on persistent volumes. For an
 example, see [docker-aiblocks-core](https://github.com/aiblocks/docker-aiblocks-core-millennium).
 
 ### In depth architecture
 
-[architecture.md](https://github.com/aiblocks/aiblocks-core/blob/master/docs/architecture.md) 
-  describes how aiblocks-core is structured internally, how it is intended to be 
-  deployed, and the collection of servers and services needed to get the full 
+[architecture.md](https://github.com/aiblocks/aiblocks-core/blob/master/docs/architecture.md)
+  describes how aiblocks-core is structured internally, how it is intended to be
+  deployed, and the collection of servers and services needed to get the full
   functionality and performance.
