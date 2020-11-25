@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://aiblocks.io"><img alt="AiBlocks" src="https://github.com/aiblocks/.github/raw/master/aiblocks-logo.png" width="558" /></a>
+<a href="https://aiblocks.io"><img alt="AiBlocks" src="https://user-images.githubusercontent.com/74240228/100219575-3be49c00-2f27-11eb-9da1-a9ba97d9e26d.png" width="558" /></a>
 <br/>
 <strong>Creating equitable access to the global financial system</strong>
 <h1>AiBlocks Core</h1>
