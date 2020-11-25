@@ -1,4 +1,4 @@
-# SCP (AiBlocks Consensus Protocol)
+# SCP (Stellar Consensus Protocol)
 
 The SCP subsystem is an abstract implementation of SCP, a protocol for federated
 byzantine agreement, intended to drive a distributed system built around the
@@ -24,4 +24,4 @@ The `aiblocks-core` program has a single subclass of SCPDriver called
 ([Overlay](../overlay)) and specific replicated state machine
 ([LedgerManager](../ledger)).
 
-For details of the protocol itself, see the [paper on SCP](https://www.aiblocks.io/papers/aiblocks-consensus-protocol.pdf).
+For details of the protocol itself, see the [paper on SCP](https://www.stellar.org/papers/stellar-consensus-protocol).
