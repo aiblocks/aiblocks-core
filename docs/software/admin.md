@@ -347,7 +347,7 @@ Once you add validators to your configuration, aiblocks core automatically gener
 
 Here's a diagram depicting the nested quality levels and how they interact:
 
-![Diagram Automatic Quorum Set Generation](https://user-images.githubusercontent.com/74240228/100377641-a595a080-3022-11eb-824a-b8e138e013fe.png)
+![Diagram Automatic Quorum Set Generation](https://raw.githubusercontent.com/aiblocks/docs/master/guides/walkthroughs/assets/validator_complete.png)
 
 
 #### Quorum and overlay network
