@@ -18,7 +18,7 @@ guarantee see [`src/scp/readme.md`](/src/scp/readme.md).
 - [Building & Installing](/INSTALL.md)
 - [AiBlocks-core administration](software/admin.md)
 - [Architecture](architecture.md)
-- [Key Concepts](https://www.aiblocks.io/developers/guides/)
+- [Key Concepts](https://www.stellar.org/developers/guides/)
 - [Integration with other services](integration.md)
 - [Major Components](#major-components)
 - [Supporting Code Directories](#supporting-code-directories)

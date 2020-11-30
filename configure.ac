@@ -1,7 +1,7 @@
 # -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright 2015 AiBlocks Development Foundation and contributors. Licensed
+# Copyright 2020 AiBlocks Development Foundation and contributors. Licensed
 # under the Apache License, Version 2.0. See the COPYING file at the root
 # of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -352,4 +352,3 @@ ac_configure_args="$ac_configure_args $(esc "CC=$CC" "CXX=$CXX" "CFLAGS=$CFLAGS"
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_FILES(lib/Makefile src/Makefile Makefile)
 AC_OUTPUT
-
